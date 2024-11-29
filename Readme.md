@@ -1,5 +1,3 @@
-Sure, here's an updated version of the README file based on the color palette provided:
-
 # CAMERA - Cinema Reservation Application
 
 ## Project Overview
