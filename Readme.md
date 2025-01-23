@@ -81,7 +81,7 @@ Detailed wireframes are available at: [Link to wireframing platform]
 
 ## Contributions
 This project was developed by:
-- Benfillous Anadd
+- Benfillous Anass
 
 Supervised by:
 - Khalil Abouabdelmajid
