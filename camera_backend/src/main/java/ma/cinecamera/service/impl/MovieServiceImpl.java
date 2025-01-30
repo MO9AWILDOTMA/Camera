@@ -10,14 +10,14 @@ import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.mapper.MovieMapper;
 import ma.cinecamera.model.Movie;
-import ma.cinecamera.repository.IMovieRepository;
+import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.service.IMovieService;
 
 @Service
 @AllArgsConstructor
 public class MovieServiceImpl implements IMovieService {
 
-	private IMovieRepository repository;
+	private MovieRepository repository;
 	private MovieMapper mapper;
 
 	@Override
