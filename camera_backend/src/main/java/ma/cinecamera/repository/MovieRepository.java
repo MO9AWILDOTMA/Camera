@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import ma.cinecamera.model.Movie;
 
 @Repository
-public interface IMovieRepository extends JpaRepository<Movie, Long> {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 }
