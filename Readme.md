@@ -65,7 +65,7 @@ CAMERA is a web application designed to simplify the cinema reservation experien
 This warm and vibrant color palette evokes the classic cinema experience, with the golden yellow suggesting the glow of theater lighting, the orange and red shades reminiscent of traditional movie theater colors, and the light cream background providing a pleasant contrast for good readability.
 
 ### Wireframes
-Detailed wireframes are available at: [Link to wireframing platform]
+Detailed wireframes are available at: 
 
 ## Project Timeline
 - Analysis and Design: X weeks
