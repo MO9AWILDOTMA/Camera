@@ -36,7 +36,7 @@ CAMERA is a web application designed to simplify the cinema reservation experien
 
 **Frontend**
 - Framework: Angular
-- UI Library: shadcn/ui
+- UI Library: Angular Material
 
 **Architecture**
 - Monolithic Architecture
