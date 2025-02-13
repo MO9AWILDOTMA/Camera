@@ -1,6 +1,9 @@
 package ma.cinecamera.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -18,5 +21,8 @@ import ma.cinecamera.model.enums.ERole;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity {
-	private ERole name;
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true)
+    private ERole name;
+
 }

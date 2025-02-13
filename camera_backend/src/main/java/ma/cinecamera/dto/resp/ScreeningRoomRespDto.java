@@ -1,5 +1,5 @@
 package ma.cinecamera.dto.resp;
 
-public class ScreeningRoomRespDto {
+public class ScreeningRoomRespDto extends BaseDto {
 
 }
