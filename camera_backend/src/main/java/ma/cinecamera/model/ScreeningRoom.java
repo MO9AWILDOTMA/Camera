@@ -24,17 +24,16 @@ import lombok.Setter;
 @Table(name = "screening_rooms")
 public class ScreeningRoom extends BaseEntity {
 
-	@Column(name = "name", nullable = false, unique = true)
-	@NotBlank(message = "Screening Room Name is required")
-	@NotNull(message = "Screening Room Name is required")
-	private String name;
+    @Column(name = "name", nullable = false, unique = true)
+    @NotBlank(message = "Screening Room Name is required")
+    @NotNull(message = "Screening Room Name is required")
+    private String name;
 
-	@Column(name = "seats", nullable = false)
-	@NotBlank(message = "Screening Room Seats is required")
-	@NotNull(message = "Screening Room Seats is required")
-	private Integer seats;
+    @Column(name = "seats", nullable = false)
+    @NotNull(message = "Screening Room Seats is required")
+    private Integer seats;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "screening_room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Showtime> showtimes;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "screeningRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Showtime> showtimes;
 }

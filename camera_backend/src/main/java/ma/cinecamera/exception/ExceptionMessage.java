@@ -1,17 +1,17 @@
 package ma.cinecamera.exception;
 
-import org.springframework.http.HttpStatus;
+import java.time.LocalDate;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Builder
+@Getter
+@Setter
 public class ExceptionMessage {
-
-	private HttpStatus httpStatus;
-	private Integer status;
-	private String messgae;
-
-	public ExceptionMessage(HttpStatus httpStatus, Integer status, String message) {
-		this.httpStatus = httpStatus;
-		this.status = status;
-		this.messgae = message;
-	}
-
+    private String error;
+    private String message;
+    private Integer status;
+    private LocalDate time;
 }

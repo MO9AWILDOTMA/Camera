@@ -28,21 +28,21 @@ import ma.cinecamera.model.enums.ReservationStatus;
 @Table(name = "reservations")
 public class Reservation extends BaseEntity {
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "showtime_id", nullable = false)
-	private Showtime showtime;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "showtime_id", nullable = false)
+    private Showtime showtime;
 
-	@JsonManagedReference
-	@OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
-	private Payment payment;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Payment payment;
 
-	@JsonBackReference
-	@ManyToOne
-	@JoinColumn(name = "cinephile_id", nullable = false)
-	private Cinephile cinephile;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	@Column(name = "status", nullable = false)
-	@NotNull(message = "Reservation Status is required")
-	private ReservationStatus status;
+    @Column(name = "status", nullable = false)
+    @NotNull(message = "Reservation Status is required")
+    private ReservationStatus status;
 }

@@ -1,5 +1,18 @@
 package ma.cinecamera.mapper;
 
-public interface UserMapper {
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
+import ma.cinecamera.dto.req.UserReqDto;
+import ma.cinecamera.dto.resp.UserRespDto;
+import ma.cinecamera.model.User;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    @Mapping(target = "id", source = "entity.id")
+    @Mapping(target = "createdAt", source = "entity.createdAt")
+    @Mapping(target = "updatedAt", source = "entity.updatedAt")
+    UserRespDto entityToDto(User entity);
+
+    User DtoToentity(UserReqDto dto);
 }

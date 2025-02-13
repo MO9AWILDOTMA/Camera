@@ -1,5 +1,5 @@
 package ma.cinecamera.dto.resp;
 
-public class ShowtimeRespDto {
+public class ShowtimeRespDto extends BaseDto {
 
 }
