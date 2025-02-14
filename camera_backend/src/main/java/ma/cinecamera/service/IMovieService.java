@@ -1,27 +1,28 @@
 package ma.cinecamera.service;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import ma.cinecamera.dto.req.MovieReqDto;
+import ma.cinecamera.dto.resp.DeleteResp;
 import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.model.Movie;
 
 @Service
 public interface IMovieService {
 
-	Optional<Movie> getMovieById(Long id);
+    Movie getMovieById(Long id);
 
-	MovieRespDto getMovieDetail(Long id);
+    MovieRespDto getMovieDetail(Long id);
 
-	List<MovieRespDto> getAllMovies(Integer page);
+    List<MovieRespDto> getAllMovies(Integer page, Integer size);
 
-	MovieRespDto createMovie(MovieReqDto dto);
+    MovieRespDto createMovie(MovieReqDto dto) throws IOException;
 
-	MovieRespDto updateMovie(MovieReqDto dto);
+    MovieRespDto updateMovie(Long id, MovieReqDto dto);
 
-	void deleteMovie(Long id);
+    DeleteResp deleteMovie(Long id);
 
 }

@@ -57,9 +57,6 @@ public class User extends BaseEntity {
     @NotNull(message = "Password is required")
     private String password;
 
-    @Column(name = "picture", nullable = true)
-    private String picture;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reservation> reservations;
