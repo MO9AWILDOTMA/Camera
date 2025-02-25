@@ -31,42 +31,34 @@ import ma.cinecamera.model.enums.Genre;
 @Entity
 @Table(name = "movies")
 public class Movie extends BaseEntity {
-	@Column(name = "name", nullable = false, unique = true)
-	@NotBlank(message = "Movie Name is required")
-	@NotNull(message = "Movie Name is required")
-	private String name;
+    @Column(name = "name", nullable = false, unique = true)
+    @NotBlank(message = "Movie Name is required")
+    @NotNull(message = "Movie Name is required")
+    private String name;
 
-	@Column(name = "description", nullable = false)
-	@NotBlank(message = "Movie Description is required")
-	@NotNull(message = "Movie Description is required")
-	private String description;
+    @Column(name = "description", nullable = true)
+    private String description;
 
-	@Column(name = "genre", nullable = false)
-	@NotBlank(message = "Movie Name is required")
-	@NotNull(message = "Movie Genre is required")
-	@Enumerated(EnumType.STRING)
-	private Genre genre;
+    @Column(name = "genre", nullable = false)
+    @NotNull(message = "Movie Genre is required")
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
-	@Column(name = "release_date", nullable = false)
-	@NotNull(message = "Movie Release Date is required")
-	private LocalDate releaseDate;
+    @Column(name = "release_date", nullable = false)
+    @NotNull(message = "Movie Release Date is required")
+    private LocalDate releaseDate;
 
-	@Column(name = "duration", nullable = false)
-	@NotNull(message = "Movie Duration is required")
-	private Integer duration;
+    @Column(name = "duration", nullable = false)
+    @NotNull(message = "Movie Duration is required")
+    private Integer duration;
 
-	@Column(name = "actors", nullable = false)
-	@NotBlank(message = "Movie Actors is required")
-	@NotNull(message = "Movie Actors is required")
-	private String actors;
+    @Column(name = "actors", nullable = false)
+    @NotBlank(message = "Movie Actors is required")
+    @NotNull(message = "Movie Actors is required")
+    private String actors;
 
-	@Column(name = "picture", nullable = false)
-	@NotBlank(message = "Movie Picture is required")
-	@NotNull(message = "Movie Picture is required")
-	private String picture;
-
-	@JsonManagedReference
-	@OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Showtime> showtimes;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Showtime> showtimes;
 
 }

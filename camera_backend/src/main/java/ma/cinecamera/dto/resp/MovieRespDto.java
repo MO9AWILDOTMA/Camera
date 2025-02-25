@@ -33,7 +33,7 @@ public class MovieRespDto extends BaseDto {
 
     private String actors;
 
-    private String picture;
+    private List<String> picturePaths;
 
     private List<Showtime> showtimes;
 

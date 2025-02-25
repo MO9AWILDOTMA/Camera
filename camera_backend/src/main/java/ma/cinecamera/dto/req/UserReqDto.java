@@ -3,6 +3,8 @@ package ma.cinecamera.dto.req;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -27,5 +29,5 @@ public class UserReqDto {
     @NotNull(message = "Password is required")
     private String password;
 
-    private String picture;
+    private MultipartFile imageFile;
 }

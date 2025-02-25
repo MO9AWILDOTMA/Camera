@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -78,6 +80,36 @@ public class GlobalExceptionHandler {
 	});
 
 	return ResponseEntity.badRequest().body(errors);
+    }
+
+    // Handle entity validation errors (e.g., @NotNull, @Size on entity fields)
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+	ValidationErrorResponse errors = new ValidationErrorResponse();
+	errors.setTimestamp(LocalDateTime.now());
+	errors.setStatus(HttpStatus.BAD_REQUEST.value());
+	errors.setMessage("Validation Failed");
+
+	ex.getConstraintViolations().forEach(violation -> {
+	    String fieldName = violation.getPropertyPath().toString();
+	    String errorMessage = violation.getMessage();
+	    errors.addError(fieldName, errorMessage);
+	});
+
+	return ResponseEntity.badRequest().body(errors);
+    }
+
+    // Handle other exceptions (optional)
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ValidationErrorResponse> handleGenericException(Exception ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	error.setMessage("An unexpected error occurred: " + ex.getMessage());
+
+	return ResponseEntity.internalServerError().body(error);
     }
 
     @ExceptionHandler(CustomDuplicateKeyException.class)

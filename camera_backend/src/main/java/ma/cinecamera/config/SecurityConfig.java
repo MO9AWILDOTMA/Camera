@@ -40,11 +40,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 	http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf().disable().httpBasic().and()
-		.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/api/user/**")
-		.hasAnyRole("CINEPHILE", "ADMIN", "MODERATOR").antMatchers("/api/moderator/**")
-		.hasAnyRole("ADMIN", "MODERATOR").antMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
-		.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.exceptionHandling()
+		.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/images/**").permitAll()
+		.antMatchers("/api/user/**").hasAnyRole("CINEPHILE", "ADMIN", "MODERATOR")
+		.antMatchers("/api/moderator/**").hasAnyRole("ADMIN", "MODERATOR").antMatchers("/api/admin/**")
+		.hasRole("ADMIN").anyRequest().authenticated().and().sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
 		.authenticationEntryPoint((request, response, authException) -> response
 			.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
 		.and().logout().logoutUrl("/api/auth/logout")
