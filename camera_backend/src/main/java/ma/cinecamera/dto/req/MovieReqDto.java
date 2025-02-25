@@ -36,6 +36,5 @@ public class MovieReqDto {
     @NotEmpty(message = "movie actors cannot be empty")
     private String actors;
 
-    @NotNull(message = "movie image files cannot be null")
     private MultipartFile[] imageFiles;
 }
