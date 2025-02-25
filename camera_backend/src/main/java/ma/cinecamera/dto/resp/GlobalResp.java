@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DeleteResp extends BaseDto {
+public class GlobalResp extends BaseDto {
     private String message;
 
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ma.cinecamera.dto.req.LoginDto;
 import ma.cinecamera.dto.req.UserReqDto;
-import ma.cinecamera.dto.resp.DeleteResp;
+import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.service.IAuthService;
 
 @RestController
@@ -34,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse resp) {
-	DeleteResp message = authService.logoutHandler(resp);
+	GlobalResp message = authService.logoutHandler(resp);
 	return ResponseEntity.ok(message);
     }
 }

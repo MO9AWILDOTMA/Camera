@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import ma.cinecamera.dto.req.LoginDto;
 import ma.cinecamera.dto.req.UserReqDto;
-import ma.cinecamera.dto.resp.DeleteResp;
+import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.UserRespDto;
 import ma.cinecamera.exception.CustomDuplicateKeyException;
 import ma.cinecamera.exception.ResourceNotFoundException;
@@ -120,7 +120,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public DeleteResp logoutHandler(HttpServletResponse response) {
+    public GlobalResp logoutHandler(HttpServletResponse response) {
 	try {
 	    // Clear the JWT cookie
 	    Cookie logoutCookie = new Cookie("Authorization", null);
@@ -135,10 +135,10 @@ public class AuthService implements IAuthService {
 	    // Clear any session-related attributes if they exist
 	    SecurityContextHolder.clearContext();
 
-	    return DeleteResp.builder().message("Successfully logged out").build();
+	    return GlobalResp.builder().message("Successfully logged out").build();
 
 	} catch (Exception e) {
-	    return DeleteResp.builder().message("Could not process logout request").build();
+	    return GlobalResp.builder().message("Could not process logout request").build();
 	}
     }
 }

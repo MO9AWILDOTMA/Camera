@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ma.cinecamera.dto.req.MovieReqDto;
-import ma.cinecamera.dto.resp.DeleteResp;
+import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.model.Movie;
 
@@ -23,6 +23,6 @@ public interface IMovieService {
 
     MovieRespDto updateMovie(Long id, MovieReqDto dto);
 
-    DeleteResp deleteMovie(Long id);
+    GlobalResp deleteMovie(Long id);
 
 }

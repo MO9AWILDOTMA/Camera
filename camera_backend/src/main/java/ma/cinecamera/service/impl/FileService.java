@@ -1,18 +1,31 @@
 package ma.cinecamera.service.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.model.Media;
+import ma.cinecamera.model.enums.MediaType;
+import ma.cinecamera.repository.MediaRepository;
 import ma.cinecamera.service.FileServiceInterface;
 
 @Service
 public class FileService implements FileServiceInterface {
+
+    @Autowired
+    private MediaRepository mediaRepository;
 
     @Override
     public String saveImageToStorage(String uploadDirectory, MultipartFile imageFile) throws IOException {
@@ -29,21 +42,66 @@ public class FileService implements FileServiceInterface {
 	    Files.createDirectories(uploadPath);
 	}
 
-	Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	try (InputStream inputStream = imageFile.getInputStream()) {
+	    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+	}
 
 	return uniqueFileName;
     }
 
-    // Delete an image
     @Override
-    public String deleteImage(String imageDirectory, String imageName) throws IOException {
+    @Transactional
+    public void saveFiles(MultipartFile[] files, Long ownerId, MediaType type, String uploadDirectory)
+	    throws IOException {
+	Path uploadPath = Path.of(uploadDirectory);
+	if (!Files.exists(uploadPath)) {
+	    Files.createDirectories(uploadPath);
+	}
+
+	for (MultipartFile file : files) {
+	    if (file == null || file.isEmpty()) {
+		continue; // Skip empty files
+	    }
+
+	    String uniqueFileName = saveImageToStorage(uploadDirectory, file);
+
+	    Media media = Media.builder().name(uniqueFileName).directory(uploadDirectory).mediaType(type)
+		    .ownerId(ownerId).build();
+	    mediaRepository.save(media);
+	}
+    }
+
+    @Override
+    public List<String> getImagePaths(Long ownerId, String uploadDirectory, MediaType type) {
+	return mediaRepository.findByMediaTypeAndOwnerId(type, ownerId).stream()
+		.map(media -> "/images/" + type.toString().toLowerCase() + 's' + "/" + media.getName())
+		.collect(Collectors.toList());
+    }
+
+    @Override
+    public GlobalResp deleteImage(String imageDirectory, String imageName) throws IOException {
 	Path imagePath = Path.of(imageDirectory, imageName);
 
 	if (Files.exists(imagePath)) {
 	    Files.delete(imagePath);
-	    return "Success";
+	    return GlobalResp.builder().message("File deleted successfully").build();
 	} else {
-	    return "Failed"; // Handle missing images
+	    return GlobalResp.builder().message("File deleting failed").build();
 	}
+    }
+
+    @Override
+    public GlobalResp deleteAllImages(Long ownerId, MediaType type) {
+	List<Media> medias = mediaRepository.findByMediaTypeAndOwnerId(type, ownerId);
+	medias.stream().map(m -> {
+	    try {
+		deleteImage(m.getDirectory(), m.getName());
+	    } catch (IOException e) {
+		return GlobalResp.builder().message("File deleting failed").build();
+	    }
+	    return m;
+	});
+	mediaRepository.deleteAllInBatch(medias);
+	return GlobalResp.builder().message("Files deleted successfully").build();
     }
 }
