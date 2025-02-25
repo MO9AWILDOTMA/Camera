@@ -21,8 +21,10 @@ public interface IMovieService {
 
     MovieRespDto createMovie(MovieReqDto dto) throws IOException;
 
-    MovieRespDto updateMovie(Long id, MovieReqDto dto);
+    MovieRespDto updateMovie(Long id, MovieReqDto dto) throws IOException;
 
     GlobalResp deleteMovie(Long id);
+
+    List<MovieRespDto> search(String q, Integer page, Integer size);
 
 }

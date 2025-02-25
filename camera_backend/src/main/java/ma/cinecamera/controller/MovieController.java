@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,12 @@ public class MovieController {
     @Autowired
     private IMovieService service;
 
-    @Secured("ROLE_CINEPHILE")
     @GetMapping("/user/movies")
     public ResponseEntity<?> index(@RequestParam(defaultValue = "1", name = "page") Integer page,
 	    @RequestParam(defaultValue = "3", name = "size") Integer size) {
 	return ResponseEntity.ok(service.getAllMovies(page, size));
     }
 
-    @Secured("ROLE_CINEPHILE")
     @GetMapping("/user/movies/{id}")
     public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.getMovieDetail(id));
@@ -47,9 +46,23 @@ public class MovieController {
 	return ResponseEntity.ok(service.createMovie(dto));
     }
 
+    @Secured("ROLE_MODERATOR")
+    @PutMapping(value = "/moderator/movies/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(@ModelAttribute @Valid MovieReqDto dto, @PathVariable(name = "id") Long id)
+	    throws IOException {
+	return ResponseEntity.ok(service.updateMovie(id, dto));
+    }
+
     @Secured("ROLE_CINEPHILE")
     @DeleteMapping("/moderator/movies/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.deleteMovie(id));
+    }
+
+    @GetMapping("/user/movies/search/{query}")
+    public ResponseEntity<?> search(@PathVariable(name = "query") String query,
+	    @RequestParam(defaultValue = "1", name = "page") Integer page,
+	    @RequestParam(defaultValue = "3", name = "size") Integer size) {
+	return ResponseEntity.ok(service.search(query, page, size));
     }
 }
