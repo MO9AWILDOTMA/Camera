@@ -42,9 +42,7 @@ public class User extends BaseEntity {
     @NotNull(message = "Last Name is required")
     private String lastName;
 
-    @Column(name = "phone", nullable = false)
-    @NotBlank(message = "Phone is required")
-    @NotNull(message = "Phone is required")
+    @Column(name = "phone")
     private String phone;
 
     @Column(name = "email", nullable = false, unique = true)
