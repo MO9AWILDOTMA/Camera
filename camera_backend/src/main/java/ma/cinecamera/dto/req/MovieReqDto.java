@@ -1,6 +1,7 @@
 package ma.cinecamera.dto.req;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,7 +24,7 @@ public class MovieReqDto {
 
     @NotNull(message = "movie genre cannot be null")
     @Enumerated(EnumType.STRING)
-    private Genre genre;
+    private List<Genre> genres;
 
     @NotNull(message = "movie release date cannot be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -34,7 +35,7 @@ public class MovieReqDto {
 
     @NotNull(message = "movie actors cannot be null")
     @NotEmpty(message = "movie actors cannot be empty")
-    private String actors;
+    private String[] actors;
 
     private MultipartFile[] imageFiles;
 }

@@ -1,91 +1,60 @@
 package ma.cinecamera.exception;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
-import javax.validation.ConstraintViolationException;
-
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "ma.cinecamera")
 public class GlobalExceptionHandler {
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionMessage resourceNotFoundExceptionHandler(ResourceNotFoundException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.NOT_FOUND.toString())
-		.message(exception.getMessage()).status(HttpStatus.NOT_FOUND.value()).time(LocalDate.now()).build();
-	return message;
-    }
 
-    @ExceptionHandler(SearchTypeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessage searchTypeExceptionHandler(SearchTypeException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.BAD_REQUEST.toString())
-		.message(exception.getMessage()).status(HttpStatus.BAD_REQUEST.value()).time(LocalDate.now()).build();
-	return message;
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessage illegalArgumentExceptionHandler(IllegalArgumentException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.BAD_REQUEST.toString())
-		.message(exception.getMessage()).status(HttpStatus.BAD_REQUEST.value()).time(LocalDate.now()).build();
-	return message;
-    }
-
-    @ExceptionHandler(ResourceValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessage ResourceValidationExceptionHandler(ResourceValidationException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.BAD_REQUEST.toString())
-		.message(exception.getMessage()).status(HttpStatus.BAD_REQUEST.value()).time(LocalDate.now()).build();
-	return message;
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessage ResourceValidationExceptionHandler(HttpMessageNotReadableException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.BAD_REQUEST.toString())
-		.message(exception.getMessage()).status(HttpStatus.BAD_REQUEST.value()).time(LocalDate.now()).build();
-	return message;
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionMessage RuntimeExceptionHandler(RuntimeException exception) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.INTERNAL_SERVER_ERROR.toString())
-		.message(exception.getMessage()).status(HttpStatus.INTERNAL_SERVER_ERROR.value()).time(LocalDate.now())
-		.build();
-	return message;
-    }
+    private final Logger logger = Logger.getLogger(GlobalExceptionHandler.class.getName());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValidException(
+	    MethodArgumentNotValidException ex) {
+	return handleBindingResult(ex.getBindingResult());
+    }
 
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> handleBindException(BindException ex) {
+	return handleBindingResult(ex.getBindingResult());
+    }
+
+    private ResponseEntity<ValidationErrorResponse> handleBindingResult(BindingResult bindingResult) {
 	ValidationErrorResponse errors = new ValidationErrorResponse();
 	errors.setTimestamp(LocalDateTime.now());
 	errors.setStatus(HttpStatus.BAD_REQUEST.value());
 	errors.setMessage("Validation Failed");
 
-	ex.getBindingResult().getFieldErrors().forEach(error -> {
-	    errors.addError(error.getField(), error.getDefaultMessage());
+	bindingResult.getAllErrors().forEach(error -> {
+	    String fieldName = ((FieldError) error).getField();
+	    String errorMessage = error.getDefaultMessage();
+	    errors.addError(fieldName, errorMessage);
 	});
 
 	return ResponseEntity.badRequest().body(errors);
     }
 
-    // Handle entity validation errors (e.g., @NotNull, @Size on entity fields)
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(
+	    javax.validation.ConstraintViolationException ex) {
 	ValidationErrorResponse errors = new ValidationErrorResponse();
 	errors.setTimestamp(LocalDateTime.now());
 	errors.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -100,16 +69,85 @@ public class GlobalExceptionHandler {
 	return ResponseEntity.badRequest().body(errors);
     }
 
-    // Handle other exceptions (optional)
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ValidationErrorResponse> handleGenericException(Exception ex) {
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ValidationErrorResponse> handleDataIntegrityViolationException(
+	    DataIntegrityViolationException ex) {
 	ValidationErrorResponse error = new ValidationErrorResponse();
 	error.setTimestamp(LocalDateTime.now());
-	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-	error.setMessage("An unexpected error occurred: " + ex.getMessage());
+	error.setStatus(HttpStatus.CONFLICT.value());
+	error.setMessage("Data integrity violation");
 
-	return ResponseEntity.internalServerError().body(error);
+	// Extract the root cause
+	Throwable rootCause = ex.getRootCause();
+	String errorMessage = "A record with this value already exists.";
+	if (rootCause instanceof ConstraintViolationException) {
+	    ConstraintViolationException constraintViolationException = (ConstraintViolationException) rootCause;
+	    String constraintName = constraintViolationException.getConstraintName();
+
+	    if (constraintName != null && constraintName.contains("uk_need1sfwodvn2yjle40es9twm")) {
+		errorMessage = "A movie with this name already exists.";
+	    }
+
+	    error.addError("name", errorMessage);
+	} else {
+	    error.addError("general", errorMessage);
+	}
+
+	return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ValidationErrorResponse> resourceNotFoundExceptionHandler(
+	    ResourceNotFoundException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.NOT_FOUND.value());
+	error.setMessage(exception.getMessage());
+	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(SearchTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> searchTypeExceptionHandler(SearchTypeException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.BAD_REQUEST.value());
+	error.setMessage(exception.getMessage());
+	return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> illegalArgumentExceptionHandler(IllegalArgumentException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.BAD_REQUEST.value());
+	error.setMessage(exception.getMessage());
+	return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(ResourceValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> handleResourceValidationException(
+	    ResourceValidationException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.BAD_REQUEST.value());
+	error.setMessage(exception.getMessage());
+	return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ValidationErrorResponse> handleHttpMessageNotReadableException(
+	    HttpMessageNotReadableException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.BAD_REQUEST.value());
+	error.setMessage(exception.getMessage());
+	return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(CustomDuplicateKeyException.class)
@@ -118,21 +156,50 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-    public ExceptionMessage handleHttpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException ex) {
-	ExceptionMessage message = ExceptionMessage.builder().error(HttpStatus.NOT_ACCEPTABLE.toString())
-		.message(ex.getMessage()).status(HttpStatus.NOT_ACCEPTABLE.value()).time(LocalDate.now()).build();
-	return message;
+    public ResponseEntity<ValidationErrorResponse> handleHttpMediaTypeNotAcceptableException(
+	    HttpMediaTypeNotAcceptableException ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+	error.setMessage(ex.getMessage());
+	return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
     }
 
     @ExceptionHandler(IOException.class)
-    public ExceptionMessage handleFileRetrieving(IOException ex) {
-	return new ExceptionMessage("File Access Error", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-		LocalDate.now());
+    public ResponseEntity<ValidationErrorResponse> handleIOException(IOException ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	error.setMessage("File upload failed: " + ex.getMessage());
+	return ResponseEntity.internalServerError().body(error);
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ExceptionMessage handleFileRetrieving(IllegalStateException ex) {
-	return new ExceptionMessage("File Access Error", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-		LocalDate.now());
+    public ResponseEntity<ValidationErrorResponse> handleIllegalStateException(IllegalStateException ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	error.setMessage("Illegal State Error: " + ex.getMessage());
+	return ResponseEntity.internalServerError().body(error);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ValidationErrorResponse> handleRuntimeException(RuntimeException exception) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	error.setMessage("Runtime Error: " + exception.getMessage());
+	return ResponseEntity.internalServerError().body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ValidationErrorResponse> handleGenericException(Exception ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	error.setMessage("An unexpected error occurred: " + ex.getMessage());
+	return ResponseEntity.internalServerError().body(error);
     }
 }

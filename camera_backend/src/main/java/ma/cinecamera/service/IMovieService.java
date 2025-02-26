@@ -25,6 +25,6 @@ public interface IMovieService {
 
     GlobalResp deleteMovie(Long id);
 
-    List<MovieRespDto> search(String q, Integer page, Integer size);
+    List<MovieRespDto> search(String q, String genre, Integer page, Integer size);
 
 }

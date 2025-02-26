@@ -61,8 +61,9 @@ public class MovieController {
 
     @GetMapping("/user/movies/search/{query}")
     public ResponseEntity<?> search(@PathVariable(name = "query") String query,
+	    @RequestParam(defaultValue = "All", name = "genre") String genre,
 	    @RequestParam(defaultValue = "1", name = "page") Integer page,
 	    @RequestParam(defaultValue = "3", name = "size") Integer size) {
-	return ResponseEntity.ok(service.search(query, page, size));
+	return ResponseEntity.ok(service.search(query, genre, page, size));
     }
 }

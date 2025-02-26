@@ -19,6 +19,7 @@ import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.MovieMapper;
 import ma.cinecamera.model.Movie;
+import ma.cinecamera.model.enums.Genre;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.service.IFileService;
@@ -40,7 +41,7 @@ public class MovieService implements IMovieService {
 //    @Value("${movie.file.upload.directory}")
     private final String uploadDirectory = "src/main/resources/static/images/movies";
 
-    private final Logger logger = Logger.getLogger(MovieService.class.getName());;
+    private final Logger logger = Logger.getLogger(MovieService.class.getName());
 
     @Override
     public Movie getMovieById(Long id) {
@@ -110,7 +111,7 @@ public class MovieService implements IMovieService {
 
 	existingMovie.setName(dto.getName());
 	existingMovie.setDescription(dto.getDescription());
-	existingMovie.setGenre(dto.getGenre());
+	existingMovie.setGenres(dto.getGenres());
 	existingMovie.setReleaseDate(dto.getReleaseDate());
 	existingMovie.setDuration(dto.getDuration());
 	existingMovie.setActors(dto.getActors());
@@ -140,7 +141,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieRespDto> search(String q, Integer page, Integer size) {
+    public List<MovieRespDto> search(String q, String genre, Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
@@ -148,9 +149,12 @@ public class MovieService implements IMovieService {
 
 	List<MovieRespDto> respDto = mapper.entitiesToDto(movies);
 
+	Genre targetGenre = genre.equalsIgnoreCase("all") ? null : Genre.valueOf(genre.toUpperCase());
+
 	return respDto.stream().map(d -> {
-	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
-	    return d;
-	}).collect(Collectors.toList());
+	    MovieRespDto newDto = new MovieRespDto(d);
+	    newDto.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    return newDto;
+	}).filter(m -> targetGenre == null || m.getGenres().contains(targetGenre)).collect(Collectors.toList());
     }
 }
