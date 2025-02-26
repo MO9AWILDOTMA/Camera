@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ma.cinecamera.dto.req.LoginDto;
-import ma.cinecamera.dto.req.UserReqDto;
+import ma.cinecamera.dto.req.RegisterDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.service.IAuthService;
 
@@ -23,7 +23,7 @@ public class AuthController {
     private IAuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UserReqDto user) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDto user) {
 	return ResponseEntity.ok(authService.registerHandler(user));
     }
 

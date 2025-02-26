@@ -53,7 +53,7 @@ public class MovieController {
 	return ResponseEntity.ok(service.updateMovie(id, dto));
     }
 
-    @Secured("ROLE_CINEPHILE")
+    @Secured("ROLE_MODERATOR")
     @DeleteMapping("/moderator/movies/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.deleteMovie(id));

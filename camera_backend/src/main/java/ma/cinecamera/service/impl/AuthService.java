@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ma.cinecamera.dto.req.LoginDto;
-import ma.cinecamera.dto.req.UserReqDto;
+import ma.cinecamera.dto.req.RegisterDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.UserRespDto;
 import ma.cinecamera.exception.CustomDuplicateKeyException;
@@ -56,7 +56,7 @@ public class AuthService implements IAuthService {
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Override
-    public UserRespDto registerHandler(UserReqDto dto) {
+    public UserRespDto registerHandler(RegisterDto dto) {
 
 	Optional<User> existingUser = userRepo.findByEmail(dto.getEmail());
 

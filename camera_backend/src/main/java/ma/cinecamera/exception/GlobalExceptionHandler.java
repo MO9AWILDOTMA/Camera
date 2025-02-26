@@ -13,6 +13,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -180,6 +181,16 @@ public class GlobalExceptionHandler {
 	error.setTimestamp(LocalDateTime.now());
 	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 	error.setMessage("Illegal State Error: " + ex.getMessage());
+	return ResponseEntity.internalServerError().body(error);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ValidationErrorResponse> handleHttpMediaTypeNotSupportedException(
+	    HttpMediaTypeNotSupportedException ex) {
+	ValidationErrorResponse error = new ValidationErrorResponse();
+	error.setTimestamp(LocalDateTime.now());
+	error.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
+	error.setMessage("Http Media Type Not Supported Error: " + ex.getMessage());
 	return ResponseEntity.internalServerError().body(error);
     }
 
