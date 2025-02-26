@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,10 +40,11 @@ public class Movie extends BaseEntity {
     @Column(name = "description", nullable = true)
     private String description;
 
-    @Column(name = "genre", nullable = false)
+    @Column(name = "genres", nullable = false)
     @NotNull(message = "Movie Genre is required")
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    private Genre genre;
+    private List<Genre> genres;
 
     @Column(name = "release_date", nullable = false)
     @NotNull(message = "Movie Release Date is required")
@@ -53,9 +55,8 @@ public class Movie extends BaseEntity {
     private Integer duration;
 
     @Column(name = "actors", nullable = false)
-    @NotBlank(message = "Movie Actors is required")
     @NotNull(message = "Movie Actors is required")
-    private String actors;
+    private String[] actors;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
