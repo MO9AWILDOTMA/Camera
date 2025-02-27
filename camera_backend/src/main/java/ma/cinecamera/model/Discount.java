@@ -23,17 +23,17 @@ import lombok.Setter;
 @Entity
 @Table(name = "discounts")
 public class Discount extends BaseEntity {
-	@Column(name = "name", nullable = false, unique = true)
-	@NotBlank(message = "Discount Name is required")
-	@NotNull(message = "Discount Name is required")
-	private String name;
+    @Column(name = "name", nullable = false, unique = true)
+    @NotBlank(message = "Discount Name is required")
+    @NotNull(message = "Discount Name is required")
+    private String name;
 
-	@Column(name = "percentage", nullable = false)
-	@NotNull(message = "Discount Percentage is required")
-	private Double percetage;
+    @Column(name = "percentage", nullable = false)
+    @NotNull(message = "Discount Percentage is required")
+    private Double percentage;
 
-	@JsonBackReference
-	@ManyToMany(mappedBy = "discounts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Showtime> showtimes;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "discounts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Showtime> showtimes;
 
 }

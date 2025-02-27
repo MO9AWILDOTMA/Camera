@@ -17,11 +17,11 @@ import lombok.Setter;
 @Entity
 @Table(name = "payments")
 public class Payment extends BaseEntity {
-	@Column(name = "amount", nullable = false)
-	@NotNull(message = "Payment Amount is required")
-	private Double amount;
+    @Column(name = "amount", nullable = false)
+    @NotNull(message = "Payment Amount is required")
+    private Double amount;
 
-	@OneToOne
-	@JoinColumn(name = "reservation_id", nullable = false, unique = true)
-	private Reservation reservation;
+    @OneToOne
+    @JoinColumn(name = "reservation_id", nullable = false, unique = true)
+    private Reservation reservation;
 }
