@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.AllArgsConstructor;
 import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.service.IMovieService;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 public class MovieController {
     @Autowired
     private IMovieService service;
