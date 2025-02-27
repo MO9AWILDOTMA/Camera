@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "framework": "angular",
+  "buildCommand": "npm install && npm run build",
+  "installCommand": "npm install",
+  "devCommand": "npm run start",
+  "outputDirectory": "dist/app",
+  "routes": [
+    {
+      "src": "/(assets/.+)",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
