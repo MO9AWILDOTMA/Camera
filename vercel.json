@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "projectSettings": {
+    "framework": "angular",
+    "buildCommand": "cd app && npm install && npm run build",
+    "outputDirectory": "app/dist/app",
+    "devCommand": "cd app && npm run start"
+  }
+} 
