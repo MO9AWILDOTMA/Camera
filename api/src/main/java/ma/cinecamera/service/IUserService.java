@@ -29,4 +29,6 @@ public interface IUserService {
 
     GlobalResp deleteMyAccount();
 
+    Long getConnectedUserId();
+
 }

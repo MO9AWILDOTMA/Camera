@@ -160,7 +160,8 @@ public class UserService implements IUserService {
 	return delete(id);
     }
 
-    private Long getConnectedUserId() {
+    @Override
+    public Long getConnectedUserId() {
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	// Check if the user is authenticated and not anonymous
 	if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)

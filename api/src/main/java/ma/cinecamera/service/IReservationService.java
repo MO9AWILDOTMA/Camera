@@ -1,0 +1,27 @@
+package ma.cinecamera.service;
+
+import java.util.List;
+
+import ma.cinecamera.dto.req.ReservationReqDto;
+import ma.cinecamera.dto.req.ReservationUpdateDto;
+import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ReservationRespDto;
+import ma.cinecamera.model.Reservation;
+
+public interface IReservationService {
+
+    Reservation getById(Long id);
+
+    ReservationRespDto create(ReservationReqDto dto);
+
+    ReservationRespDto update(Long id, ReservationUpdateDto dto);
+
+    List<ReservationRespDto> getAll(Integer page, Integer size);
+
+    GlobalResp delete(Long id);
+
+    GlobalResp cancelReservation(Long id);
+
+    GlobalResp archive(Long id);
+
+}

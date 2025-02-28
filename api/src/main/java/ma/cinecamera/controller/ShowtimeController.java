@@ -1,7 +1,5 @@
 package ma.cinecamera.controller;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,15 +37,14 @@ public class ShowtimeController {
     }
 
     @Secured("ROLE_MODERATOR")
-    @PostMapping(value = "/moderator/showtimes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> store(@ModelAttribute @Valid ShowtimeReqDto dto) throws IOException {
+    @PostMapping(value = "/moderator/showtimes")
+    public ResponseEntity<?> store(@RequestBody @Valid ShowtimeReqDto dto) {
 	return ResponseEntity.ok(service.createShowtime(dto));
     }
 
     @Secured("ROLE_MODERATOR")
     @PutMapping(value = "/moderator/showtimes/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@ModelAttribute @Valid ShowtimeReqDto dto, @PathVariable(name = "id") Long id)
-	    throws IOException {
+    public ResponseEntity<?> update(@RequestBody @Valid ShowtimeReqDto dto, @PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.updateShowtime(id, dto));
     }
 

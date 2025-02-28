@@ -72,7 +72,7 @@ public class ShowtimeService implements IShowtimeService {
 	Movie movie = movieService.getMovieById(dto.getMovieId());
 	ScreeningRoom sRoom = screeningRoomService.getById(dto.getScreeningRoomId());
 
-	if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom)) {
+	if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 	    throw new ResourceValidationException(
 		    "Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	}
@@ -102,7 +102,7 @@ public class ShowtimeService implements IShowtimeService {
 	Boolean sRoomChecker = dto.getScreeningRoomId().equals(showtime.getScreeningRoom().getId());
 
 	if (!dateChecker || !sRoomChecker) {
-	    if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom)) {
+	    if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 		throw new ResourceValidationException(
 			"Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	    }
