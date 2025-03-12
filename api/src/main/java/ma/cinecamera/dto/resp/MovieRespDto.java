@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import ma.cinecamera.model.Showtime;
 import ma.cinecamera.model.enums.Genre;
 
 @Data
@@ -22,7 +21,6 @@ import ma.cinecamera.model.enums.Genre;
 @EqualsAndHashCode(callSuper = true)
 public class MovieRespDto extends BaseDto {
     private String name;
-
     private String description;
 
     @ElementCollection
@@ -30,14 +28,9 @@ public class MovieRespDto extends BaseDto {
     private List<Genre> genres;
 
     private LocalDate releaseDate;
-
     private Integer duration;
-
     private String[] actors;
-
     private List<String> picturePaths;
-
-    private List<Showtime> showtimes;
 
     public MovieRespDto(MovieRespDto dto) {
 	this.setId(dto.getId());
@@ -48,9 +41,7 @@ public class MovieRespDto extends BaseDto {
 	this.setDuration(dto.getDuration());
 	this.setActors(dto.getActors());
 	this.setPicturePaths(dto.getPicturePaths());
-	this.setShowtimes(dto.getShowtimes());
 	this.setCreatedAt(dto.getCreatedAt());
 	this.setUpdatedAt(dto.getUpdatedAt());
     }
-
 }

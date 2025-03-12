@@ -1,5 +1,6 @@
 package ma.cinecamera.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import ma.cinecamera.dto.req.ScreeningRoomReqDto;
@@ -15,9 +16,9 @@ public interface IScreeningRoomService {
 
     ScreeningRoomRespDto getScreeningRoomDetail(Long id);
 
-    ScreeningRoomRespDto createScreeningRoom(ScreeningRoomReqDto dto);
+    ScreeningRoomRespDto createScreeningRoom(ScreeningRoomReqDto dto) throws IOException;
 
-    ScreeningRoomRespDto updateScreeningRoom(Long id, ScreeningRoomReqDto dto);
+    ScreeningRoomRespDto updateScreeningRoom(Long id, ScreeningRoomReqDto dto) throws IOException;
 
     GlobalResp deleteScreeningRoom(Long id);
 

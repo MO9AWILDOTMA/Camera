@@ -15,4 +15,7 @@ public class PaymentReqDto {
     @NotNull(message = "User id is required")
     private Long userId;
 
+    @NotNull(message = "Payment currency is required")
+    private String currency;
+
 }

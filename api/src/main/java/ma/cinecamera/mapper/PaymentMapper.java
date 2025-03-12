@@ -9,8 +9,9 @@ import ma.cinecamera.dto.req.PaymentReqDto;
 import ma.cinecamera.dto.resp.PaymentRespDto;
 import ma.cinecamera.model.Payment;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { ReservationMapper.class, UserMapper.class, TransactionMapper.class })
 public interface PaymentMapper {
+
     @Mapping(target = "id", source = "entity.id")
     @Mapping(target = "createdAt", source = "entity.createdAt")
     @Mapping(target = "updatedAt", source = "entity.updatedAt")
@@ -18,8 +19,5 @@ public interface PaymentMapper {
 
     Payment DtoToEntity(PaymentReqDto dto);
 
-    @Mapping(target = "id", source = "entity.id")
-    @Mapping(target = "createdAt", source = "entity.createdAt")
-    @Mapping(target = "updatedAt", source = "entity.updatedAt")
     List<PaymentRespDto> entitiesToDto(List<Payment> entities);
 }

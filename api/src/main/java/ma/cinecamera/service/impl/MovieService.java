@@ -137,7 +137,8 @@ public class MovieService implements IMovieService {
 	fileService.deleteAllFiles(id, MediaType.MOVIE);
 
 	repository.delete(existingMovie);
-	return GlobalResp.builder().message("Movie deleted succussfully").build();
+	return GlobalResp.builder().message("Movie deleted succussfully").id(id).createdAt(existingMovie.getCreatedAt())
+		.updatedAt(existingMovie.getUpdatedAt()).build();
     }
 
     @Override

@@ -9,7 +9,7 @@ import ma.cinecamera.dto.req.ShowtimeReqDto;
 import ma.cinecamera.dto.resp.ShowtimeRespDto;
 import ma.cinecamera.model.Showtime;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { MovieMapper.class, DiscountMapper.class, ScreeningRoomMapper.class })
 public interface ShowtimeMapper {
     @Mapping(target = "id", source = "entity.id")
     @Mapping(target = "createdAt", source = "entity.createdAt")
@@ -18,8 +18,5 @@ public interface ShowtimeMapper {
 
     Showtime DtoToEntity(ShowtimeReqDto dto);
 
-    @Mapping(target = "id", source = "entity.id")
-    @Mapping(target = "createdAt", source = "entity.createdAt")
-    @Mapping(target = "updatedAt", source = "entity.updatedAt")
     List<ShowtimeRespDto> entitiesToDto(List<Showtime> entities);
 }

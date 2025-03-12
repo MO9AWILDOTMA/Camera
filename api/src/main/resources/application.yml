@@ -4,7 +4,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+
   servlet:
     multipart:
       max-file-size: 10MB
@@ -39,3 +40,7 @@ movie:
   file:
     upload:
       directory: "src/main/resources/static/images/movies"
+
+youcanpay:
+  public-key: 'your-public-key'
+  private-key: 'your-private-key'

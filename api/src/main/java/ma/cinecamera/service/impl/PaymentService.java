@@ -17,11 +17,16 @@ import ma.cinecamera.exception.ResourceValidationException;
 import ma.cinecamera.mapper.PaymentMapper;
 import ma.cinecamera.model.Payment;
 import ma.cinecamera.model.Reservation;
+import ma.cinecamera.model.Ticket;
 import ma.cinecamera.model.User;
 import ma.cinecamera.model.enums.PaymentStatus;
+import ma.cinecamera.model.enums.ReservationStatus;
 import ma.cinecamera.repository.PaymentRepository;
+import ma.cinecamera.repository.ReservationRepository;
 import ma.cinecamera.service.IPaymentService;
 import ma.cinecamera.service.IReservationService;
+import ma.cinecamera.service.ITicketService;
+import ma.cinecamera.service.ITransactionService;
 import ma.cinecamera.service.IUserService;
 import ma.cinecamera.validation.PaymentValidator;
 
@@ -32,6 +37,9 @@ public class PaymentService implements IPaymentService {
     private PaymentRepository repository;
 
     @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
     private PaymentMapper mapper;
 
     @Autowired
@@ -39,6 +47,12 @@ public class PaymentService implements IPaymentService {
 
     @Autowired
     private IReservationService reservationService;
+
+    @Autowired
+    private ITransactionService transactionService;
+
+    @Autowired
+    private ITicketService ticketService;
 
     @Autowired
     private PaymentValidator validator;
@@ -66,17 +80,29 @@ public class PaymentService implements IPaymentService {
 	User user = userService.getById(userId);
 	Reservation reservation = reservationService.getById(dto.getReservationId());
 
-	if (!validator.checkIfThereIsPaymentPending(userId)) {
+	if (validator.checkIfThereIsPaymentPending(userId)) {
 	    throw new ResourceValidationException("Cannot create two Payments in the same time");
 	}
 
+//	TransactionReq transactionReq = TransactionReq.builder().amount(dto.getAmount()).orderId(dto.getReservationId())
+//		.currency(dto.getCurrency())
+//		.customer(new TransactionUserDto(user.getFirstName() + " " + user.getLastName(), user.getEmail()))
+//		.build();
+//	Transaction transaction = transactionService.genrateToken(transactionReq);
+//	payment.setTransaction(transaction);
+
+	Ticket ticket = ticketService.createTicket(ticketService.buildTicket(reservation));
+
 	Payment payment = mapper.DtoToEntity(dto);
 
+	reservation.setStatus(ReservationStatus.CONFIRMED);
+	reservation.setTicket(ticket);
 	payment.setUser(user);
 	payment.setReservation(reservation);
-	payment.setStatus(PaymentStatus.IN_PROGRESS);
+	payment.setStatus(PaymentStatus.CONFIRMED);
 
 	Payment savedPayment = repository.save(payment);
+	reservationRepository.save(reservation);
 	return mapper.entityToDto(savedPayment);
     }
 
@@ -88,7 +114,7 @@ public class PaymentService implements IPaymentService {
 	Reservation reservation = reservationService.getById(dto.getReservationId());
 
 	if (!userId.equals(payment.getUser().getId())) {
-	    if (!validator.checkIfThereIsPaymentPending(userId)) {
+	    if (validator.checkIfThereIsPaymentPending(userId)) {
 		throw new ResourceValidationException("Cannot create two Payments in the same time");
 	    }
 	    payment.setUser(user);
@@ -106,7 +132,8 @@ public class PaymentService implements IPaymentService {
 	Payment payment = getById(id);
 
 	repository.delete(payment);
-	return GlobalResp.builder().message("Payment deleted successfully").build();
+	return GlobalResp.builder().message("Payment deleted successfully").id(id).createdAt(payment.getCreatedAt())
+		.updatedAt(payment.getUpdatedAt()).build();
     }
 
     @Override

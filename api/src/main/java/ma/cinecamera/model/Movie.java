@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -42,7 +43,7 @@ public class Movie extends BaseEntity {
 
     @Column(name = "genres", nullable = false)
     @NotNull(message = "Movie Genre is required")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Genre> genres;
 
@@ -60,6 +61,7 @@ public class Movie extends BaseEntity {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore // Ignore this field during serialization
     private List<Showtime> showtimes;
 
 }

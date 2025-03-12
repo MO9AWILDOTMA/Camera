@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class FileService implements IFileService {
 
 	String uniqueFileName = UUID.randomUUID().toString() + "_" + System.currentTimeMillis() + "_"
 		+ imageFile.getOriginalFilename();
-	Path uploadPath = Path.of(uploadDirectory);
+	Path uploadPath = Paths.get(uploadDirectory);
 	Path filePath = uploadPath.resolve(uniqueFileName);
 
 	if (!Files.exists(uploadPath)) {
@@ -56,7 +57,7 @@ public class FileService implements IFileService {
     @Transactional
     public void saveFiles(MultipartFile[] files, Long ownerId, MediaType type, String uploadDirectory)
 	    throws IOException {
-	Path uploadPath = Path.of(uploadDirectory);
+	Path uploadPath = Paths.get(uploadDirectory);
 	if (!Files.exists(uploadPath)) {
 	    Files.createDirectories(uploadPath);
 	}
@@ -76,7 +77,12 @@ public class FileService implements IFileService {
 
     @Override
     public List<String> getFilePaths(Long ownerId, String uploadDirectory, MediaType type) {
-	String typeName = type.toString().toLowerCase() + 's';
+	String typeName;
+	if (type.equals(MediaType.SCREENING_ROOM)) {
+	    typeName = "screeningRooms";
+	} else {
+	    typeName = type.toString().toLowerCase() + 's';
+	}
 	return mediaRepository.findByMediaTypeAndOwnerId(type, ownerId).stream()
 		.map(media -> "/images/" + typeName + "/" + ownerId + "/" + media.getName())
 		.collect(Collectors.toList());
@@ -107,7 +113,7 @@ public class FileService implements IFileService {
 	    deleteFileFromServer(m.getDirectory(), m.getName());
 	});
 	mediaRepository.deleteAllInBatch(medias);
-	return GlobalResp.builder().message("Files deleted successfully").build();
+	return GlobalResp.builder().message("Files deleted successfully").id(ownerId).build();
     }
 
     @Override

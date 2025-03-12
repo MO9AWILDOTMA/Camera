@@ -66,7 +66,7 @@ public class ReservationService implements IReservationService {
 	User user = userService.getById(userId);
 	Showtime showtime = showtimeService.getById(dto.getShowtimeId());
 
-	if (!validator.checkIfThereIsReservationPending(userId)) {
+	if (validator.checkIfThereIsReservationPending(userId)) {
 	    throw new ResourceValidationException("Cannot create two Reservations in the same time");
 	}
 
@@ -88,7 +88,7 @@ public class ReservationService implements IReservationService {
 	Showtime showtime = showtimeService.getById(dto.getShowtimeId());
 
 	if (!userId.equals(reservation.getUser().getId())) {
-	    if (!validator.checkIfThereIsReservationPending(userId)) {
+	    if (validator.checkIfThereIsReservationPending(userId)) {
 		throw new ResourceValidationException("Cannot create two Reservations in the same time");
 	    }
 	    reservation.setUser(user);
@@ -96,6 +96,7 @@ public class ReservationService implements IReservationService {
 
 	reservation.setShowtime(showtime);
 	reservation.setStatus(dto.getStatus());
+	reservation.setSeat(dto.getSeat());
 
 	Reservation updatedReservation = repository.save(reservation);
 	return mapper.entityToDto(updatedReservation);
@@ -106,7 +107,8 @@ public class ReservationService implements IReservationService {
 	Reservation reservation = getById(id);
 
 	repository.delete(reservation);
-	return GlobalResp.builder().message("Reservation deleted successfully").build();
+	return GlobalResp.builder().message("Reservation deleted successfully").id(id)
+		.createdAt(reservation.getCreatedAt()).updatedAt(reservation.getUpdatedAt()).build();
     }
 
     @Override

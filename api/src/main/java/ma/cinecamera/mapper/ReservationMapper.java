@@ -9,7 +9,7 @@ import ma.cinecamera.dto.req.ReservationReqDto;
 import ma.cinecamera.dto.resp.ReservationRespDto;
 import ma.cinecamera.model.Reservation;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { TicketMapper.class })
 public interface ReservationMapper {
     @Mapping(target = "id", source = "entity.id")
     @Mapping(target = "createdAt", source = "entity.createdAt")
@@ -18,8 +18,5 @@ public interface ReservationMapper {
 
     Reservation DtoToEntity(ReservationReqDto dto);
 
-    @Mapping(target = "id", source = "entity.id")
-    @Mapping(target = "createdAt", source = "entity.createdAt")
-    @Mapping(target = "updatedAt", source = "entity.updatedAt")
     List<ReservationRespDto> entitiesToDto(List<Reservation> entities);
 }

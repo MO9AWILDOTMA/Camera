@@ -49,7 +49,7 @@ public class UserController {
 	return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @Secured("ROLE_CINEPHILE")
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/admin/users/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.delete(id));

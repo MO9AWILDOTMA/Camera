@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ma.cinecamera.dto.req.ShowtimeReqDto;
@@ -18,11 +19,13 @@ import ma.cinecamera.model.Movie;
 import ma.cinecamera.model.ScreeningRoom;
 import ma.cinecamera.model.Showtime;
 import ma.cinecamera.repository.ShowtimeRepository;
+import ma.cinecamera.service.IDiscountService;
 import ma.cinecamera.service.IMovieService;
 import ma.cinecamera.service.IScreeningRoomService;
 import ma.cinecamera.service.IShowtimeService;
 import ma.cinecamera.validation.ShowtimeValidator;
 
+@Service
 public class ShowtimeService implements IShowtimeService {
 
     @Autowired
@@ -33,6 +36,9 @@ public class ShowtimeService implements IShowtimeService {
 
     @Autowired
     private IScreeningRoomService screeningRoomService;
+
+    @Autowired
+    private IDiscountService discountService;
 
     @Autowired
     private ShowtimeMapper mapper;
@@ -72,7 +78,7 @@ public class ShowtimeService implements IShowtimeService {
 	Movie movie = movieService.getMovieById(dto.getMovieId());
 	ScreeningRoom sRoom = screeningRoomService.getById(dto.getScreeningRoomId());
 
-	if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
+	if (validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 	    throw new ResourceValidationException(
 		    "Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	}
@@ -80,6 +86,7 @@ public class ShowtimeService implements IShowtimeService {
 
 	showtime.setMovie(movie);
 	showtime.setScreeningRoom(sRoom);
+	showtime.setDiscounts(discountService.getDiscounts(dto.getDiscountIds()));
 
 	Showtime savedShowtime = repository.save(showtime);
 
@@ -102,12 +109,12 @@ public class ShowtimeService implements IShowtimeService {
 	Boolean sRoomChecker = dto.getScreeningRoomId().equals(showtime.getScreeningRoom().getId());
 
 	if (!dateChecker || !sRoomChecker) {
-	    if (!validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
+	    if (validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 		throw new ResourceValidationException(
 			"Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	    }
 	}
-
+	showtime.setDiscounts(discountService.getDiscounts(dto.getDiscountIds()));
 	showtime.setPrice(dto.getPrice());
 	showtime.setDateTime(dto.getDateTime());
 	showtime.setMovie(movie);
@@ -124,7 +131,8 @@ public class ShowtimeService implements IShowtimeService {
 
 	repository.delete(showtime);
 
-	return GlobalResp.builder().id(id).message("Showtime deleted successfully").build();
+	return GlobalResp.builder().id(id).message("Showtime deleted successfully").id(id)
+		.createdAt(showtime.getCreatedAt()).updatedAt(showtime.getUpdatedAt()).build();
     }
 
 }

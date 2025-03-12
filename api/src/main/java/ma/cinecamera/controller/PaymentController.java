@@ -33,7 +33,7 @@ public class PaymentController {
 	return ResponseEntity.ok(service.getAll(page, size));
     }
 
-    @Secured("ROLE_CINEPHINLE")
+    @Secured("ROLE_CINEPHILE")
     @PostMapping("/cinephile/payments")
     public ResponseEntity<?> store(@RequestBody @Valid PaymentReqDto dto) {
 	return ResponseEntity.ok(service.create(dto));
@@ -45,7 +45,7 @@ public class PaymentController {
 	return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @Secured("ROLE_CINEPHINLE")
+    @Secured("ROLE_CINEPHILE")
     @PutMapping("/cinephile/payments/cancel/{id}")
     public ResponseEntity<?> cancelPayment(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.cancelPayment(id));

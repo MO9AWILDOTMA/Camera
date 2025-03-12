@@ -128,7 +128,9 @@ public class UserService implements IUserService {
     public GlobalResp delete(Long id) {
 	User user = getById(id);
 	repository.delete(user);
-	return GlobalResp.builder().message("User deleted successfully").id(id).build();
+	fileService.deleteAllFiles(id, MediaType.USER);
+	return GlobalResp.builder().message("User deleted successfully").id(id).createdAt(user.getCreatedAt())
+		.updatedAt(user.getUpdatedAt()).build();
     }
 
     @Override
@@ -139,7 +141,8 @@ public class UserService implements IUserService {
 	user.setRoles(roles);
 
 	repository.save(user);
-	return GlobalResp.builder().message("Roles assigned successfully").id(id).build();
+	return GlobalResp.builder().message("Roles assigned successfully").id(id).createdAt(user.getCreatedAt())
+		.updatedAt(user.getUpdatedAt()).build();
     }
 
     @Override

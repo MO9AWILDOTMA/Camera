@@ -66,7 +66,7 @@ public class AuthService implements IAuthService {
 
 	String encodedPass = encoder.encode(dto.getPassword());
 
-	User user = mapper.DtoToentity(dto);
+	User user = mapper.DtoToEntity(dto);
 	user.setPassword(encodedPass);
 
 	// Add default USER role

@@ -3,7 +3,6 @@ package ma.cinecamera.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +42,7 @@ public class ShowtimeController {
     }
 
     @Secured("ROLE_MODERATOR")
-    @PutMapping(value = "/moderator/showtimes/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/moderator/showtimes/{id}")
     public ResponseEntity<?> update(@RequestBody @Valid ShowtimeReqDto dto, @PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.updateShowtime(id, dto));
     }

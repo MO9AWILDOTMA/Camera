@@ -3,6 +3,8 @@ package ma.cinecamera.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -37,6 +39,14 @@ public class Reservation extends BaseEntity {
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Payment payment;
 
+    @JsonManagedReference
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Ticket ticket;
+
+    @Column(name = "seat", nullable = false)
+    @NotNull(message = "Reservation Seat is required")
+    private String seat;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -44,5 +54,6 @@ public class Reservation extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     @NotNull(message = "Reservation Status is required")
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 }

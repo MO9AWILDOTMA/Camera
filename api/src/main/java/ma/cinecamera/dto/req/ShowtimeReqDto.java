@@ -1,6 +1,7 @@
 package ma.cinecamera.dto.req;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,4 +20,6 @@ public class ShowtimeReqDto {
 
     @NotNull(message = "Screening Room Price is required")
     private Long screeningRoomId;
+
+    private List<Long> discountIds;
 }

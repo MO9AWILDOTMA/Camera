@@ -11,4 +11,7 @@ public class ReservationReqDto {
 
     @NotNull(message = "User id is required")
     private Long userId;
+
+    @NotNull(message = "Reservation Seat is required")
+    private String seat;
 }
