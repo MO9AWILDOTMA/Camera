@@ -83,7 +83,7 @@ public class UserService implements IUserService {
 
     private String getPicturePath(Long id) {
 	List<String> pathList = fileService.getFilePaths(id, uploadDirectory, MediaType.USER);
-	return pathList != null && pathList.size() > 0 ? pathList.getFirst() : "";
+	return pathList != null && pathList.size() > 0 ? pathList.get(0) : "";
     }
 
     @Override

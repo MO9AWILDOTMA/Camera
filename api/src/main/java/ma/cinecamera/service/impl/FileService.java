@@ -90,7 +90,7 @@ public class FileService implements IFileService {
 
     @Override
     public GlobalResp deleteFileFromServer(String imageDirectory, String imageName) {
-	Path imagePath = Path.of(imageDirectory, imageName);
+	Path imagePath = Paths.get(imageDirectory, imageName);
 
 	if (Files.exists(imagePath)) {
 	    try {
