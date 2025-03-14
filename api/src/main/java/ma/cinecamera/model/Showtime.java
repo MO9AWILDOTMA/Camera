@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,6 +24,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ma.cinecamera.model.enums.ShowVersion;
 
 @Getter
 @Setter
@@ -54,5 +57,10 @@ public class Showtime extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "screening_room_id", nullable = false)
     private ScreeningRoom screeningRoom;
+
+    @Column(name = "show_version", nullable = false)
+    @NotNull(message = "Showtime Version is required")
+    @Enumerated(EnumType.STRING)
+    private ShowVersion showVersion;
 
 }

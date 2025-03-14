@@ -119,6 +119,7 @@ public class ShowtimeService implements IShowtimeService {
 	showtime.setDateTime(dto.getDateTime());
 	showtime.setMovie(movie);
 	showtime.setScreeningRoom(sRoom);
+	showtime.setShowVersion(dto.getShowVersion());
 
 	Showtime savedShowtime = repository.save(showtime);
 

@@ -3,9 +3,12 @@ package ma.cinecamera.dto.req;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import ma.cinecamera.model.enums.ShowVersion;
 
 @Data
 public class ShowtimeReqDto {
@@ -20,6 +23,10 @@ public class ShowtimeReqDto {
 
     @NotNull(message = "Screening Room Price is required")
     private Long screeningRoomId;
+
+    @NotNull(message = "Showtime Version is required")
+    @Enumerated(EnumType.STRING)
+    private ShowVersion showVersion;
 
     private List<Long> discountIds;
 }
