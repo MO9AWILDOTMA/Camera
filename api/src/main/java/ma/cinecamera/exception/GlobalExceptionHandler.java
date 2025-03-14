@@ -78,22 +78,7 @@ public class GlobalExceptionHandler {
 	error.setTimestamp(LocalDateTime.now());
 	error.setStatus(HttpStatus.CONFLICT.value());
 	error.setMessage("Data integrity violation");
-
-	// Extract the root cause
-	Throwable rootCause = ex.getRootCause();
-	String errorMessage = "A record with this value already exists.";
-	if (rootCause instanceof ConstraintViolationException) {
-	    ConstraintViolationException constraintViolationException = (ConstraintViolationException) rootCause;
-	    String constraintName = constraintViolationException.getConstraintName();
-
-	    if (constraintName != null && constraintName.contains("uk_need1sfwodvn2yjle40es9twm")) {
-		errorMessage = "A movie with this name already exists.";
-	    }
-
-	    error.addError("name", errorMessage);
-	} else {
-	    error.addError("general", errorMessage);
-	}
+	    error.addError("general", "A record with this value already exists.");
 
 	return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
@@ -153,7 +138,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomDuplicateKeyException.class)
     public ResponseEntity<?> handleDuplicateKeyException(CustomDuplicateKeyException ex) {
-	return ResponseEntity.status(HttpStatus.CONFLICT).body("A record with this username already exists");
+	return ResponseEntity.status(HttpStatus.CONFLICT).body("A record with this email already exists");
     }
 
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
@@ -191,16 +176,6 @@ public class GlobalExceptionHandler {
 	error.setTimestamp(LocalDateTime.now());
 	error.setStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
 	error.setMessage("Http Media Type Not Supported Error: " + ex.getMessage());
-	return ResponseEntity.internalServerError().body(error);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ValidationErrorResponse> handleRuntimeException(RuntimeException exception) {
-	ValidationErrorResponse error = new ValidationErrorResponse();
-	error.setTimestamp(LocalDateTime.now());
-	error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-	error.setMessage("Runtime Error: " + exception.getMessage());
 	return ResponseEntity.internalServerError().body(error);
     }
 
