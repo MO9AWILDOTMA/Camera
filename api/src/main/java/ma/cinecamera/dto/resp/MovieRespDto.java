@@ -21,6 +21,7 @@ import ma.cinecamera.model.enums.Genre;
 @EqualsAndHashCode(callSuper = true)
 public class MovieRespDto extends BaseDto {
     private String name;
+    private String slug;
     private String description;
 
     @ElementCollection
@@ -32,16 +33,5 @@ public class MovieRespDto extends BaseDto {
     private String[] actors;
     private List<String> picturePaths;
 
-    public MovieRespDto(MovieRespDto dto) {
-	this.setId(dto.getId());
-	this.setName(dto.getName());
-	this.setDescription(dto.getDescription());
-	this.setGenres(dto.getGenres());
-	this.setReleaseDate(dto.getReleaseDate());
-	this.setDuration(dto.getDuration());
-	this.setActors(dto.getActors());
-	this.setPicturePaths(dto.getPicturePaths());
-	this.setCreatedAt(dto.getCreatedAt());
-	this.setUpdatedAt(dto.getUpdatedAt());
-    }
+    private String status;
 }

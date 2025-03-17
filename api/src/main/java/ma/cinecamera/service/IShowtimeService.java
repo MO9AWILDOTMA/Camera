@@ -13,7 +13,7 @@ public interface IShowtimeService {
 
     List<ShowtimeRespDto> getAllShowtimes(Integer page, Integer size);
 
-    ShowtimeRespDto getShowtimeDetail(Long id);
+    ShowtimeRespDto getShowtimeDetail(String slug);
 
     ShowtimeRespDto createShowtime(ShowtimeReqDto dto);
 

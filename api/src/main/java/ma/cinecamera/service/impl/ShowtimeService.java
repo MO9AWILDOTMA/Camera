@@ -2,12 +2,15 @@ package ma.cinecamera.service.impl;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.github.slugify.Slugify;
 
 import ma.cinecamera.dto.req.ShowtimeReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
@@ -18,8 +21,11 @@ import ma.cinecamera.mapper.ShowtimeMapper;
 import ma.cinecamera.model.Movie;
 import ma.cinecamera.model.ScreeningRoom;
 import ma.cinecamera.model.Showtime;
+import ma.cinecamera.model.enums.MediaType;
+import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.repository.ShowtimeRepository;
 import ma.cinecamera.service.IDiscountService;
+import ma.cinecamera.service.IFileService;
 import ma.cinecamera.service.IMovieService;
 import ma.cinecamera.service.IScreeningRoomService;
 import ma.cinecamera.service.IShowtimeService;
@@ -35,6 +41,9 @@ public class ShowtimeService implements IShowtimeService {
     private IMovieService movieService;
 
     @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
     private IScreeningRoomService screeningRoomService;
 
     @Autowired
@@ -48,6 +57,14 @@ public class ShowtimeService implements IShowtimeService {
 
     private final Logger logger = Logger.getLogger(ShowtimeService.class.getName());
 
+    @Autowired
+    private IFileService fileService;
+
+//    @Value("${movie.file.upload.directory}")
+    private final String uploadDirectory = "src/main/resources/static/images/movies";
+
+    private final Slugify slg = new Slugify();
+
     @Override
     public Showtime getById(Long id) {
 	return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Showtime Not Found"));
@@ -60,12 +77,21 @@ public class ShowtimeService implements IShowtimeService {
 	Pageable pageable = PageRequest.of(page, size);
 	List<Showtime> showtimes = repository.findAll(pageable).getContent();
 
-	return mapper.entitiesToDto(showtimes);
+	List<ShowtimeRespDto> dtos = mapper.entitiesToDto(showtimes);
+
+	return dtos.stream().map(d -> {
+	    d.getMovie().setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    return d;
+	}).collect(Collectors.toList());
     }
 
     @Override
-    public ShowtimeRespDto getShowtimeDetail(Long id) {
-	return mapper.entityToDto(getById(id));
+    public ShowtimeRespDto getShowtimeDetail(String slug) {
+	Showtime showtime = repository.findBySlug(slug)
+		.orElseThrow(() -> new ResourceNotFoundException("Showtime Not Found"));
+	ShowtimeRespDto dto = mapper.entityToDto(showtime);
+	dto.getMovie().setPicturePaths(fileService.getFilePaths(dto.getId(), uploadDirectory, MediaType.MOVIE));
+	return dto;
     }
 
     @Override
@@ -77,18 +103,29 @@ public class ShowtimeService implements IShowtimeService {
 
 	Movie movie = movieService.getMovieById(dto.getMovieId());
 	ScreeningRoom sRoom = screeningRoomService.getById(dto.getScreeningRoomId());
+	Integer totalSeats = dto.getTotalSeats();
 
 	if (validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 	    throw new ResourceValidationException(
 		    "Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	}
-	Showtime showtime = mapper.DtoToEntity(dto);
 
+	if (totalSeats > sRoom.getSeats()) {
+	    throw new ResourceValidationException(
+		    "Showtime creation failed, total seats greater than screening room seats which is: "
+			    + sRoom.getSeats());
+	}
+	Showtime showtime = mapper.DtoToEntity(dto);
+	String uniqueName = dto.getDateTime() + " " + movie.getName();
+	String slug = slg.slugify(uniqueName);
+	showtime.setSlug(slug);
 	showtime.setMovie(movie);
 	showtime.setScreeningRoom(sRoom);
 	showtime.setDiscounts(discountService.getDiscounts(dto.getDiscountIds()));
-
+	showtime.setTotalSeats(totalSeats);
 	Showtime savedShowtime = repository.save(showtime);
+	movie.updateStatus();
+	movieRepository.save(movie);
 
 	return mapper.entityToDto(savedShowtime);
     }
@@ -120,20 +157,28 @@ public class ShowtimeService implements IShowtimeService {
 	showtime.setMovie(movie);
 	showtime.setScreeningRoom(sRoom);
 	showtime.setShowVersion(dto.getShowVersion());
+	showtime.setSpecialEvent(dto.isSpecialEvent());
+	showtime.setPreview(dto.isPreview());
+	showtime.setTotalSeats(dto.getTotalSeats());
+	String uniqueName = dto.getDateTime() + " " + movie.getName();
+	String slug = slg.slugify(uniqueName);
+	showtime.setSlug(slug);
 
 	Showtime savedShowtime = repository.save(showtime);
-
+	movie.updateStatus();
+	movieRepository.save(movie);
 	return mapper.entityToDto(savedShowtime);
     }
 
     @Override
     public GlobalResp deleteShowtime(Long id) {
 	Showtime showtime = getById(id);
-
+	Movie movie = showtime.getMovie();
 	repository.delete(showtime);
 
+	movie.updateStatus();
+	movieRepository.save(movie);
 	return GlobalResp.builder().id(id).message("Showtime deleted successfully").id(id)
 		.createdAt(showtime.getCreatedAt()).updatedAt(showtime.getUpdatedAt()).build();
     }
-
 }

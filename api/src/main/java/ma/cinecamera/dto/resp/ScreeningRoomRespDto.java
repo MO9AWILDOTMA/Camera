@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class ScreeningRoomRespDto extends BaseDto {
     private String name;
+    private String slug;
     private Integer seats;
     private List<String> picturePaths;
 }

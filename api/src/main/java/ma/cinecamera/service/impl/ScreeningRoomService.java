@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.slugify.Slugify;
+
 import ma.cinecamera.dto.req.ScreeningRoomReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.ScreeningRoomRespDto;
@@ -38,6 +40,8 @@ public class ScreeningRoomService implements IScreeningRoomService {
 //  @Value("${screeningRoom.file.upload.directory}")
     private final String uploadDirectory = "src/main/resources/static/images/screeningRooms";
 
+    private final Slugify slg = new Slugify();
+
     @Override
     public ScreeningRoom getById(Long id) {
 	return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Screening Room Not Found"));
@@ -59,8 +63,10 @@ public class ScreeningRoomService implements IScreeningRoomService {
     }
 
     @Override
-    public ScreeningRoomRespDto getScreeningRoomDetail(Long id) {
-	ScreeningRoomRespDto respDto = mapper.entityToDto(getById(id));
+    public ScreeningRoomRespDto getScreeningRoomDetail(String slug) {
+	ScreeningRoom sRoom = repository.findBySlug(slug)
+		.orElseThrow(() -> new ResourceNotFoundException("Screening Room Not Found"));
+	ScreeningRoomRespDto respDto = mapper.entityToDto(sRoom);
 
 	// Set image paths in the response DTO
 	String uniqueUploadDir = uploadDirectory + "/" + respDto.getId();
@@ -73,6 +79,7 @@ public class ScreeningRoomService implements IScreeningRoomService {
     public ScreeningRoomRespDto createScreeningRoom(ScreeningRoomReqDto dto) throws IOException {
 	ScreeningRoom sRoom = mapper.DtoToEntity(dto);
 
+	sRoom.setSlug(slg.slugify(sRoom.getName()));
 	ScreeningRoom savedScreeningRoom = repository.save(sRoom);
 
 	String uniqueUploadDir = uploadDirectory + "/" + savedScreeningRoom.getId();
@@ -96,6 +103,7 @@ public class ScreeningRoomService implements IScreeningRoomService {
 
 	sRoom.setName(dto.getName());
 	sRoom.setSeats(dto.getSeats());
+	sRoom.setSlug(slg.slugify(sRoom.getName()));
 
 	ScreeningRoom updatedRoom = repository.save(sRoom);
 

@@ -30,9 +30,9 @@ public class ShowtimeController {
 	return ResponseEntity.ok(service.getAllShowtimes(page, size));
     }
 
-    @GetMapping("/user/showtimes/{id}")
-    public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
-	return ResponseEntity.ok(service.getShowtimeDetail(id));
+    @GetMapping("/user/showtimes/{slug}")
+    public ResponseEntity<?> show(@PathVariable(name = "slug") String slug) {
+	return ResponseEntity.ok(service.getShowtimeDetail(slug));
     }
 
     @Secured("ROLE_MODERATOR")

@@ -14,7 +14,7 @@ public interface IScreeningRoomService {
 
     List<ScreeningRoomRespDto> getAllScreeningRooms(Integer page, Integer size);
 
-    ScreeningRoomRespDto getScreeningRoomDetail(Long id);
+    ScreeningRoomRespDto getScreeningRoomDetail(String slug);
 
     ScreeningRoomRespDto createScreeningRoom(ScreeningRoomReqDto dto) throws IOException;
 

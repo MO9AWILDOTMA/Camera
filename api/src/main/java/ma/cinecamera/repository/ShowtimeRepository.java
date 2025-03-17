@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ma.cinecamera.model.Showtime;
 
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
+    Optional<Showtime> findBySlug(String slug);
 
     Optional<Showtime> findByDateTimeAndScreeningRoomId(LocalDateTime dateTime, Long screeningRoomId);
 }
