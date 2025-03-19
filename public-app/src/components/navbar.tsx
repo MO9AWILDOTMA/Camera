@@ -33,6 +33,7 @@ function NavItem({ children, href, setOpen }: NavItemProps) {
   return (
     <li>
       <Typography
+        {...({} as any)}
         as="a"
         onClick={() => {
           setOpen(false);
@@ -105,6 +106,7 @@ export function Navbar() {
 
   return (
     <MTNavbar
+      {...({} as any)}
       shadow={false}
       fullWidth
       blurred={false}
@@ -135,10 +137,13 @@ export function Navbar() {
         </ul>
         <div className="hidden items-center gap-4 lg:flex">
           <a href="https://www.cinecamera.ma" target="_blank">
-            <Button color={isScrolling ? "gray" : "white"}>book now!</Button>
+            <Button {...({} as any)} color={isScrolling ? "gray" : "white"}>
+              book now!
+            </Button>
           </a>
         </div>
         <IconButton
+          {...({} as any)}
           variant="text"
           color={isScrolling ? "gray" : "white"}
           onClick={handleOpen}
@@ -163,7 +168,9 @@ export function Navbar() {
           </ul>
           <div className="mt-6 flex items-center gap-4">
             <a href="https://www.cinecamera.ma" target="_blank">
-              <Button color="gray">book now!</Button>
+              <Button {...({} as any)} color="gray">
+                book now!
+              </Button>
             </a>
           </div>
         </div>

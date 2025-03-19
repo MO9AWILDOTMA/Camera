@@ -27,6 +27,7 @@ export function Footer() {
             {LINKS.map((link, index) => (
               <li key={index}>
                 <Typography
+                  {...({} as any)}
                   as="a"
                   onClick={() => handleNavigation(link)}
                   variant="small"
@@ -39,21 +40,22 @@ export function Footer() {
             ))}
           </ul>
           <div className="flex w-fit justify-center gap-2">
-            <IconButton size="sm" color="gray" variant="text">
+            <IconButton {...({} as any)} size="sm" color="gray" variant="text">
               <i className="fa-brands fa-twitter text-lg" />
             </IconButton>
-            <IconButton size="sm" color="gray" variant="text">
+            <IconButton {...({} as any)} size="sm" color="gray" variant="text">
               <i className="fa-brands fa-youtube text-lg" />
             </IconButton>
-            <IconButton size="sm" color="gray" variant="text">
+            <IconButton {...({} as any)} size="sm" color="gray" variant="text">
               <i className="fa-brands fa-instagram text-lg" />
             </IconButton>
-            <IconButton size="sm" color="gray" variant="text">
+            <IconButton {...({} as any)} size="sm" color="gray" variant="text">
               <i className="fa-brands fa-github text-lg" />
             </IconButton>
           </div>
         </div>
         <Typography
+          {...({} as any)}
           color="blue-gray"
           className="text-center mt-12 font-normal !text-gray-700"
         >

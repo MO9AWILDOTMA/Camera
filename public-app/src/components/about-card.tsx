@@ -19,8 +19,9 @@ export function AboutCard({
 }: AboutCardProp) {
   const picture = BASE_URL + picturePaths[0];
   return (
-    <Card shadow={false}>
+    <Card {...({} as any)} shadow={false}>
       <CardBody
+        {...({} as any)}
         className="h-[453px] p-5 flex flex-col justify-center items-center rounded-2xl bg-gray-900"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("${picture}")`,
@@ -28,19 +29,30 @@ export function AboutCard({
           backgroundColor: "#cccccc",
         }}
       >
-        <Typography variant="h6" className="mb-4 text-center" color="white">
+        <Typography
+          {...({} as any)}
+          variant="h6"
+          className="mb-4 text-center"
+          color="white"
+        >
           {status}
         </Typography>
-        <Typography variant="h4" className="text-center" color="white">
+        <Typography
+          {...({} as any)}
+          variant="h4"
+          className="text-center"
+          color="white"
+        >
           {name}
         </Typography>
         <Typography
+          {...({} as any)}
           color="white"
           className="mt-2 mb-10 text-base w-full lg:w-8/12 text-center font-normal"
         >
           {description}
         </Typography>
-        <Button color="white" size="sm">
+        <Button {...({} as any)} color="white" size="sm">
           view details
         </Button>
       </CardBody>

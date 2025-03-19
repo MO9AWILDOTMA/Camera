@@ -130,6 +130,7 @@ function Hero() {
       <div className="grid min-h-screen px-8">
         <div className="container relative z-10 my-auto mx-auto grid place-items-center text-center">
           <Typography
+            {...({} as any)}
             placeholder=""
             variant="h3"
             color="white"
@@ -138,6 +139,7 @@ function Hero() {
             {currentMovie.status}
           </Typography>
           <Typography
+            {...({} as any)}
             placeholder=""
             variant="h1"
             color="white"
@@ -146,6 +148,7 @@ function Hero() {
             {currentMovie.title}
           </Typography>
           <Typography
+            {...({} as any)}
             placeholder=""
             variant="lead"
             color="white"
@@ -155,6 +158,7 @@ function Hero() {
           </Typography>
           <div className="flex items-center gap-4">
             <Button
+              {...({} as any)}
               placeholder=""
               onClick={() => {
                 handleCtaClick(currentMovie.slug);
@@ -165,6 +169,7 @@ function Hero() {
               {currentMovie.cta}
             </Button>
             <IconButton
+              {...({} as any)}
               placeholder=""
               className="rounded-full bg-white p-6"
               color="white"
@@ -178,6 +183,7 @@ function Hero() {
       {/* Navigation */}
       <div className="absolute inset-x-0 bottom-16 flex justify-center items-center gap-4 z-20">
         <IconButton
+          {...({} as any)}
           placeholder=""
           variant="text"
           color="white"
@@ -199,6 +205,7 @@ function Hero() {
         </div>
 
         <IconButton
+          {...({} as any)}
           placeholder=""
           variant="text"
           color="white"
