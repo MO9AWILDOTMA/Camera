@@ -5,6 +5,7 @@ import AboutCard from "@/components/about-card";
 import { useEffect, useState } from "react";
 import { fetchShowtimes } from "@/apis/fetchShowtimes";
 import { Movie, MovieStatus } from "@/models/Movie";
+import Showtime from "@/models/Showtime";
 
 const EVENT_INFO: Movie[] = [
   {
@@ -36,7 +37,7 @@ export function AboutEvent() {
       try {
         const resp = await fetchShowtimes();
         let movieArray: Movie[] = [];
-        resp.data.forEach((showtime) => {
+        resp.data.forEach((showtime: Showtime) => {
           movieArray.push(showtime.movie);
         });
         setMovies(movieArray);

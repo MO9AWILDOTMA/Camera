@@ -48,7 +48,9 @@ function Hero() {
   const [loading, setLoading] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const [movies, setMovies] = useState<HeroMovie[]>(initialCarouselContent);
-  const [currentMovie, setCurrentMovie] = useState<HeroMovie>(movies[0]);
+  const [currentMovie, setCurrentMovie] = useState<HeroMovie>(
+    initialCarouselContent[0]
+  );
   const router = useRouter();
 
   // Memoize the slide functions
@@ -73,9 +75,11 @@ function Hero() {
     const getMovies = async () => {
       try {
         const resp = await fetchUpcomingMovies();
-        const mappedMovies = movieMapper(resp.data);
-        setMovies(mappedMovies);
-        setCurrentMovie(mappedMovies[0]); // Set initial movie
+        if (resp.data.length > 0) {
+          const mappedMovies = movieMapper(resp.data);
+          setMovies(mappedMovies);
+          setCurrentMovie(mappedMovies[0]);
+        }
       } catch (error) {
         console.error("Failed to fetch movies:", error);
         // Keep using initial content in case of error
