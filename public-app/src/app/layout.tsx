@@ -4,6 +4,8 @@ import { Roboto } from "next/font/google";
 import { Layout } from "@/components/layout";
 import { FixedPlugin } from "@/components/fixed-plugin";
 import { Footer, Navbar } from "@/components";
+import { Suspense } from "react";
+import Loading from "@/components/loading";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -35,7 +37,7 @@ export default function RootLayout({
       <body className={roboto.className}>
         <Layout>
           <Navbar />
-          {children}
+          <Suspense fallback={<Loading />}>{children}</Suspense>
           <FixedPlugin />
           <Footer />
         </Layout>

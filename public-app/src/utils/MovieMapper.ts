@@ -20,7 +20,6 @@ export const movieMapper = (movies: Partial<Movie[]>): HeroMovie[] => {
             heroMovies.push(heroMovie);
         }
     })
-    console.log(heroMovies);
     
     return heroMovies;
 }

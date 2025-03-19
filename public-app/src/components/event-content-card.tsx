@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Typography,
@@ -6,23 +7,32 @@ import {
   CardBody,
   Avatar,
 } from "@material-tailwind/react";
+import InstagramEmbed from "./instagramEmbed";
 
-interface EventContentCardProps {
+interface TestimonialsCardProps {
+  id: string;
   title: string;
   des: string;
   name: string;
   position: string;
   panel: string;
   img: string;
+  url: string;
 }
-export function EventContentCard({
+
+export function TestimonialsCard({
   title,
   des,
   name,
   position,
   panel,
   img,
-}: EventContentCardProps) {
+  url,
+}: TestimonialsCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const onMouseEnter = () => setIsHovered(true);
+  const onMouseLeave = () => setIsHovered(false);
+
   return (
     <Card
       color="transparent"
@@ -32,15 +42,34 @@ export function EventContentCard({
       <CardHeader
         floated={false}
         shadow={false}
-        className="h-[32rem] max-w-[28rem] shrink-0"
+        className="h-[32rem] max-w-[28rem] shrink-0 relative"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
-        <Image
-          width={768}
-          height={768}
-          src={img}
-          alt="testimonial image"
-          className="h-full w-full object-cover"
-        />
+        <div
+          className="absolute inset-0 z-10"
+          style={{
+            opacity: isHovered ? 1 : 0,
+            transition: "opacity 0.3s ease",
+          }}
+        >
+          <InstagramEmbed url={url} />
+        </div>
+        <div
+          className="relative h-full w-full"
+          style={{
+            opacity: isHovered ? 0 : 1,
+            transition: "opacity 0.3s ease",
+          }}
+        >
+          <Image
+            width={768}
+            height={768}
+            src={img}
+            alt="testimonial image"
+            className="h-full w-full object-cover"
+          />
+        </div>
       </CardHeader>
       <CardBody className="col-span-full lg:col-span-3">
         <Typography variant="h6" color="blue-gray" className="mb-4">
@@ -55,8 +84,8 @@ export function EventContentCard({
         <div className="flex items-center gap-4">
           <Avatar
             variant="circular"
-            src="/logos/spotify-logo.png"
-            alt="spotify"
+            src="/logos/camera-logo.jpg"
+            alt="camera"
             size="lg"
           />
           <div>
@@ -72,5 +101,3 @@ export function EventContentCard({
     </Card>
   );
 }
-
-export default EventContentCard;

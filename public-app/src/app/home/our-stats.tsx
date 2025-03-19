@@ -5,26 +5,26 @@ import StatsCard from "@/components/stats-card";
 
 const STATS = [
   {
-    count: "1,500+",
-    title: "Participants",
+    count: "1938",
+    title: "Opened",
   },
   {
-    count: "50",
-    title: "Speakers",
+    count: "600+",
+    title: "Capacity",
   },
   {
-    count: "20+",
-    title: "Workshops",
+    count: "2021",
+    title: "Reopened",
   },
   {
-    count: "3",
-    title: "Days",
+    count: "80+",
+    title: "Age",
   },
 ];
 
 export function OurStats() {
   return (
-    <section className="container mx-auto grid gap-10 px-8 py-44 lg:grid-cols-1 lg:gap-20 xl:grid-cols-2 xl:place-items-center">
+    <section className="container mx-auto grid gap-10 px-8 py-36 lg:grid-cols-1 lg:gap-20 xl:grid-cols-2 xl:place-items-center">
       <div>
         <Typography variant="h6" color="orange" className="mb-6 font-medium">
           Our Stats
@@ -33,15 +33,16 @@ export function OurStats() {
           className="text-5xl font-bold leading-tight lg:w-3/4"
           color="blue-gray"
         >
-          Conference Highlights
+          Historical Significance
         </Typography>
         <Typography
           variant="lead"
           className="mt-3 w-full !text-gray-500 lg:w-9/12"
         >
-          This three-day extravaganza brings together the brightest minds,
-          leading innovators, and top companies in the field of Artificial
-          Intelligence.
+          A relic of Morocco’s golden age of cinema (1930s–1960s), Cinema Caméra
+          originally screened French, Egyptian, and Hollywood films. It
+          symbolizes Meknes’ role in Morocco’s cinematic heritage and the
+          revival of historic theaters
         </Typography>
       </div>
       <div>

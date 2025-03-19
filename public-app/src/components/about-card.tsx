@@ -1,25 +1,38 @@
-import {
-  Card,
-  CardBody,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
 
 interface AboutCardProp {
-  title: string;
-  subTitle: string;
+  name: string;
+  status: string;
   description: string;
+  slug: string;
+  picturePaths: string[];
 }
 
-export function AboutCard({ title, description, subTitle }: AboutCardProp) {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+export function AboutCard({
+  name,
+  description,
+  status,
+  slug,
+  picturePaths,
+}: AboutCardProp) {
+  const picture = BASE_URL + picturePaths[0];
   return (
     <Card shadow={false}>
-      <CardBody className="h-[453px] p-5 flex flex-col justify-center items-center rounded-2xl bg-gray-900 ">
+      <CardBody
+        className="h-[453px] p-5 flex flex-col justify-center items-center rounded-2xl bg-gray-900"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("${picture}")`,
+          backgroundSize: "cover",
+          backgroundColor: "#cccccc",
+        }}
+      >
         <Typography variant="h6" className="mb-4 text-center" color="white">
-          {subTitle}
+          {status}
         </Typography>
         <Typography variant="h4" className="text-center" color="white">
-          {title}
+          {name}
         </Typography>
         <Typography
           color="white"
@@ -34,6 +47,5 @@ export function AboutCard({ title, description, subTitle }: AboutCardProp) {
     </Card>
   );
 }
-
 
 export default AboutCard;
