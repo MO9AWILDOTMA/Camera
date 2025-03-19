@@ -17,12 +17,17 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ url }) => {
       document.body.appendChild(script);
     } else {
       // If script exists, process the new embed
-      if (window.instgrm) {
-        window.instgrm.Embeds.process();
+      if ((window as any).instgrm) {
+        (window as any).instgrm.Embeds.process();
       }
     }
   }, [url]); // Re-run when URL changes
 
+  const width = [
+    "99.375%",
+    "-webkit-calc(100% - 2px)",
+    "calc(100% - 2px)",
+  ].join("; ");
   return (
     <blockquote
       className="instagram-media"
@@ -38,9 +43,7 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ url }) => {
         maxWidth: "540px",
         minWidth: "326px",
         padding: "0",
-        width: "99.375%",
-        width: "-webkit-calc(100% - 2px)",
-        width: "calc(100% - 2px)",
+        width,
       }}
     >
       <div style={{ padding: "16px" }}>

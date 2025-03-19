@@ -35,11 +35,13 @@ export function TestimonialsCard({
 
   return (
     <Card
+      {...({} as any)}
       color="transparent"
       shadow={false}
       className="lg:!flex-row mb-10 lg:items-end"
     >
       <CardHeader
+        {...({} as any)}
         floated={false}
         shadow={false}
         className="h-[32rem] max-w-[28rem] shrink-0 relative"
@@ -71,28 +73,51 @@ export function TestimonialsCard({
           />
         </div>
       </CardHeader>
-      <CardBody className="col-span-full lg:col-span-3">
-        <Typography variant="h6" color="blue-gray" className="mb-4">
+      <CardBody {...({} as any)} className="col-span-full lg:col-span-3">
+        <Typography
+          variant="h6"
+          {...({} as any)}
+          color="blue-gray"
+          className="mb-4"
+        >
           {panel}
         </Typography>
-        <Typography variant="h2" color="blue-gray" className="mb-4 font-medium">
+        <Typography
+          {...({} as any)}
+          variant="h2"
+          color="blue-gray"
+          className="mb-4 font-medium"
+        >
           {title}
         </Typography>
-        <Typography className="mb-12 md:w-8/12 font-medium !text-gray-500">
+        <Typography
+          {...({} as any)}
+          className="mb-12 md:w-8/12 font-medium !text-gray-500"
+        >
           {des}
         </Typography>
         <div className="flex items-center gap-4">
           <Avatar
+            {...({} as any)}
             variant="circular"
             src="/logos/camera-logo.jpg"
             alt="camera"
             size="lg"
           />
           <div>
-            <Typography variant="h6" color="blue-gray" className="mb-0.5">
+            <Typography
+              {...({} as any)}
+              variant="h6"
+              color="blue-gray"
+              className="mb-0.5"
+            >
               {name}
             </Typography>
-            <Typography variant="small" className="font-normal !text-gray-500">
+            <Typography
+              {...({} as any)}
+              variant="small"
+              className="font-normal !text-gray-500"
+            >
               {position}
             </Typography>
           </div>

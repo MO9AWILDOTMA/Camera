@@ -53,13 +53,24 @@ export function AboutEvent() {
   }, []);
   return (
     <section className="container mx-auto flex flex-col items-center px-4 py-10">
-      <Typography variant="h6" className="text-center mb-2" color="orange">
+      <Typography
+        {...({} as any)}
+        variant="h6"
+        className="text-center mb-2"
+        color="orange"
+      >
         About the movie theater
       </Typography>
-      <Typography variant="h3" className="text-center" color="blue-gray">
+      <Typography
+        {...({} as any)}
+        variant="h3"
+        className="text-center"
+        color="blue-gray"
+      >
         Why It Matters?
       </Typography>
       <Typography
+        {...({} as any)}
         variant="lead"
         className="mt-2 lg:max-w-4xl mb-8 w-full text-center font-normal !text-gray-500"
       >
