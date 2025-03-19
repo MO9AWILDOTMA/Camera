@@ -29,4 +29,13 @@ public class ShowtimeReqDto {
     private ShowVersion showVersion;
 
     private List<Long> discountIds;
+
+    @NotNull(message = "Showtime Total Seats is required")
+    private int totalSeats;
+
+    @NotNull(message = "Please set true if it is preview or false if isnt")
+    private boolean isPreview;
+
+    @NotNull(message = "Please set true if it is special event or false if isnt")
+    private boolean isSpecialEvent;
 }

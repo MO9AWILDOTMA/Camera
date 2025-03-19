@@ -33,9 +33,15 @@ public class MovieController {
 	return ResponseEntity.ok(service.getAllMovies(page, size));
     }
 
-    @GetMapping("/user/movies/{id}")
-    public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
-	return ResponseEntity.ok(service.getMovieDetail(id));
+    @GetMapping("/user/movies/upcoming")
+    public ResponseEntity<?> get(@RequestParam(defaultValue = "1", name = "page") Integer page,
+	    @RequestParam(defaultValue = "3", name = "size") Integer size) {
+	return ResponseEntity.ok(service.currentAndUpcomingmovies(page, size));
+    }
+
+    @GetMapping("/user/movies/{slug}")
+    public ResponseEntity<?> show(@PathVariable(name = "slug") String slug) {
+	return ResponseEntity.ok(service.getMovieDetail(slug));
     }
 
     @Secured("ROLE_MODERATOR")

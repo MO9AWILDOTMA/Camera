@@ -24,6 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ma.cinecamera.model.enums.Genre;
+import ma.cinecamera.model.enums.MovieStatus;
+import ma.cinecamera.utils.MovieStatusManager;
 
 @Getter
 @Setter
@@ -38,7 +40,13 @@ public class Movie extends BaseEntity {
     @NotNull(message = "Movie Name is required")
     private String name;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "slug", nullable = false, unique = true)
+    @NotBlank(message = "Movie Slug is required")
+    @NotNull(message = "Movie Slug is required")
+    private String slug;
+
+    @Column(name = "description", nullable = false)
+    @NotNull(message = "Movie Description is required")
     private String description;
 
     @Column(name = "genres", nullable = false)
@@ -63,5 +71,11 @@ public class Movie extends BaseEntity {
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore // Ignore this field during serialization
     private List<Showtime> showtimes;
+
+    private MovieStatus status;
+
+    public void updateStatus() {
+	this.status = MovieStatusManager.determineStatus(this);
+    }
 
 }

@@ -1,6 +1,7 @@
 package ma.cinecamera.service.impl;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.slugify.Slugify;
+
 import lombok.AllArgsConstructor;
 import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
@@ -21,6 +24,7 @@ import ma.cinecamera.mapper.MovieMapper;
 import ma.cinecamera.model.Movie;
 import ma.cinecamera.model.enums.Genre;
 import ma.cinecamera.model.enums.MediaType;
+import ma.cinecamera.model.enums.MovieStatus;
 import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.service.IFileService;
 import ma.cinecamera.service.IMovieService;
@@ -43,14 +47,17 @@ public class MovieService implements IMovieService {
 
     private final Logger logger = Logger.getLogger(MovieService.class.getName());
 
+    private final Slugify slg = new Slugify();
+
     @Override
     public Movie getMovieById(Long id) {
 	return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Movie Not Found"));
     }
 
     @Override
-    public MovieRespDto getMovieDetail(Long id) {
-	MovieRespDto respDto = mapper.entityToDto(getMovieById(id));
+    public MovieRespDto getMovieDetail(String slug) {
+	Movie movie = repository.findBySlug(slug).orElseThrow(() -> new ResourceNotFoundException("Movie Not Found"));
+	MovieRespDto respDto = mapper.entityToDto(movie);
 
 	// Set image paths in the response DTO
 	respDto.setPicturePaths(fileService.getFilePaths(respDto.getId(), uploadDirectory, MediaType.MOVIE));
@@ -83,6 +90,9 @@ public class MovieService implements IMovieService {
 	// Map DTO to entity
 	Movie movie = mapper.DtoToEntity(dto);
 
+	movie.setStatus(MovieStatus.COMING_SOON);
+	movie.setSlug(slg.slugify(movie.getName()));
+
 	// Save the movie entity
 	Movie savedMovie = repository.save(movie);
 
@@ -109,12 +119,15 @@ public class MovieService implements IMovieService {
 	}
 	Movie existingMovie = getMovieById(id);
 
-	existingMovie.setName(dto.getName());
+	String name = dto.getName();
+	existingMovie.setName(name);
+	existingMovie.setSlug(slg.slugify(name));
 	existingMovie.setDescription(dto.getDescription());
 	existingMovie.setGenres(dto.getGenres());
 	existingMovie.setReleaseDate(dto.getReleaseDate());
 	existingMovie.setDuration(dto.getDuration());
 	existingMovie.setActors(dto.getActors());
+	existingMovie.setStatus(dto.getStatus());
 
 	Movie updatedMovie = repository.save(existingMovie);
 
@@ -153,9 +166,23 @@ public class MovieService implements IMovieService {
 	Genre targetGenre = genre.equalsIgnoreCase("all") ? null : Genre.valueOf(genre.toUpperCase());
 
 	return respDto.stream().map(d -> {
-	    MovieRespDto newDto = new MovieRespDto(d);
-	    newDto.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
-	    return newDto;
+	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    return d;
 	}).filter(m -> targetGenre == null || m.getGenres().contains(targetGenre)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MovieRespDto> currentAndUpcomingmovies(Integer page, Integer size) {
+	page = page > 0 ? page - 1 : 0;
+	size = size < 3 ? 3 : size;
+	Pageable pageable = PageRequest.of(page, size);
+	List<MovieRespDto> moviesDtos = mapper
+		.entitiesToDto(repository.findMoviesWithUpcomingShowtimes(LocalDateTime.now(), pageable));
+
+	return moviesDtos.stream().map(d -> {
+	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    return d;
+	}).collect(Collectors.toList());
+
     }
 }

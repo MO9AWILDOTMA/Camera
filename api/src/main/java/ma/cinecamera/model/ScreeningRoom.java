@@ -33,6 +33,11 @@ public class ScreeningRoom extends BaseEntity {
     @NotNull(message = "Screening Room Name is required")
     private String name;
 
+    @Column(name = "slug", nullable = false, unique = true)
+    @NotBlank(message = "Screening Room Slug is required")
+    @NotNull(message = "Screening Room Slug is required")
+    private String slug;
+
     @Column(name = "seats", nullable = false)
     @NotNull(message = "Screening Room Seats is required")
     private Integer seats;

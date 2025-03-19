@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 import ma.cinecamera.model.enums.Genre;
+import ma.cinecamera.model.enums.MovieStatus;
 
 @Data
 public class MovieReqDto {
@@ -20,6 +21,8 @@ public class MovieReqDto {
     @NotEmpty(message = "movie name cannot be empty")
     private String name;
 
+    @NotNull(message = "Movie Description is required")
+    @NotEmpty(message = "movie Description cannot be empty")
     private String description;
 
     @NotNull(message = "movie genre cannot be null")
@@ -38,4 +41,6 @@ public class MovieReqDto {
     private String[] actors;
 
     private MultipartFile[] imageFiles;
+
+    private MovieStatus status;
 }

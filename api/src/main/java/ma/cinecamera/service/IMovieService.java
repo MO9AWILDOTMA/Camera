@@ -15,7 +15,7 @@ public interface IMovieService {
 
     Movie getMovieById(Long id);
 
-    MovieRespDto getMovieDetail(Long id);
+    MovieRespDto getMovieDetail(String slug);
 
     List<MovieRespDto> getAllMovies(Integer page, Integer size);
 
@@ -26,5 +26,7 @@ public interface IMovieService {
     GlobalResp deleteMovie(Long id);
 
     List<MovieRespDto> search(String q, String genre, Integer page, Integer size);
+
+    List<MovieRespDto> currentAndUpcomingmovies(Integer page, Integer size);
 
 }

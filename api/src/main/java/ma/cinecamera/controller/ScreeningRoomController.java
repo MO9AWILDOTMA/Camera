@@ -33,9 +33,9 @@ public class ScreeningRoomController {
 	return ResponseEntity.ok(service.getAllScreeningRooms(page, size));
     }
 
-    @GetMapping("/user/screeningRooms/{id}")
-    public ResponseEntity<?> show(@PathVariable(name = "id") Long id) {
-	return ResponseEntity.ok(service.getScreeningRoomDetail(id));
+    @GetMapping("/user/screeningRooms/{slug}")
+    public ResponseEntity<?> show(@PathVariable(name = "slug") String slug) {
+	return ResponseEntity.ok(service.getScreeningRoomDetail(slug));
     }
 
     @Secured("ROLE_MODERATOR")
