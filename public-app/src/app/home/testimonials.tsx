@@ -69,7 +69,7 @@ const EVENT_CONTENT = [
 ];
 
 // Function to split the array into chunks of 3
-const chunkArray = (array, size) => {
+const chunkArray = (array: any, size: number) => {
   const result = [];
   for (let i = 0; i < array.length; i += size) {
     result.push(array.slice(i, i + size));
@@ -90,9 +90,10 @@ export default function TestimonialTabs() {
     if (groupedContent && groupedContent[parseInt(tab)]) {
       setCurrentContent(groupedContent[parseInt(tab)]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
-  const handleChange = (value) => {
+  const handleChange = (value: string) => {
     setTab(value);
   };
 
@@ -101,12 +102,13 @@ export default function TestimonialTabs() {
       {/* Tabs Header */}
       <Tabs
         value={tab}
-        onChange={(value) => handleChange(value)}
+        onChange={(value: string) => handleChange(value)}
         className="px-8"
       >
-        <TabsHeader>
+        <TabsHeader {...({} as any)}>
           {groupedContent.map((group, index) => (
             <Tab
+              {...({} as any)}
               key={index}
               value={index.toString()}
               onClick={() => setTab(index.toString())}
@@ -119,7 +121,7 @@ export default function TestimonialTabs() {
 
       {/* Content for the Selected Tab */}
       <div>
-        {currentContent.map((props) => (
+        {currentContent.map((props: any) => (
           <TestimonialsCard key={props.id} {...props} />
         ))}
       </div>
