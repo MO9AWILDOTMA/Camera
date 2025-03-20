@@ -1,0 +1,146 @@
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0f0f1a;
+    color: #ffffff;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  .construction-banner {
+    background-color: #ffd000;
+    color: #000000;
+    padding: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 30px 0;
+    transform: rotate(-2deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  .logo-placeholder {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 50px 0 30px;
+    color: #ff5500;
+  }
+  .cinema-icon {
+    font-size: 5rem;
+    margin: 20px 0;
+  }
+  .description {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 40px;
+  }
+  .coming-soon {
+    font-size: 2.2rem;
+    margin: 30px 0;
+    color: #ff5500;
+  }
+  .footer {
+    margin-top: 100px;
+    font-size: 0.9rem;
+    color: #aaaaaa;
+  }
+  .tape {
+    height: 30px;
+    background-color: #ffd000;
+    margin: 0 auto;
+    position: relative;
+    width: 100px;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 20px;
+    right: 100px;
+  }
+  .tape-left {
+    transform: rotate(-45deg);
+    left: 100px;
+    right: auto;
+  }
+  .construction-area {
+    position: relative;
+    margin: 50px 0;
+    border: 5px dashed #ffd000;
+    padding: 40px 20px;
+  }
+  .countdown {
+    font-size: 1.5rem;
+    margin: 30px 0;
+  }
+  .social-links {
+    margin: 30px 0;
+  }
+  .social-links a {
+    color: #ffffff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+  .social-links a:hover {
+    color: #ff5500;
+  }
+  @media (max-width: 768px) {
+    .tape {
+      display: none;
+    }
+    .construction-banner {
+      transform: none;
+    }
+  }
+</style>
+<body>
+  <div class="container">
+    <div class="logo-placeholder">
+      <img
+        src="../../../assets/images/logo/logo.jpg"
+        width="200"
+        height="200"
+        style="border-radius: 100%"
+        alt="Camera logo"
+      />
+    </div>
+
+    <div class="construction-area">
+      <div class="tape"></div>
+      <div class="tape tape-left"></div>
+
+      <div class="construction-banner">SITE EN CONSTRUCTION</div>
+
+      <div class="cinema-icon">🎬</div>
+
+      <h1 class="coming-soon">OUVERTURE PROCHAINE</h1>
+
+      <p class="description">
+        Nous travaillons actuellement sur une nouvelle expérience de réservation
+        de cinéma camera en ligne. Bientôt, vous pourrez réserver vos places de
+        cinéma en quelques clics !
+      </p>
+
+      <div class="countdown">Lancement prévu : Printemps 2025</div>
+    </div>
+
+    <div class="social-links">
+      <a href="https://www.facebook.com/@Cinema.camera1/">Facebook</a>
+      <a
+        href="https://www.instagram.com/cinema.camera?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+        >Instagram</a
+      >
+      <a href="https://www.linkedin.com/in/benfill/">Linkedin</a>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 CinéCamera. Tous droits réservés.</p>
+      <p>
+        Pour nous contacter :
+        <a href="mailto:contact@cinecamera.ma">{{ "contact@cinecamera.ma" }}</a>
+      </p>
+    </div>
+  </div>
+</body>
