@@ -1,15 +1,15 @@
-import { log } from "console";
 import React, { useState, useRef, useEffect } from "react";
 
 interface SearchProps {
+  selectedGenre: string; // Controlled selected genre
   initialGenre?: string;
   genres?: string[];
   placeholder?: string;
-  onSearch?: (selectedGenre: string, searchTerm: string) => void;
-  searching: boolean;
+  onSearch: (selectedGenre: string, searchTerm: string) => void; // Callback for search
 }
 
 const Search: React.FC<SearchProps> = ({
+  selectedGenre,
   initialGenre = "",
   genres = [
     "ACTION",
@@ -34,34 +34,24 @@ const Search: React.FC<SearchProps> = ({
     "WESTERN",
   ],
   placeholder = "Search movies...",
-  onSearch = () => {},
-  searching = false,
+  onSearch,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedGenre, setSelectedGenre] = useState<string>(initialGenre);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [localSearchTerm, setLocalSearchTerm] = useState(""); // Local state for input value
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (searching) onSearch(selectedGenre, searchTerm);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, selectedGenre]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleGenreSelect = (genre: string) => {
-    setSelectedGenre(genre);
+    onSearch(genre, localSearchTerm); // Notify parent of genre change
     setIsOpen(false);
   };
 
   const handleSearch = () => {
-    onSearch(selectedGenre, searchTerm);
+    onSearch(selectedGenre, localSearchTerm); // Notify parent of search
   };
-
-  // Display text for selected genre
-  const displayText = selectedGenre || "Genre";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -92,7 +82,7 @@ const Search: React.FC<SearchProps> = ({
             onClick={toggleDropdown}
           >
             <span className="text-ellipsis overflow-hidden max-w-[100px]">
-              {displayText}
+              {selectedGenre || "Genre"}
             </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -144,11 +134,11 @@ const Search: React.FC<SearchProps> = ({
           type="text"
           className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pr-12 pl-28 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
           placeholder={placeholder}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={localSearchTerm} // Controlled by local state
+          onChange={(e) => setLocalSearchTerm(e.target.value)} // Update local state
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              handleSearch();
+              handleSearch(); // Trigger search on Enter
             }
           }}
         />
@@ -156,7 +146,7 @@ const Search: React.FC<SearchProps> = ({
         <button
           className="absolute right-1 top-1 rounded bg-slate-800 p-1.5 border border-transparent text-center text-sm text-black transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           type="button"
-          onClick={handleSearch}
+          onClick={handleSearch} // Trigger search on button click
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

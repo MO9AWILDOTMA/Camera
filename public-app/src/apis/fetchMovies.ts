@@ -76,12 +76,16 @@ export const fetchMovieDetails = async (slug: string)=> {
 }
 
 
-export const fetchMovies = async () => {
+export const fetchMovies = async (size:number = 3, page: number = 1) => {
     try {
         if (!BASE_URL) {
             throw new Error('API Base URL is not configured. Please check your environment variables.');
         }
-        const response = await axios(SHOW_MOVIE);
+        const response = await axios(SHOW_MOVIE, {
+            params: {
+                page,
+                size
+            }});
         return response;
     } catch (error) {
         console.error('Error fetching movies:', error);

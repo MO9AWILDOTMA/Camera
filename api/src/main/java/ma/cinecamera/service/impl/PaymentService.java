@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ma.cinecamera.dto.req.PaymentReqDto;
 import ma.cinecamera.dto.req.PaymentUpdateDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.PaymentRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.exception.ResourceValidationException;
@@ -65,13 +67,16 @@ public class PaymentService implements IPaymentService {
     }
 
     @Override
-    public List<PaymentRespDto> getAll(Integer page, Integer size) {
+    public ListResponse getAll(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<Payment> payments = repository.findAll(pageable).getContent();
+	Page<Payment> res = repository.findAll(pageable);
+	List<Payment> payments = res.getContent();
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
 	List<PaymentRespDto> respDto = mapper.entitiesToDto(payments);
-	return respDto;
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
     }
 
     @Override

@@ -1,10 +1,9 @@
 package ma.cinecamera.service;
 
-import java.util.List;
-
 import ma.cinecamera.dto.req.ReservationReqDto;
 import ma.cinecamera.dto.req.ReservationUpdateDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.ReservationRespDto;
 import ma.cinecamera.model.Reservation;
 
@@ -16,7 +15,7 @@ public interface IReservationService {
 
     ReservationRespDto update(Long id, ReservationUpdateDto dto);
 
-    List<ReservationRespDto> getAll(Integer page, Integer size);
+    ListResponse getAll(Integer page, Integer size);
 
     GlobalResp delete(Long id);
 

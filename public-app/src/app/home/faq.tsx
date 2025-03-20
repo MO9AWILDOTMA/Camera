@@ -67,6 +67,7 @@ export function Faq() {
             >
               <AccordionHeader
                 {...({} as any)}
+                key={key}
                 className="text-left text-gray-900"
               >
                 {title}

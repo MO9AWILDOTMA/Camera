@@ -1,9 +1,8 @@
 package ma.cinecamera.service;
 
-import java.util.List;
-
 import ma.cinecamera.dto.req.TransactionReq;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.TransactionResp;
 import ma.cinecamera.model.Transaction;
 import ma.cinecamera.model.enums.TransactionStatus;
@@ -12,7 +11,7 @@ public interface ITransactionService {
 
     Transaction getById(Long id);
 
-    List<TransactionResp> getAll(Integer page, Integer size);
+    ListResponse getAll(Integer page, Integer size);
 
     TransactionResp getDetail(Long id);
 

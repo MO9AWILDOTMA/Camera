@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.github.slugify.Slugify;
 
 import ma.cinecamera.dto.req.ScreeningRoomReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.ScreeningRoomRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.ScreeningRoomMapper;
@@ -48,18 +50,20 @@ public class ScreeningRoomService implements IScreeningRoomService {
     }
 
     @Override
-    public List<ScreeningRoomRespDto> getAllScreeningRooms(Integer page, Integer size) {
+    public ListResponse getAllScreeningRooms(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<ScreeningRoom> sRooms = repository.findAll(pageable).getContent();
-
-	List<ScreeningRoomRespDto> respDto = mapper.entitiesToDto(sRooms);
-
-	return respDto.stream().map(d -> {
+	Page<ScreeningRoom> res = repository.findAll(pageable);
+	List<ScreeningRoom> sRooms = res.getContent();
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
+	List<ScreeningRoomRespDto> respDto = mapper.entitiesToDto(sRooms).stream().map(d -> {
 	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.SCREENING_ROOM));
 	    return d;
 	}).collect(Collectors.toList());
+
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
     }
 
     @Override

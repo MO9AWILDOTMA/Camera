@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ma.cinecamera.dto.req.RolesDto;
 import ma.cinecamera.dto.req.UserReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.UserRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.UserMapper;
@@ -59,17 +61,20 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserRespDto> getAll(Integer page, Integer size) {
+    public ListResponse getAll(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-
-	List<User> users = repository.findAll(pageable).getContent();
-	List<UserRespDto> respDto = mapper.entitiesToDto(users);
-	return respDto.stream().map(d -> {
+	Page<User> res = repository.findAll(pageable);
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
+	List<User> users = res.getContent();
+	List<UserRespDto> respDto = mapper.entitiesToDto(users).stream().map(d -> {
 	    d.setPicture(getPicturePath(d.getId()));
 	    return d;
 	}).collect(Collectors.toList());
+
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
     }
 
     @Override
