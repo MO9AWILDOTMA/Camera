@@ -3,7 +3,11 @@ package ma.cinecamera.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
@@ -29,5 +33,9 @@ public interface IMovieService {
     ListResponse search(String q, String genre, Integer page, Integer size);
 
     List<MovieRespDto> currentAndUpcomingmovies(Integer page, Integer size);
+
+    ResponseEntity<GlobalResp> uploadMovieTrailer(MultipartFile file, Long movieId);
+
+    ResponseEntity<ResourceRegion> streamMovieTrailer(Long movieId, HttpHeaders headers);
 
 }

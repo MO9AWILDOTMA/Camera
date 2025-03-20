@@ -20,6 +20,7 @@ import ma.cinecamera.dto.resp.ScreeningRoomRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.ScreeningRoomMapper;
 import ma.cinecamera.model.ScreeningRoom;
+import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.ScreeningRoomRepository;
 import ma.cinecamera.service.IFileService;
@@ -40,7 +41,7 @@ public class ScreeningRoomService implements IScreeningRoomService {
     private final Logger logger = Logger.getLogger(ScreeningRoom.class.getName());
 
 //  @Value("${screeningRoom.file.upload.directory}")
-    private final String uploadDirectory = "src/main/resources/static/images/screeningRooms";
+    private final String uploadDirectory = "uploads/images/screeningRooms";
 
     private final Slugify slg = new Slugify();
 
@@ -83,6 +84,10 @@ public class ScreeningRoomService implements IScreeningRoomService {
     public ScreeningRoomRespDto createScreeningRoom(ScreeningRoomReqDto dto) throws IOException {
 	ScreeningRoom sRoom = mapper.DtoToEntity(dto);
 
+	if (dto.getImageFiles() == null || dto.getImageFiles().length == 0) {
+	    throw new IllegalArgumentException("No image files provided");
+	}
+
 	sRoom.setSlug(slg.slugify(sRoom.getName()));
 	ScreeningRoom savedScreeningRoom = repository.save(sRoom);
 
@@ -90,7 +95,7 @@ public class ScreeningRoomService implements IScreeningRoomService {
 
 	// Save associated image files
 	fileService.saveFiles(dto.getImageFiles(), savedScreeningRoom.getId(), MediaType.SCREENING_ROOM,
-		uniqueUploadDir);
+		MediaCategory.IMAGE, uniqueUploadDir);
 
 	ScreeningRoomRespDto respDto = mapper.entityToDto(savedScreeningRoom);
 
@@ -113,7 +118,8 @@ public class ScreeningRoomService implements IScreeningRoomService {
 
 	String uniqueUploadDir = uploadDirectory + "/" + updatedRoom.getId();
 
-	fileService.updateFiles(dto.getImageFiles(), updatedRoom.getId(), MediaType.SCREENING_ROOM, uniqueUploadDir);
+	fileService.updateFiles(dto.getImageFiles(), updatedRoom.getId(), MediaType.SCREENING_ROOM, MediaCategory.IMAGE,
+		uniqueUploadDir);
 	ScreeningRoomRespDto respDto = mapper.entityToDto(updatedRoom);
 
 	// Set image paths in the response DTO

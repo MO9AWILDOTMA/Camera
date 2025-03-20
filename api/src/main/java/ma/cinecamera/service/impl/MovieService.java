@@ -1,18 +1,30 @@
 package ma.cinecamera.service.impl;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRange;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.slugify.Slugify;
 
@@ -23,10 +35,13 @@ import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.MovieMapper;
+import ma.cinecamera.model.Media;
 import ma.cinecamera.model.Movie;
 import ma.cinecamera.model.enums.Genre;
+import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.model.enums.MovieStatus;
+import ma.cinecamera.repository.MediaRepository;
 import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.service.IFileService;
 import ma.cinecamera.service.IMovieService;
@@ -45,12 +60,17 @@ public class MovieService implements IMovieService {
     private IFileService fileService;
 
 //    @Value("${movie.file.upload.directory}")
-    private final String uploadDirectory = "src/main/resources/static/images/movies";
+    private final String IMAGES_UPLOAD_DIR = "uploads/images/movies";
+
+    private static final String TRAILER_UPLOAD_DIR = "uploads/trailers/";
 
     @SuppressWarnings("unused")
     private final Logger logger = Logger.getLogger(MovieService.class.getName());
 
     private final Slugify slg = new Slugify();
+
+    @Autowired
+    private MediaRepository mediaRepository;
 
     @Override
     public Movie getMovieById(Long id) {
@@ -63,7 +83,7 @@ public class MovieService implements IMovieService {
 	MovieRespDto respDto = mapper.entityToDto(movie);
 
 	// Set image paths in the response DTO
-	respDto.setPicturePaths(fileService.getFilePaths(respDto.getId(), uploadDirectory, MediaType.MOVIE));
+	respDto.setPicturePaths(fileService.getFilePaths(respDto.getId(), IMAGES_UPLOAD_DIR, MediaType.MOVIE));
 
 	return respDto;
     }
@@ -80,7 +100,7 @@ public class MovieService implements IMovieService {
 	Integer totalPages = res.getTotalPages();
 
 	List<MovieRespDto> respDto = mapper.entitiesToDto(movies).stream().map(d -> {
-	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    d.setPicturePaths(fileService.getFilePaths(d.getId(), IMAGES_UPLOAD_DIR, MediaType.MOVIE));
 	    return d;
 	}).collect(Collectors.toList());
 
@@ -105,10 +125,11 @@ public class MovieService implements IMovieService {
 	// Save the movie entity
 	Movie savedMovie = repository.save(movie);
 
-	String uniqueUploadDir = uploadDirectory + "/" + savedMovie.getId();
+	String uniqueUploadDir = IMAGES_UPLOAD_DIR + "/" + savedMovie.getId();
 
 	// Save associated image files
-	fileService.saveFiles(dto.getImageFiles(), savedMovie.getId(), MediaType.MOVIE, uniqueUploadDir);
+	fileService.saveFiles(dto.getImageFiles(), savedMovie.getId(), MediaType.MOVIE, MediaCategory.IMAGE,
+		uniqueUploadDir);
 
 	// Map the saved entity back to DTO
 	MovieRespDto respDto = mapper.entityToDto(savedMovie);
@@ -140,9 +161,10 @@ public class MovieService implements IMovieService {
 
 	Movie updatedMovie = repository.save(existingMovie);
 
-	String uniqueUploadDir = uploadDirectory + "/" + updatedMovie.getId();
+	String uniqueUploadDir = IMAGES_UPLOAD_DIR + "/" + updatedMovie.getId();
 
-	fileService.updateFiles(dto.getImageFiles(), updatedMovie.getId(), MediaType.MOVIE, uniqueUploadDir);
+	fileService.updateFiles(dto.getImageFiles(), updatedMovie.getId(), MediaType.MOVIE, MediaCategory.IMAGE,
+		uniqueUploadDir);
 
 	MovieRespDto respDto = mapper.entityToDto(updatedMovie);
 
@@ -176,7 +198,7 @@ public class MovieService implements IMovieService {
 
 	Genre targetGenre = genre.equalsIgnoreCase("all") ? null : Genre.valueOf(genre.toUpperCase());
 	List<MovieRespDto> respDto = mapper.entitiesToDto(movies).stream().map(d -> {
-	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    d.setPicturePaths(fileService.getFilePaths(d.getId(), IMAGES_UPLOAD_DIR, MediaType.MOVIE));
 	    return d;
 	}).filter(m -> targetGenre == null || m.getGenres().contains(targetGenre)).collect(Collectors.toList());
 
@@ -193,9 +215,74 @@ public class MovieService implements IMovieService {
 		.entitiesToDto(repository.findMoviesWithUpcomingShowtimes(LocalDateTime.now(), pageable));
 
 	return moviesDtos.stream().map(d -> {
-	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    d.setPicturePaths(fileService.getFilePaths(d.getId(), IMAGES_UPLOAD_DIR, MediaType.MOVIE));
 	    return d;
 	}).collect(Collectors.toList());
 
     }
+
+    @Override
+    public ResponseEntity<GlobalResp> uploadMovieTrailer(MultipartFile file, Long movieId) {
+	if (file == null || file.isEmpty()) {
+	    return ResponseEntity.badRequest().body(new GlobalResp("File is empty", false));
+	}
+
+	try {
+	    String uploadDirectory = "uploads/trailers/" + movieId;
+	    fileService.saveFiles(new MultipartFile[] { file }, movieId, MediaType.MOVIE, MediaCategory.VIDEO,
+		    uploadDirectory);
+	    return ResponseEntity.ok(new GlobalResp("Trailer uploaded successfully", true));
+	} catch (IOException e) {
+	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		    .body(new GlobalResp("File upload failed", false));
+	}
+    }
+
+    @Override
+    @GetMapping("/streamTrailer/{movieId}")
+    public ResponseEntity<ResourceRegion> streamMovieTrailer(Long movieId, HttpHeaders headers) {
+	Optional<Media> mediaOptional = mediaRepository
+		.findByMediaTypeAndOwnerIdAndMediaCategory(MediaType.MOVIE, movieId, MediaCategory.VIDEO).stream()
+		.findFirst();
+
+	if (!mediaOptional.isPresent()) {
+	    return ResponseEntity.notFound().build();
+	}
+
+	Media media = mediaOptional.get();
+	Path filePath = Paths.get(media.getDirectory()).resolve(media.getName()).normalize();
+
+	try {
+	    UrlResource videoResource = new UrlResource(filePath.toUri());
+
+	    if (!videoResource.exists()) {
+		return ResponseEntity.notFound().build();
+	    }
+
+	    // Get file size
+	    long contentLength = videoResource.contentLength();
+	    ResourceRegion region;
+
+	    // Check if the request includes a "Range" header
+	    if (headers.getRange().isEmpty()) {
+		// If no range, send the full file
+		region = new ResourceRegion(videoResource, 0, contentLength);
+	    } else {
+		// Handle partial content requests
+		HttpRange range = headers.getRange().get(0);
+		long rangeStart = range.getRangeStart(contentLength);
+		long rangeEnd = Math.min(rangeStart + (1024 * 1024), contentLength - 1); // 1MB chunks
+		region = new ResourceRegion(videoResource, rangeStart, rangeEnd - rangeStart + 1);
+	    }
+
+	    return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+		    .contentType(MediaTypeFactory.getMediaType(videoResource)
+			    .orElse(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM))
+		    .header(HttpHeaders.ACCEPT_RANGES, "bytes").body(region);
+
+	} catch (IOException e) {
+	    return ResponseEntity.internalServerError().build();
+	}
+    }
+
 }
