@@ -5,6 +5,9 @@ spring:
         dialect: ${HIBERNATE_DIALECT}
     hibernate:
       ddl-auto: ${HIBERNATE_DDL_AUTO}
+  web:
+    resources:
+      static-locations: ${STATIC_LOCATION}
   
   servlet:
     multipart:

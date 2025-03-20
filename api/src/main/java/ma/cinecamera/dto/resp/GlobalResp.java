@@ -13,5 +13,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class GlobalResp extends BaseDto {
     private String message;
+    private Boolean success;
 
 }

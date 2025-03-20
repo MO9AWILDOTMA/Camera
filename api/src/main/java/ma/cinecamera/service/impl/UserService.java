@@ -26,6 +26,7 @@ import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.UserMapper;
 import ma.cinecamera.model.Role;
 import ma.cinecamera.model.User;
+import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.RoleRepository;
 import ma.cinecamera.repository.UserRepository;
@@ -51,7 +52,7 @@ public class UserService implements IUserService {
     private PasswordEncoder encoder;
 
 //  @Value("${user.file.upload.directory}")
-    private final String uploadDirectory = "src/main/resources/static/images/users";
+    private final String uploadDirectory = "uploads/images/users";
 
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
@@ -121,7 +122,9 @@ public class UserService implements IUserService {
 
 	    files[0] = dto.getImageFile();
 
-	    fileService.updateFiles(files, id, MediaType.USER, uniqueUploadDir);
+	    fileService.updateFiles(files, id, MediaType.USER, MediaCategory.IMAGE, uniqueUploadDir);
+	} else {
+	    logger.warning("**** File isnt here **** " + dto.getImageFile());
 	}
 
 	UserRespDto respDto = mapper.entityToDto(updatedUser);

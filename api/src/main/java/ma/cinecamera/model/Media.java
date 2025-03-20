@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 
 @Getter
@@ -31,6 +32,9 @@ public class Media extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "media_type")
     private MediaType mediaType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "media_category")
+    private MediaCategory mediaCategory;
 
     @Column(name = "owner_id")
     private Long ownerId;
