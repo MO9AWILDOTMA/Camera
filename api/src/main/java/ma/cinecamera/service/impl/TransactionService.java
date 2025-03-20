@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import ma.cinecamera.dto.req.TransactionReq;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.TransactionResp;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.TransactionMapper;
@@ -49,12 +51,16 @@ public class TransactionService implements ITransactionService {
     }
 
     @Override
-    public List<TransactionResp> getAll(Integer page, Integer size) {
+    public ListResponse getAll(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<Transaction> transactions = repository.findAll(pageable).getContent();
-	return mapper.entitiesToDto(transactions);
+	Page<Transaction> res = repository.findAll(pageable);
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
+	List<Transaction> transactions = res.getContent();
+	return ListResponse.builder().totalElements(totalElements).totalPages(totalPages)
+		.content(mapper.entitiesToDto(transactions)).build();
     }
 
     @Override

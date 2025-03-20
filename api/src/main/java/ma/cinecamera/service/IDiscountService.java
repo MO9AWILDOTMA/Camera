@@ -6,12 +6,13 @@ import java.util.Set;
 import ma.cinecamera.dto.req.DiscountReqDto;
 import ma.cinecamera.dto.resp.DiscountRespDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.model.Discount;
 
 public interface IDiscountService {
     Discount getById(Long id);
 
-    List<DiscountRespDto> getAll(Integer page, Integer size);
+    ListResponse getAll(Integer page, Integer size);
 
     DiscountRespDto getDetail(Long id);
 

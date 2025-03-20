@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ma.cinecamera.dto.req.ReservationReqDto;
 import ma.cinecamera.dto.req.ReservationUpdateDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.ReservationRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.exception.ResourceValidationException;
@@ -51,13 +53,16 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<ReservationRespDto> getAll(Integer page, Integer size) {
+    public ListResponse getAll(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<Reservation> reservations = repository.findAll(pageable).getContent();
+	Page<Reservation> res = repository.findAll(pageable);
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
+	List<Reservation> reservations = res.getContent();
 	List<ReservationRespDto> respDto = mapper.entitiesToDto(reservations);
-	return respDto;
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
     }
 
     @Override

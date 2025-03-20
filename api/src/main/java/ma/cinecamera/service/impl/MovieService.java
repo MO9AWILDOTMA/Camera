@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.github.slugify.Slugify;
 import lombok.AllArgsConstructor;
 import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
+import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.MovieRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.MovieMapper;
@@ -45,6 +47,7 @@ public class MovieService implements IMovieService {
 //    @Value("${movie.file.upload.directory}")
     private final String uploadDirectory = "src/main/resources/static/images/movies";
 
+    @SuppressWarnings("unused")
     private final Logger logger = Logger.getLogger(MovieService.class.getName());
 
     private final Slugify slg = new Slugify();
@@ -66,17 +69,23 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieRespDto> getAllMovies(Integer page, Integer size) {
+    public ListResponse getAllMovies(Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<Movie> movies = repository.findAll(pageable).getContent();
-	List<MovieRespDto> respDto = mapper.entitiesToDto(movies);
 
-	return respDto.stream().map(d -> {
+	Page<Movie> res = repository.findAll(pageable);
+	List<Movie> movies = res.getContent();
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
+
+	List<MovieRespDto> respDto = mapper.entitiesToDto(movies).stream().map(d -> {
 	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
 	    return d;
 	}).collect(Collectors.toList());
+
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
+
     }
 
     @Override
@@ -155,20 +164,24 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public List<MovieRespDto> search(String q, String genre, Integer page, Integer size) {
+    public ListResponse search(String q, String genre, Integer page, Integer size) {
 	page = page > 0 ? page - 1 : 0;
 	size = size < 3 ? 3 : size;
 	Pageable pageable = PageRequest.of(page, size);
-	List<Movie> movies = repository.findByNameContainingIgnoreCase(q, pageable);
 
-	List<MovieRespDto> respDto = mapper.entitiesToDto(movies);
+	Page<Movie> res = repository.findByNameContainingIgnoreCase(q, pageable);
+	List<Movie> movies = res.getContent();
+	Long totalElements = res.getTotalElements();
+	Integer totalPages = res.getTotalPages();
 
 	Genre targetGenre = genre.equalsIgnoreCase("all") ? null : Genre.valueOf(genre.toUpperCase());
-
-	return respDto.stream().map(d -> {
+	List<MovieRespDto> respDto = mapper.entitiesToDto(movies).stream().map(d -> {
 	    d.setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
 	    return d;
 	}).filter(m -> targetGenre == null || m.getGenres().contains(targetGenre)).collect(Collectors.toList());
+
+	return ListResponse.builder().content(respDto).totalElements(totalElements).totalPages(totalPages).build();
+
     }
 
     @Override
