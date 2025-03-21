@@ -37,11 +37,10 @@ export function AboutEvent() {
       try {
         const resp = await fetchShowtimes();
         let movieArray: Movie[] = [];
-        resp.data.forEach((showtime: Showtime) => {
+        resp.data.content.forEach((showtime: Showtime) => {
           movieArray.push(showtime.movie);
         });
-        setMovies(movieArray);
-        console.log(movieArray);
+        setMovies(movieArray.length > 0 ? movieArray : EVENT_INFO);
       } catch (error) {
         console.error("Failed to fetch showtimes:", error);
       } finally {

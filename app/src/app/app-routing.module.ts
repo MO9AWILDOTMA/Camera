@@ -1,3 +1,4 @@
+import { PagesModule } from './pages/pages.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WarningComponent } from './pages/warning/warning.component';
@@ -5,7 +6,7 @@ import { WarningComponent } from './pages/warning/warning.component';
 const routes: Routes = [
   {
     path: "",
-    component: WarningComponent
+    loadChildren: () => import("./pages/pages.module").then(m => m.PagesModule)
   }
 ];
 
