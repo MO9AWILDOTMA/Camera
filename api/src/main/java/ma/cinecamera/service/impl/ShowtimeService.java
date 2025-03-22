@@ -1,5 +1,6 @@
 package ma.cinecamera.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -97,9 +98,8 @@ public class ShowtimeService implements IShowtimeService {
 	return dto;
     }
 
-    @Override
     @Transactional
-    public ShowtimeRespDto createShowtime(ShowtimeReqDto dto) {
+    private ShowtimeRespDto createShowtime(ShowtimeReqDto dto) {
 	if (dto == null) {
 	    throw new IllegalArgumentException("Movie data cannot be null");
 	}
@@ -107,6 +107,12 @@ public class ShowtimeService implements IShowtimeService {
 	Movie movie = movieService.getMovieById(dto.getMovieId());
 	ScreeningRoom sRoom = screeningRoomService.getById(dto.getScreeningRoomId());
 	Integer totalSeats = dto.getTotalSeats();
+	String uniqueName = dto.getDateTime() + " " + movie.getName();
+
+	if (totalSeats == null) {
+	    throw new ResourceValidationException(
+		    "Showtime creation failed, Show: " + uniqueName + "  total seats is required.");
+	}
 
 	if (validator.checkDateAndScreeningRoomConflict(dto.getDateTime(), sRoom.getId())) {
 	    throw new ResourceValidationException(
@@ -119,7 +125,6 @@ public class ShowtimeService implements IShowtimeService {
 			    + sRoom.getSeats());
 	}
 	Showtime showtime = mapper.DtoToEntity(dto);
-	String uniqueName = dto.getDateTime() + " " + movie.getName();
 	String slug = slg.slugify(uniqueName);
 	showtime.setSlug(slug);
 	showtime.setMovie(movie);
@@ -183,5 +188,17 @@ public class ShowtimeService implements IShowtimeService {
 	movieRepository.save(movie);
 	return GlobalResp.builder().id(id).message("Showtime deleted successfully").id(id)
 		.createdAt(showtime.getCreatedAt()).updatedAt(showtime.getUpdatedAt()).build();
+    }
+
+    @Override
+    @Transactional
+    public List<ShowtimeRespDto> createShowtimes(List<ShowtimeReqDto> dtos) {
+	List<ShowtimeRespDto> respDtos = new ArrayList<ShowtimeRespDto>();
+
+	dtos.forEach(dto -> {
+	    respDtos.add(createShowtime(dto));
+	});
+
+	return respDtos;
     }
 }

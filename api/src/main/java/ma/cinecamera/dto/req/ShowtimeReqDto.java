@@ -31,7 +31,7 @@ public class ShowtimeReqDto {
     private List<Long> discountIds;
 
     @NotNull(message = "Showtime Total Seats is required")
-    private int totalSeats;
+    private Integer totalSeats;
 
     @NotNull(message = "Please set true if it is preview or false if isnt")
     private boolean isPreview;

@@ -1,5 +1,7 @@
 package ma.cinecamera.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +39,8 @@ public class ShowtimeController {
 
     @Secured("ROLE_MODERATOR")
     @PostMapping(value = "/moderator/showtimes")
-    public ResponseEntity<?> store(@RequestBody @Valid ShowtimeReqDto dto) {
-	return ResponseEntity.ok(service.createShowtime(dto));
+    public ResponseEntity<?> store(@RequestBody @Valid List<ShowtimeReqDto> dtos) {
+	return ResponseEntity.ok(service.createShowtimes(dtos));
     }
 
     @Secured("ROLE_MODERATOR")
