@@ -1,7 +1,10 @@
 package ma.cinecamera.service.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.lowagie.text.DocumentException;
 
+import ma.cinecamera.dto.req.TicketDownloadReq;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.TicketMapper;
 import ma.cinecamera.model.Movie;
@@ -33,27 +37,40 @@ public class TicketService implements ITicketService {
     @Autowired
     private TicketMapper mapper;
 
-    @Override
-    public Ticket getTicketByCode(String code) {
-	return repository.findByUniqueCode(code).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
-    }
+    @SuppressWarnings("unused")
+    private final Logger logger = Logger.getLogger(TicketService.class.getName());
 
     @Override
-    public byte[] generateTicket(String code) throws DocumentException {
-	// Get ticket data
-	Ticket ticket = getTicketByCode(code);
+    public List<Ticket> getTicketsByCodes(List<String> codes) {
+	if (!repository.existsByUniqueCodeIn(codes)) {
+	    throw new ResourceNotFoundException("Tickets not found");
+	}
+	logger.warning("*** tickets existence checked ***");
+	return repository.findByUniqueCodeIn(codes);
+    }
+
+    /**
+     * Generates a PDF containing multiple movie tickets based on provided ticket
+     * codes
+     * 
+     * @param codes Array of ticket codes to generate tickets for
+     * @return byte array containing the generated PDF document
+     */
+    @Override
+    public byte[] generateTicket(TicketDownloadReq req) throws DocumentException {
+	logger.warning("***entered***");
+	// Get ticket data for all provided codes
+	List<Ticket> tickets = getTicketsByCodes(req.getCodes());
+
+	logger.warning("***got tickets***");
 
 	// Prepare the Thymeleaf context
 	Context context = new Context();
-	context.setVariable("ticket", ticket);
+	context.setVariable("tickets", tickets);
+	context.setVariable("logoPath", "/images/camera-logo.png");
 
-	// You can send additional data if needed
-	context.setVariable("cinemaName", "Camera");
-	context.setVariable("ticketType", ticket.getType());
-	context.setVariable("ticketCode", ticket.getUniqueCode());
-	context.setVariable("date", ticket.getTime().toLocalDate());
-	context.setVariable("time", ticket.getTime().toLocalTime());
-	context.setVariable("screeningRoom", ticket.getReservation().getShowtime().getScreeningRoom().getName());
+	// Set cinema name as a common variable
+	context.setVariable("cinemaName", "CINEMA CAMERA");
 
 	// Process HTML template with the data
 	String ticketHtml = templateEngine.process("ticket-pdf", context);
@@ -68,20 +85,35 @@ public class TicketService implements ITicketService {
 	return outputStream.toByteArray();
     }
 
-    @Override
-    public Ticket createTicket(Ticket ticket) {
+    private Ticket createTicket(Ticket ticket) {
 	Ticket savedTicket = repository.save(ticket);
 	return ticket;
     }
 
     @Override
-    public Ticket buildTicket(Reservation reservation) {
+    public List<Ticket> createTickets(List<Ticket> ticketsReq) {
+	List<Ticket> tickets = new ArrayList<Ticket>();
+	ticketsReq.forEach(t -> {
+	    tickets.add(createTicket(t));
+	});
+
+	return tickets;
+    }
+
+    @Override
+    public List<Ticket> buildTickets(Reservation reservation) {
 	User user = reservation.getUser();
 	Showtime showtime = reservation.getShowtime();
 	Movie movie = showtime.getMovie();
-	return Ticket.builder().reservation(reservation).seat(reservation.getSeat())
-		.customerName(user.getFirstName() + " " + user.getLastName()).movieTitle(movie.getName())
-		.time(showtime.getDateTime()).uniqueCode(getUniqueCode()).type("Movie").build();
+	String[] seats = reservation.getSeats();
+	List<Ticket> tickets = new ArrayList<Ticket>();
+	for (String seat : seats) {
+	    Ticket ticket = Ticket.builder().reservation(reservation).seat(seat)
+		    .customerName(user.getFirstName() + " " + user.getLastName()).movieTitle(movie.getName())
+		    .time(showtime.getDateTime()).uniqueCode(getUniqueCode()).type("Movie").build();
+	    tickets.add(ticket);
+	}
+	return tickets;
     }
 
     private String getUniqueCode() {

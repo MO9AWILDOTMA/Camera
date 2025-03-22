@@ -1,17 +1,20 @@
 package ma.cinecamera.service;
 
+import java.util.List;
+
 import com.lowagie.text.DocumentException;
 
+import ma.cinecamera.dto.req.TicketDownloadReq;
 import ma.cinecamera.model.Reservation;
 import ma.cinecamera.model.Ticket;
 
 public interface ITicketService {
 
-    Ticket getTicketByCode(String code);
+    List<Ticket> buildTickets(Reservation reservation);
 
-    Ticket createTicket(Ticket ticket);
+    List<Ticket> createTickets(List<Ticket> tickets);
 
-    byte[] generateTicket(String code) throws DocumentException;
+    byte[] generateTicket(TicketDownloadReq req) throws DocumentException;
 
-    Ticket buildTicket(Reservation reservation);
+    List<Ticket> getTicketsByCodes(List<String> codes);
 }

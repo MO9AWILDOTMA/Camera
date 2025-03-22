@@ -19,7 +19,7 @@ public class ReservationValidator {
 
     public Boolean checkIfThereIsReservationPending(Long userId) {
 
-	return repository.findByUserId(userId).isPresent();
+	return repository.findByUserIdAndStatus(userId, ReservationStatus.IN_PROGRESS).isPresent();
     }
 
     public Boolean checkIfUserAuthorizedOfCancelingReservation(Reservation reservation) {

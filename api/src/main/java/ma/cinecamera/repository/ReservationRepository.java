@@ -11,7 +11,7 @@ import ma.cinecamera.model.enums.ReservationStatus;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Optional<Reservation> findByUserId(Long UserId);
+    Optional<Reservation> findByUserIdAndStatus(Long UserId, ReservationStatus status);
 
     Long countByStatus(ReservationStatus status);
 

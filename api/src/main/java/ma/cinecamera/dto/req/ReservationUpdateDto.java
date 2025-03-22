@@ -14,7 +14,7 @@ public class ReservationUpdateDto {
     private Long userId;
 
     @NotNull(message = "Reservation Seat is required")
-    private String seat;
+    private String[] seats;
 
     @NotNull(message = "Reservation status is required")
     private ReservationStatus status;

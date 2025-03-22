@@ -96,12 +96,12 @@ public class PaymentService implements IPaymentService {
 //	Transaction transaction = transactionService.genrateToken(transactionReq);
 //	payment.setTransaction(transaction);
 
-	Ticket ticket = ticketService.createTicket(ticketService.buildTicket(reservation));
+	List<Ticket> tickets = ticketService.createTickets(ticketService.buildTickets(reservation));
 
 	Payment payment = mapper.DtoToEntity(dto);
 
 	reservation.setStatus(ReservationStatus.CONFIRMED);
-	reservation.setTicket(ticket);
+	reservation.setTickets(tickets);
 	payment.setUser(user);
 	payment.setReservation(reservation);
 	payment.setStatus(PaymentStatus.CONFIRMED);

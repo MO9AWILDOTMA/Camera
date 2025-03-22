@@ -19,7 +19,7 @@ public class PaymentValidator {
 
     public Boolean checkIfThereIsPaymentPending(Long userId) {
 
-	return repository.findByUserId(userId).isPresent();
+	return repository.findByUserIdAndStatus(userId, PaymentStatus.IN_PROGRESS).isPresent();
     }
 
     public boolean checkIfUserAuthorizedOfCancelingPayment(Payment payment) {
