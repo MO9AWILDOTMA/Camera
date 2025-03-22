@@ -1,5 +1,7 @@
 package ma.cinecamera.service;
 
+import java.util.List;
+
 import ma.cinecamera.dto.req.ShowtimeReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.ListResponse;
@@ -14,7 +16,7 @@ public interface IShowtimeService {
 
     ShowtimeRespDto getShowtimeDetail(String slug);
 
-    ShowtimeRespDto createShowtime(ShowtimeReqDto dto);
+    List<ShowtimeRespDto> createShowtimes(List<ShowtimeReqDto> dtos);
 
     ShowtimeRespDto updateShowtime(Long id, ShowtimeReqDto dto);
 

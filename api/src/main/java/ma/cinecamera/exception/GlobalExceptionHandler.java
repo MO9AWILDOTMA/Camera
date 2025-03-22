@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +77,7 @@ public class GlobalExceptionHandler {
 	error.setTimestamp(LocalDateTime.now());
 	error.setStatus(HttpStatus.CONFLICT.value());
 	error.setMessage("Data integrity violation");
-	    error.addError("general", "A record with this value already exists.");
+	error.addError("general", "A record with this value already exists.");
 
 	return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
