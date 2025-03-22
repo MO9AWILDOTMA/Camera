@@ -1,5 +1,7 @@
 package ma.cinecamera.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -40,12 +43,12 @@ public class Reservation extends BaseEntity {
     private Payment payment;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private Ticket ticket;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<Ticket> tickets;
 
-    @Column(name = "seat", nullable = false)
-    @NotNull(message = "Reservation Seat is required")
-    private String seat;
+    @Column(name = "seats", nullable = false)
+    @NotNull(message = "Reservation Seats is required")
+    private String[] seats;
 
     @JsonBackReference
     @ManyToOne

@@ -6,10 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ma.cinecamera.dto.req.TicketDownloadReq;
 import ma.cinecamera.service.ITicketService;
 
 @RestController
@@ -24,15 +25,15 @@ public class TicketController {
      * @param id Ticket Code
      * @return PDF file as response
      */
-    @GetMapping("/cinephile/tickets/{code}/download")
-    public ResponseEntity<byte[]> downloadTicket(@PathVariable("code") String code) {
+    @GetMapping("/cinephile/tickets/download")
+    public ResponseEntity<byte[]> downloadTicket(@RequestBody TicketDownloadReq req) {
 
 	try {
-	    byte[] pdfBytes = service.generateTicket(code);
+	    byte[] pdfBytes = service.generateTicket(req);
 	    // Set up headers
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_PDF);
-	    headers.setContentDispositionFormData("attachment", "ticket-" + code + ".pdf");
+	    headers.setContentDispositionFormData("attachment", "camera-ticket.pdf");
 	    headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 	    return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 

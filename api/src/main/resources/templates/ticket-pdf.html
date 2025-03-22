@@ -1,59 +1,200 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"> </meta>
+    <meta charset="UTF-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-    <title>Movie Ticket</title>
+    <title>Movie Tickets</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin: 0 auto;
+        }
+        
+        .tickets-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 0 20px;
+        }
+        
+        .ticket-container {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #ebf0ec;
+            break-inside: avoid;
+        }
+        
+        .ticket-header {
+            background-color: #FF0000;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .ticket-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .ticket-subtitle {
+            font-size: 12px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .movie-title {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .movie-title-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .info-grid {
+            padding: 15px;
+        }
+        
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .info-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 3px;
+        }
+        
+        .divider {
+            height: 10px;
+            background-color: #f5f5f5;
+        }
+        
+        .ticket-footer {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .ticket-code {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .footer-note {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .page-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 30px;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
-    <div style="width: 100%; max-width: 350px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background-color: #FFFAF0;">
-        <!-- Header -->
-        <div style="background-color: #FF0000; color: white; padding: 15px; text-align: center;">
-            <div style="font-size: 20px; font-weight: bold;">CINE CAMERA</div>
-            <div style="font-size: 12px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;">ADMISSION TICKET</div>
+<body>
+    <!-- Page Header with Logo -->
+    <div class="header">
+        <!-- Logo image -->
+        <img class="logo" th:src="${logoPath}" alt="Cinema Logo" />
+        <h1 th:text="${cinemaName}">CINEMA CAMERA</h1>
+        <p>Thank you for your purchase</p>
+    </div>
+    
+    <!-- Tickets Container - All tickets in a flex layout -->
+    <div class="tickets-container">
+        <!-- Iterate through each ticket -->
+        <div th:each="ticket : ${tickets}" class="ticket-container">
+            <!-- Header -->
+            <div class="ticket-header">
+                <div class="ticket-title" th:text="${cinemaName}">CINE CAMERA</div>
+                <div class="ticket-subtitle">ADMISSION TICKET</div>
+            </div>
+
+            <!-- Movie Title -->
+            <div class="movie-title">
+                <div class="movie-title-text" th:text="${ticket.movieTitle}">Avengers: Endgame</div>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <table class="info-table">
+                    <tr>
+                        <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
+                            <div class="info-label">DATE</div>
+                            <div class="info-value" th:text="${#temporals.format(ticket.time.toLocalDate(), 'MMMM d, yyyy')}">March 12, 2025</div>
+                        </td>
+                        <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
+                            <div class="info-label">TIME</div>
+                            <div class="info-value" th:text="${#temporals.format(ticket.time.toLocalTime(), 'h:mm a')}">7:30 PM</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
+                            <div class="info-label">SEAT</div>
+                            <div class="info-value" th:text="${ticket.seat}">H12</div>
+                        </td>
+                        <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
+                            <div class="info-label">THEATER</div>
+                            <div class="info-value" th:text="${ticket.reservation.showtime.screeningRoom.name}">SCREEN 3</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider"></div>
+
+            <!-- Footer -->
+            <div class="ticket-footer">
+                <div class="ticket-code" th:text="${'TKT-' + ticket.uniqueCode}">TKT58627491</div>
+                <div class="footer-note">Present this ticket at the entrance</div>
+            </div>
         </div>
-        
-        <!-- Movie Title -->
-        <div style="padding: 15px; border-bottom: 1px solid #eee;">
-            <div style="font-size: 18px; font-weight: bold; color: #2c3e50;" th:text="${ticket.movieTitle}">Avengers: Endgame</div>
-        </div>
-        
-        <!-- Info Grid -->
-        <div style="padding: 15px;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
-                        <div style="font-size: 11px; color: #7f8c8d; text-transform: uppercase;">DATE</div>
-                        <div style="font-size: 14px; font-weight: bold; color: #2c3e50; margin-top: 3px;" th:text="${#temporals.format(date, 'MMMM d, yyyy')}">March 12, 2025</div>
-                    </td>
-                    <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
-                        <div style="font-size: 11px; color: #7f8c8d; text-transform: uppercase;">TIME</div>
-                        <div style="font-size: 14px; font-weight: bold; color: #2c3e50; margin-top: 3px;" th:text="${#temporals.format(time, 'h:mm a')}">7:30 PM</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
-                        <div style="font-size: 11px; color: #7f8c8d; text-transform: uppercase;">SEAT</div>
-                        <div style="font-size: 14px; font-weight: bold; color: #2c3e50; margin-top: 3px;" th:text="${ticket.seat}">H12</div>
-                    </td>
-                    <td style="width: 50%; padding-bottom: 12px; vertical-align: top;">
-                        <div style="font-size: 11px; color: #7f8c8d; text-transform: uppercase;">THEATER</div>
-                        <div style="font-size: 14px; font-weight: bold; color: #2c3e50; margin-top: 3px;" th:text="${screeningRoom}">SCREEN 3</div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- Divider -->
-        <div style="height: 10px; background-color: #f5f5f5;"></div>
-        
-        <!-- Footer -->
-        <div style="padding: 15px; text-align: center;">
-            <!-- Simple barcode representation -->
-<!--             <div style="margin: 0 auto 10px auto; height: 40px; width: 200px; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAAkAQMAAADrpX0aAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAFiSURBVDiN1dSxasJQFMbxfy5BUhxCqC6Cg9BJRLoIboKTY0BcW8GxD+DYzUFw8AEcHLq6CE5CpkJJQF0CpYPQ0UFwyHGQNrZJoJBgD3wDuefm/ri5PaBBPzUGF+M1+c/bu6r+4PDYHYeLmZWb77smV3iez+N/oyZXWCwUCgmJLFdYLHFPc0xv5gpXi1iRGONxJVdYcO0r+Sfu2U2gcIXFVX9oZnYTKFz7+3q6ij+JXOEKi04i1vpZ8rlc4cqdzm/Wvbs5uPRQS5LnzRWusGj4vXH18TmXK1xhcd3vOz96ub6uG+AKi8v22jJ8UL5c4WrB6TdO1Tv6yBWusFiOxyaJWJkrXMX4vbKNt8dRrnCFRbtrGrVxkCtcYdHyB5b18XsuV7jCYqRiRTtGuVzhajH6KmY0S3Lzb7jCVYPv2Jbpo1yu8A8Wj7Fg+CHkClcL3rrr8Cf9muBRrnCFxQP/wh2PKzxzI5o3j1QfmQAAAABJRU5ErkJggg==');"></div>
- -->            <div style="font-size: 14px; letter-spacing: 2px; color: #7f8c8d; margin-bottom: 5px;" th:text="${'TKT' + ticketCode}">TKT58627491</div>
-            <div style="font-size: 11px; color: #999;">Present this ticket at the entrance</div>
-        </div>
+    </div>
+    
+    <!-- Page Footer -->
+    <div class="page-footer">
+        <p>© 2025 Cinema Camera - All rights reserved</p>
+        <p th:text="${'Generated on: ' + #temporals.format(#temporals.createNow(), 'dd MMM yyyy, HH:mm')}">Generated on: 22 Mar 2025, 13:03</p>
     </div>
 </body>
 </html>

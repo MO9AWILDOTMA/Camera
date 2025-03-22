@@ -80,7 +80,6 @@ public class ReservationService implements IReservationService {
 	reservation.setUser(user);
 	reservation.setShowtime(showtime);
 	reservation.setStatus(ReservationStatus.IN_PROGRESS);
-
 	Reservation savedReservation = repository.save(reservation);
 	return mapper.entityToDto(savedReservation);
     }
@@ -101,7 +100,7 @@ public class ReservationService implements IReservationService {
 
 	reservation.setShowtime(showtime);
 	reservation.setStatus(dto.getStatus());
-	reservation.setSeat(dto.getSeat());
+	reservation.setSeats(dto.getSeats());
 
 	Reservation updatedReservation = repository.save(reservation);
 	return mapper.entityToDto(updatedReservation);

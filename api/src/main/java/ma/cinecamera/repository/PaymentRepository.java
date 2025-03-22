@@ -10,7 +10,7 @@ import ma.cinecamera.model.enums.PaymentStatus;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    Optional<Payment> findByUserId(Long userId);
+    Optional<Payment> findByUserIdAndStatus(Long userId, PaymentStatus status);
 
     List<Payment> findByStatus(PaymentStatus status);
 
