@@ -1,13 +1,13 @@
 import User from "../../models/user.model";
 
-export interface UsersState {
-  Users: User[];
+export interface UserState {
+  users: User[];
   loading: boolean;
   error: string | null;
 }
 
-export const initialUsersState: UsersState = {
-  Users: [],
+export const initialUserState: UserState = {
+  users: [],
   loading: false,
   error: null,
 };

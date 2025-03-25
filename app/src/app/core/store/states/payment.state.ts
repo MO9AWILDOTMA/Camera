@@ -1,13 +1,13 @@
 import Payment from "../../models/payment.model";
 
-export interface PaymentsState {
-  Payments: Payment[];
+export interface PaymentState {
+  payments: Payment[];
   loading: boolean;
   error: string | null;
 }
 
-export const initialPaymentsState: PaymentsState = {
-  Payments: [],
+export const initialPaymentState: PaymentState = {
+  payments: [],
   loading: false,
   error: null,
 };

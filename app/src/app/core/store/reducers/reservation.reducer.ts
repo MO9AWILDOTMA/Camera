@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { ReservationState, initialReservationState } from '../states/reservation.state';
+import { ReservationState, initialReservationState } from '../states/reservation.state'
 import * as ReservationActions from '../actions/reservation.action';
 
 export const reservationReducer = createReducer(

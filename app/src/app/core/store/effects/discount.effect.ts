@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import * as DiscountActions from '../actions/discount.action';
 import { DiscountService } from '../../services/discount.service';
+import Discount from '../../models/discount.model';
 
 @Injectable()
 export class DiscountEffects {
@@ -12,7 +13,7 @@ export class DiscountEffects {
       ofType(DiscountActions.loadDiscounts),
       mergeMap(() =>
         this.discountService.getDiscounts().pipe(
-          map((discounts) => DiscountActions.loadDiscountsSuccess({ discounts })),
+          map((discounts: any) => DiscountActions.loadDiscountsSuccess({ discounts })),
           catchError((error) =>
             of(DiscountActions.loadDiscountsFailure({ error: error.message }))
           )
@@ -26,7 +27,7 @@ export class DiscountEffects {
       ofType(DiscountActions.addDiscount),
       mergeMap(({ discount }) =>
         this.discountService.createDiscount(discount).pipe(
-          map((newDiscount) => DiscountActions.addDiscountSuccess({ discount: newDiscount })),
+          map((newDiscount: any) => DiscountActions.addDiscountSuccess({ discount: newDiscount })),
           catchError((error) =>
             of(DiscountActions.addDiscountFailure({ error: error.message }))
           )
@@ -40,7 +41,7 @@ export class DiscountEffects {
       ofType(DiscountActions.updateDiscount),
       mergeMap(({ id, discount }) =>
         this.discountService.updateDiscount(id, discount).pipe(
-          map((updatedDiscount) =>
+          map((updatedDiscount: any) =>
             DiscountActions.updateDiscountSuccess({ discount: updatedDiscount })
           ),
           catchError((error) =>

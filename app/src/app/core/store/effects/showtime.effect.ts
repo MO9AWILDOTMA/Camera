@@ -12,7 +12,7 @@ export class ShowtimeEffects {
       ofType(ShowtimeActions.loadShowtimes),
       mergeMap(() =>
         this.showtimeService.getShowtimes().pipe(
-          map((showtimes) => ShowtimeActions.loadShowtimesSuccess({ showtimes })),
+          map((showtimes: any) => ShowtimeActions.loadShowtimesSuccess({ showtimes })),
           catchError((error) =>
             of(ShowtimeActions.loadShowtimesFailure({ error: error.message }))
           )
@@ -26,7 +26,7 @@ export class ShowtimeEffects {
       ofType(ShowtimeActions.addShowtime),
       mergeMap(({ showtime }) =>
         this.showtimeService.createShowtime(showtime).pipe(
-          map((newShowtime) => ShowtimeActions.addShowtimeSuccess({ showtime: newShowtime })),
+          map((newShowtime: any) => ShowtimeActions.addShowtimeSuccess({ showtime: newShowtime })),
           catchError((error) =>
             of(ShowtimeActions.addShowtimeFailure({ error: error.message }))
           )
@@ -40,7 +40,7 @@ export class ShowtimeEffects {
       ofType(ShowtimeActions.updateShowtime),
       mergeMap(({ id, showtime }) =>
         this.showtimeService.updateShowtime(id, showtime).pipe(
-          map((updatedShowtime) =>
+          map((updatedShowtime: any) =>
             ShowtimeActions.updateShowtimeSuccess({ showtime: updatedShowtime })
           ),
           catchError((error) =>

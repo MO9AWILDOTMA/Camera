@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import * as MovieActions from '../actions/movie.action';
 import { MovieService } from '../../services/movie.service';
+import Movie from '../../models/movie.model';
 
 @Injectable()
 export class MovieEffects {
@@ -12,7 +13,7 @@ export class MovieEffects {
       ofType(MovieActions.loadMovies),
       mergeMap(() =>
         this.movieService.getMovies().pipe(
-          map((movies) => MovieActions.loadMoviesSuccess({ movies })),
+          map((movies: Movie[]) => MovieActions.loadMoviesSuccess({ movies })),
           catchError((error) =>
             of(MovieActions.loadMoviesFailure({ error: error.message }))
           )
@@ -26,7 +27,7 @@ export class MovieEffects {
       ofType(MovieActions.addMovie),
       mergeMap(({ movie }) =>
         this.movieService.createMovie(movie).pipe(
-          map((newMovie) => MovieActions.addMovieSuccess({ movie: newMovie })),
+          map((newMovie: any) => MovieActions.addMovieSuccess({ movie: newMovie })),
           catchError((error) =>
             of(MovieActions.addMovieFailure({ error: error.message }))
           )
@@ -40,7 +41,7 @@ export class MovieEffects {
       ofType(MovieActions.updateMovie),
       mergeMap(({ id, movie }) =>
         this.movieService.updateMovie(id, movie).pipe(
-          map((updatedMovie) =>
+          map((updatedMovie:any) =>
             MovieActions.updateMovieSuccess({ movie: updatedMovie })
           ),
           catchError((error) =>

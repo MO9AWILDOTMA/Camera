@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import * as UserActions from '../actions/user.action';
 import { UserService } from '../../services/user.service';
+import User from '../../models/user.model';
 
 @Injectable()
 export class UserEffects {
@@ -12,7 +13,7 @@ export class UserEffects {
       ofType(UserActions.loadUsers),
       mergeMap(() =>
         this.userService.getUsers().pipe(
-          map((users) => UserActions.loadUsersSuccess({ users })),
+          map((users: any) => UserActions.loadUsersSuccess({ users })),
           catchError((error) =>
             of(UserActions.loadUsersFailure({ error: error.message }))
           )
@@ -26,7 +27,7 @@ export class UserEffects {
       ofType(UserActions.addUser),
       mergeMap(({ user }) =>
         this.userService.createUser(user).pipe(
-          map((newUser) => UserActions.addUserSuccess({ user: newUser })),
+          map((newUser: any) => UserActions.addUserSuccess({ user: newUser })),
           catchError((error) =>
             of(UserActions.addUserFailure({ error: error.message }))
           )
@@ -40,7 +41,7 @@ export class UserEffects {
       ofType(UserActions.updateUser),
       mergeMap(({ id, user }) =>
         this.userService.updateUser(id, user).pipe(
-          map((updatedUser) =>
+          map((updatedUser: any) =>
             UserActions.updateUserSuccess({ user: updatedUser })
           ),
           catchError((error) =>

@@ -1,13 +1,13 @@
 import Discount from "../../models/discount.model";
 
-export interface DiscountsState {
-  Discounts: Discount[];
+export interface DiscountState {
+  discounts: Discount[];
   loading: boolean;
   error: string | null;
 }
 
-export const initialDiscountsState: DiscountsState = {
-  Discounts: [],
+export const initialDiscountState: DiscountState = {
+  discounts: [],
   loading: false,
   error: null,
 };

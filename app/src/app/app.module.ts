@@ -24,8 +24,7 @@ import { UserEffects } from './core/store/effects/user.effect';
 import { RoleEffects } from './core/store/effects/role.effect';
 import { DiscountEffects } from './core/store/effects/discount.effect';
 import { PaymentEffects } from './core/store/effects/payment.effect';
-import { ScreeningRoomEffects } from './core/store/effects/screening-room.effect';
-
+import { ScreeningRoomEffects } from './core/store/effects/screening-room.effect'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PagesModule } from './pages/pages.module';
@@ -53,7 +52,7 @@ import { PagesModule } from './pages/pages.module';
     ]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      logOnly: environment.production,
+      // logOnly: environment.production,
       autoPause: true,
       trace: false,
       traceLimit: 75,

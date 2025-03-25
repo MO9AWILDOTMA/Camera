@@ -1,13 +1,13 @@
 import ScreeningRoom from "../../models/screening-room.model";
 
-export interface ScreeningRoomsState {
-  ScreeningRooms: ScreeningRoom[];
+export interface ScreeningRoomState {
+  screeningRooms: ScreeningRoom[];
   loading: boolean;
   error: string | null;
 }
 
-export const initialScreeningRoomsState: ScreeningRoomsState = {
-  ScreeningRooms: [],
+export const initialScreeningRoomState: ScreeningRoomState = {
+  screeningRooms: [],
   loading: false,
   error: null,
 };

@@ -10,9 +10,9 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      mergeMap(({ email, password }) =>
-        this.authService.login(email, password).pipe(
-          map((response) =>
+      mergeMap(({ credentials }) =>
+        this.authService.login(credentials.email, credentials.password).pipe(
+          map((response: any) =>
             AuthActions.loginSuccess({
               user: response.user,
             })
@@ -44,7 +44,7 @@ export class AuthEffects {
       ofType(AuthActions.register),
       mergeMap(({ user }) =>
         this.authService.register(user).pipe(
-          map((response) =>
+          map((response:any) =>
             AuthActions.registerSuccess({
               user: response.user,
             })

@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
-import { UserState } from '../states/user.state';
 import User from '../../models/user.model';
+import { UserState } from '../states/user.state';
 
 export const selectUserState = (state: { user: UserState }) => state.user;
 
@@ -26,5 +26,5 @@ export const selectUserById = (id: number) =>
 
 export const selectUsersByRole = (roleId: number) =>
   createSelector(selectUsers, (users: User[]) =>
-    users.filter((user) => user.roleId === roleId)
+    users.filter((user) => user.roles.filter(r => r.id = roleId))
   );

@@ -12,7 +12,7 @@ export class ReservationEffects {
       ofType(ReservationActions.loadReservations),
       mergeMap(() =>
         this.reservationService.getReservations().pipe(
-          map((reservations) => ReservationActions.loadReservationsSuccess({ reservations })),
+          map((reservations: any) => ReservationActions.loadReservationsSuccess({ reservations })),
           catchError((error) =>
             of(ReservationActions.loadReservationsFailure({ error: error.message }))
           )
@@ -26,7 +26,7 @@ export class ReservationEffects {
       ofType(ReservationActions.addReservation),
       mergeMap(({ reservation }) =>
         this.reservationService.createReservation(reservation).pipe(
-          map((newReservation) => ReservationActions.addReservationSuccess({ reservation: newReservation })),
+          map((newReservation: any) => ReservationActions.addReservationSuccess({ reservation: newReservation })),
           catchError((error) =>
             of(ReservationActions.addReservationFailure({ error: error.message }))
           )
@@ -40,7 +40,7 @@ export class ReservationEffects {
       ofType(ReservationActions.updateReservation),
       mergeMap(({ id, reservation }) =>
         this.reservationService.updateReservation(id, reservation).pipe(
-          map((updatedReservation) =>
+          map((updatedReservation: any) =>
             ReservationActions.updateReservationSuccess({ reservation: updatedReservation })
           ),
           catchError((error) =>
