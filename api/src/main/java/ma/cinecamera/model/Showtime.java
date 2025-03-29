@@ -71,7 +71,7 @@ public class Showtime extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ShowVersion showVersion;
 
-    @OneToMany(mappedBy = "showtime")
+    @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
     @Column(name = "total_seats", nullable = false)
