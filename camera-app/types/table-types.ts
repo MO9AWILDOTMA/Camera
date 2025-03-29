@@ -6,6 +6,7 @@ export interface DataItem {
   
   // Define column type
 export interface Column<T> {
+    render?: any;
     key: keyof T;
     label: string;
   }
