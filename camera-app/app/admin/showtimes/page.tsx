@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Table from "../../../components/admin/table";
-import { moviesApi } from "@/lib/api";
+import ShowtimesTable from "../../../components/admin/table";
+import { Column } from "@/types/table-types";
+import { showtimesApi } from "@/lib/api";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Film, Plus } from "lucide-react";
+import { Film } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import Movie from "@/models/movie.model";
+import Showtime from "@/models/showtime.model";
 import {
   Pagination,
   PaginationContent,
@@ -19,34 +20,28 @@ import {
 
 const columns = [
   { key: "id", label: "ID" },
-  { key: "name", label: "Name" },
-  { key: "duration", label: "Duration (min)" },
   {
-    key: "releaseDate",
-    label: "Release Date",
-    render: (item: Movie) => new Date(item.releaseDate).toLocaleDateString(),
+    key: "movie",
+    label: "Movie Name",
+    render: (item: any) => item.movie?.name,
+  },
+  { key: "price", label: "Price" },
+  { key: "showVersion", label: "Show Language" },
+  { key: "reservedSeats", label: "Reserved Seats" },
+  { key: "totalSeats", label: "Total Seats" },
+  {
+    key: "preview",
+    label: "Is Preview",
+    render: (item: any) => item.preview.toString(),
   },
   {
-    key: "status",
-    label: "Status",
-    render: (item: Movie) => (
-      <span
-        className={`px-2 py-1 rounded-full text-xs ${
-          item.status === "Released"
-            ? "bg-green-100 text-green-800"
-            : item.status === "Coming Soon"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-gray-100 text-gray-800"
-        }`}
-      >
-        {item.status}
-      </span>
-    ),
+    key: "specialEvent",
+    label: "Is Special Event",
+    render: (item: any) => item.specialEvent.toString(),
   },
 ];
-
-const Movies = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+const Showtimes = () => {
+  const [showtimes, setShowtimes] = useState();
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(6);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,80 +49,76 @@ const Movies = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchShowtimes = async () => {
       try {
-        setLoading(true);
-        const response = await moviesApi.getAll(page, size);
+        const response = await showtimesApi.getAll(page, size);
         const data = response.data;
 
-        setMovies(data.content || []);
+        setShowtimes(data.content || []);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load movies",
-          variant: "destructive",
-        });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovies();
-  }, [page, size]);
+    fetchShowtimes();
+  }, [loading]);
 
-  const showMovie = (movie: Movie) => {
-    router.push(`/admin/movies/${movie.slug}`);
-  };
+  const showShowtime = () => {};
 
-  const handleDelete = async (item: Movie) => {
+  const handleDelete = async (item: Showtime) => {
+    setLoading(true);
     try {
-      await moviesApi.delete(item.id);
+      await showtimesApi.delete(item.id);
       toast({
-        title: "Success",
-        description: "Movie deleted successfully!",
+        title: "Deleting successful",
+        description: "Showtime deleted successfully!",
       });
-      // Refresh the list
-      setPage(1);
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.response?.data?.message || "Failed to delete movie",
+        title: "Deleting failed",
+        description: error.response.data.message || "Showtime Deletings Failed",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEdit = (movie: Movie) => {
-    router.push(`/admin/movies/update/${movie.slug}`);
+  const handleEdit = (showtime: Showtime) => {
+    router.push(`/admin/showtimes/update/${showtime.slug}`);
   };
+  if (loading) return <Loading />;
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setPage(newPage);
     }
   };
-
-  if (loading) return <Loading />;
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Movies Management</h2>
-        <Button onClick={() => router.push("/admin/movies/create")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create New Movie
-        </Button>
+    <div>
+      <div className="flex justify-between items-center lg:flex-nowrap flex-wrap md:flex-nowrap">
+        <h2 className="px-10 mb-4 font-bold text-2xl">Showtimes Managment</h2>
+        <div>
+          <Button
+            variant="outline"
+            className="w-full justify-start"
+            onClick={() => router.push("showtimes/create")}
+          >
+            <Film className="mr-2 h-4 w-4" />
+            Create New Showtime
+          </Button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <Table
-          data={movies}
+        <ShowtimesTable
+          data={showtimes}
           onDelete={handleDelete}
-          onShow={showMovie}
+          onShow={showShowtime}
           onEdit={handleEdit}
           columns={columns}
-          showActions={true}
         />
 
         {totalPages > 1 && (
@@ -160,4 +151,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default Showtimes;

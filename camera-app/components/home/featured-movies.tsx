@@ -20,7 +20,7 @@ export function FeaturedMovies() {
   useEffect(() => {
     const fetchFeaturedMovies = async () => {
       try {
-        const response = await showtimesApi.getAll();
+        const response = await showtimesApi.getAll(1, 6);
         const data = response.data;
         const mockMovies: Partial<Movie>[] = [
           {

@@ -84,9 +84,11 @@ function GenericTable<T extends DataItem>({
             >
               <span className="text-muted-foreground">{column.label}</span>
               <span>
-                {Array.isArray(item[column.key])
-                  ? item[column.key].join(", ")
-                  : item[column.key]}
+                {column.render
+                  ? column.render(item)
+                  : Array.isArray(item[column.key])
+                    ? item[column.key].join(", ")
+                    : item[column.key]}
               </span>
             </div>
           ))}
@@ -115,9 +117,11 @@ function GenericTable<T extends DataItem>({
               <TableRow key={item.id}>
                 {columns.map((column) => (
                   <TableCell className="text-center" key={String(column.key)}>
-                    {Array.isArray(item[column.key])
-                      ? item[column.key].join(", ")
-                      : item[column.key]}
+                    {column.render
+                      ? column.render(item)
+                      : Array.isArray(item[column.key])
+                        ? item[column.key].join(", ")
+                        : item[column.key]}
                   </TableCell>
                 ))}
                 {showActions && (

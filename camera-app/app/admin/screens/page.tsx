@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Table from "../../../components/admin/table";
-import { moviesApi } from "@/lib/api";
+import GenericTable from "@/components/admin/table";
+import { Column } from "@/types/table-types";
+import { screenApi } from "@/lib/api";
 import Loading from "@/app/loading";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Film, Plus } from "lucide-react";
+import { Plus, Home } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import Movie from "@/models/movie.model";
+import ScreeningRoom from "@/models/screening-room.model";
 import {
   Pagination,
   PaginationContent,
@@ -17,55 +18,43 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const columns = [
+const columns: Column<ScreeningRoom>[] = [
   { key: "id", label: "ID" },
   { key: "name", label: "Name" },
-  { key: "duration", label: "Duration (min)" },
+  { key: "seats", label: "Seats" },
   {
-    key: "releaseDate",
-    label: "Release Date",
-    render: (item: Movie) => new Date(item.releaseDate).toLocaleDateString(),
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (item: Movie) => (
-      <span
-        className={`px-2 py-1 rounded-full text-xs ${
-          item.status === "Released"
-            ? "bg-green-100 text-green-800"
-            : item.status === "Coming Soon"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-gray-100 text-gray-800"
-        }`}
-      >
-        {item.status}
+    key: "picturePaths",
+    label: "Images",
+    render: (item: ScreeningRoom) => (
+      <span className="text-sm text-gray-600">
+        {item.picturePaths?.length || 0} images
       </span>
     ),
   },
 ];
 
-const Movies = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+const ScreeningRooms = () => {
+  const [rooms, setRooms] = useState<ScreeningRoom[]>([]);
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(6);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchRooms = async () => {
       try {
         setLoading(true);
-        const response = await moviesApi.getAll(page, size);
+        const response = await screenApi.getAll(page, size);
         const data = response.data;
 
-        setMovies(data.content || []);
+        setRooms(data.content || []);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to load movies",
+          description: "Failed to load screening rooms",
           variant: "destructive",
         });
       } finally {
@@ -73,33 +62,39 @@ const Movies = () => {
       }
     };
 
-    fetchMovies();
-  }, [page, size]);
+    fetchRooms();
+  }, [page, size, deleting]);
 
-  const showMovie = (movie: Movie) => {
-    router.push(`/admin/movies/${movie.slug}`);
+  const showRoom = (room: ScreeningRoom) => {
+    router.push(`/admin/screening-rooms/${room.slug}`);
   };
 
-  const handleDelete = async (item: Movie) => {
+  const handleDelete = async (room: ScreeningRoom) => {
+    setLoading(true);
+    setDeleting(true);
     try {
-      await moviesApi.delete(item.id);
+      await screenApi.delete(room.id);
       toast({
         title: "Success",
-        description: "Movie deleted successfully!",
+        description: "Screening room deleted successfully!",
       });
       // Refresh the list
       setPage(1);
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to delete movie",
+        description:
+          error.response?.data?.message || "Failed to delete screening room",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
+      setDeleting(false);
     }
   };
 
-  const handleEdit = (movie: Movie) => {
-    router.push(`/admin/movies/update/${movie.slug}`);
+  const handleEdit = (room: ScreeningRoom) => {
+    router.push(`/admin/screens/update/${room.slug}`);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -113,18 +108,18 @@ const Movies = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Movies Management</h2>
-        <Button onClick={() => router.push("/admin/movies/create")}>
+        <h2 className="text-2xl font-bold">Screening Rooms Management</h2>
+        <Button onClick={() => router.push("/admin/screens/create")}>
           <Plus className="mr-2 h-4 w-4" />
-          Create New Movie
+          Create New Room
         </Button>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <Table
-          data={movies}
+        <GenericTable
+          data={rooms}
           onDelete={handleDelete}
-          onShow={showMovie}
+          onShow={showRoom}
           onEdit={handleEdit}
           columns={columns}
           showActions={true}
@@ -160,4 +155,4 @@ const Movies = () => {
   );
 };
 
-export default Movies;
+export default ScreeningRooms;

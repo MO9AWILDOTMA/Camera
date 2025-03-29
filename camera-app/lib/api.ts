@@ -22,7 +22,7 @@ api.interceptors.response.use(
 
 // Movies API
 export const moviesApi = {
-  getAll: (page?: number, size?: number) => api.get(`/user/movies?page=${page}&size=${size}`),
+  getAll: (page?: number, size?: number) => api.get(`/user/movies`),
   getFeatured: () => api.get("/user/movies/featured"),
   getCurrentlyShowing: () => api.get("/user/movies/current"),
   getUpcoming: () => api.get("/user/movies/upcoming?size=4"),
@@ -39,13 +39,27 @@ export const moviesApi = {
 }
 
 // Screening Rooms API
-export const theatersApi = {
-  getAll: () => api.get("/user/screeningRooms"),
-  getById: (id: number) => api.get(`/user/screeningRooms/${id}`),
+export const screenApi = {
+  getAll: (page: number, size: number) => api.get(`/user/screeningRooms?page=${page}&size=${size}`),
+  getById: (slug: string) => api.get(`/user/screeningRooms/${slug}`),
   // Admin endpoints
-  create: (data: any) => api.post("/admin/screeningRooms", data),
-  update: (id: number, data: any) => api.put(`/admin/screeningRooms/${id}`, data),
-  delete: (id: number) => api.delete(`/admin/screeningRooms/${id}`),
+  create: (data: any) => api.post("/moderator/screeningRooms", data, {
+    headers: { "Content-Type" : "multipart/form-data"}
+  }),
+  update: (id: number, data: any) => api.put(`/moderator/screeningRooms/${id}`, data, {
+    headers: { "Content-Type" : "multipart/form-data"}
+  }),
+  delete: (id: number) => api.delete(`/moderator/screeningRooms/${id}`),
+}
+
+// Screening Rooms API
+export const discountsApi = {
+  getAll: (page:number, size: number) => api.get(`/moderator/discounts?page=${page}&size=${size}`),
+  getById: (id: number) => api.get(`/moderator/discounts/${id}`),
+  // Admin endpoints
+  create: (data: any) => api.post("/moderator/discounts", data),
+  update: (id: number, data: any) => api.put(`/moderator/discounts/${id}`, data),
+  delete: (id: number) => api.delete(`/moderator/discounts/${id}`),
 }
 
 // Showtimes API
@@ -53,19 +67,28 @@ export const showtimesApi = {
   getByMovie: (movieId: number) => api.get(`/user/showtimes/movie/${movieId}`),
   getByTheater: (theaterId: number) => api.get(`/user/showtimes/theater/${theaterId}`),
   getById: (slug: string) => api.get(`/user/showtimes/${slug}`),
-  getAll: () => api.get(`/user/showtimes?size=6`),
+  getAll: (page: number, size: number) => api.get(`/user/showtimes?size=${size}&page=${page}`),
   // Admin endpoints
-  create: (data: any) => api.post("/admin/showtimes", data),
-  update: (id: number, data: any) => api.put(`/admin/showtimes/${id}`, data),
-  delete: (id: number) => api.delete(`/admin/showtimes/${id}`),
+  create: (data: any) => api.post("/moderator/showtimes", data),
+  update: (id: number, data: any) => api.put(`/moderator/showtimes/${id}`, data),
+  delete: (id: number) => api.delete(`/moderator/showtimes/${id}`),
 }
 
-// Bookings API
-export const bookingsApi = {
-  create: (data: any) => api.post("/cinephile/bookings", data),
-  getUserBookings: () => api.get("/user/bookings/user"),
-  getById: (id: number) => api.get(`/user/bookings/${id}`),
-  cancel: (id: number) => api.post(`/bookings/${id}/cancel`),
+// Reservation API
+export const reservationsApi = {
+  create: (data: any) => api.post("/cinephile/reservation", data),
+  getAll: (page: number, size: number) => api.get(`/moderator/reservations?size=${size}&page=${page}`),
+  getUserReservation: () => api.get("/user/reservation/user"),
+  getById: (id: number) => api.get(`/user/reservation/${id}`),
+  cancel: (id: number) => api.post(`/reservation/${id}/cancel`),
+}
+
+export const paymentsApi = {
+  create: (data: any) => api.post("/cinephile/payment", data),
+  getAll: (page: number, size: number) => api.get(`/moderator/payments?size=${size}&page=${page}`),
+  getUserPayments: () => api.get("/user/payments/user"),
+  getById: (id: number) => api.get(`/user/payments/${id}`),
+  cancel: (id: number) => api.post(`/payments/${id}/cancel`),
 }
 
 // Seats API
