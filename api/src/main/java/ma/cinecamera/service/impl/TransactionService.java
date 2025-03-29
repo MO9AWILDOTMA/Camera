@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +27,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class TransactionService implements ITransactionService {
 
-    @Value("${youcanpay.private-key}")
-    private String privateKey;
+//    @Value("${youcanpay.private-key}")
+//    private String privateKey;
 
     private final WebClient webClient;
 
@@ -71,7 +70,7 @@ public class TransactionService implements ITransactionService {
     @Override
     public Transaction genrateToken(TransactionReq req) {
 	Mono<JsonNode> jsonResponseMono = webClient.post().uri("/payment-tokens")
-		.header("Authorization", "Bearer " + privateKey)
+//		.header("Authorization", "Bearer " + privateKey)
 		.contentType(org.springframework.http.MediaType.APPLICATION_JSON).bodyValue(req).retrieve()
 		.bodyToMono(JsonNode.class)
 		.onErrorMap(error -> new RuntimeException("Failed to create payment token", error));

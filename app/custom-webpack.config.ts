@@ -1,17 +1,16 @@
-import { Configuration, DefinePlugin } from 'webpack';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
+const Dotenv = require('dotenv-webpack');
+import { Configuration } from 'webpack';
 
-// Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-const config: Configuration = {
-  plugins: [
-    new DefinePlugin({
-      'process.env.API_URL': JSON.stringify(process.env['API_URL']),
-      'process.env.ENV_MODE': JSON.stringify(process.env['ENV_MODE'])
+module.exports = (config: Configuration, options: any) => {
+  // Add Dotenv plugin
+  config.plugins = [
+    ...(config.plugins || []),
+    new Dotenv({
+      systemvars: true, // Load system environment variables too
+      path: './.env', // Path to your .env file
+      safe: false // Set to true if you want to verify the .env file
     })
-  ]
-};
+  ];
 
-export default config;
+  return config;
+};

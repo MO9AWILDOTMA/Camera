@@ -12,7 +12,7 @@ export class PaymentEffects {
       ofType(PaymentActions.loadPayments),
       mergeMap(() =>
         this.paymentService.getPayments().pipe(
-          map((payments) => PaymentActions.loadPaymentsSuccess({ payments })),
+          map((payments: any) => PaymentActions.loadPaymentsSuccess({ payments })),
           catchError((error) =>
             of(PaymentActions.loadPaymentsFailure({ error: error.message }))
           )
@@ -26,7 +26,7 @@ export class PaymentEffects {
       ofType(PaymentActions.addPayment),
       mergeMap(({ payment }) =>
         this.paymentService.createPayment(payment).pipe(
-          map((newPayment) => PaymentActions.addPaymentSuccess({ payment: newPayment })),
+          map((newPayment: any) => PaymentActions.addPaymentSuccess({ payment: newPayment })),
           catchError((error) =>
             of(PaymentActions.addPaymentFailure({ error: error.message }))
           )
@@ -40,7 +40,7 @@ export class PaymentEffects {
       ofType(PaymentActions.updatePayment),
       mergeMap(({ id, payment }) =>
         this.paymentService.updatePayment(id, payment).pipe(
-          map((updatedPayment) =>
+          map((updatedPayment: any) =>
             PaymentActions.updatePaymentSuccess({ payment: updatedPayment })
           ),
           catchError((error) =>

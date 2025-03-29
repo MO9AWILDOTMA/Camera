@@ -1,13 +1,22 @@
 import { ActionReducerMap } from '@ngrx/store';
-import { AuthState, authReducer } from './auth.reducer';
-import { MovieState, movieReducer } from './movie.reducer';
-import { ShowtimeState, showtimeReducer } from './showtime.reducer';
-import { ReservationState, reservationReducer } from './reservation.reducer';
-import { UserState, userReducer } from './user.reducer';
-import { RoleState, roleReducer } from './role.reducer';
-import { DiscountState, discountReducer } from './discount.reducer';
-import { PaymentState, paymentReducer } from './payment.reducer';
-import { ScreeningRoomState, screeningRoomReducer } from './screening-room.reducer';
+import { authReducer } from './auth.reducer';
+import { movieReducer } from './movie.reducer';
+import { showtimeReducer } from './showtime.reducer';
+import { reservationReducer } from './reservation.reducer';
+import { userReducer } from './user.reducer';
+import { roleReducer } from './role.reducer';
+import { discountReducer } from './discount.reducer';
+import { paymentReducer } from './payment.reducer';
+import { screeningRoomReducer } from './screening-room.reducer';
+import { AuthState } from '../states/auth.state';
+import { MovieState } from '../states/movie.state';
+import { ShowtimeState } from '../states/showtime.state';
+import { UserState } from '../states/user.state';
+import { ScreeningRoomState } from '../states/screening-room.state';
+import { ReservationState } from '../states/reservation.state';
+import { RoleState } from '../states/role.state';
+import { DiscountState } from '../states/discount.state';
+import { PaymentState } from '../states/payment.state';
 
 export interface AppState {
   auth: AuthState;

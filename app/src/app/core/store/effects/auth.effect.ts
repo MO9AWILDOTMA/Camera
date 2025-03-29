@@ -10,15 +10,19 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      mergeMap(({ email, password }) =>
-        this.authService.login(email, password).pipe(
-          map((response) =>
+      mergeMap(({ credentials }) =>
+        this.authService.login(credentials.email, credentials.password).pipe(
+          tap((response: any) => {
+            // Save user data to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(response));
+          }),
+          map((response: any) =>
             AuthActions.loginSuccess({
-              user: response.user,
+              user: response,
             })
           ),
           catchError((error) =>
-            of(AuthActions.loginFailure({ error: error.message }))
+            of(AuthActions.loginFailure({ error: error.error?.message || 'Login failed' }))
           )
         )
       )
@@ -30,9 +34,13 @@ export class AuthEffects {
       ofType(AuthActions.logout),
       mergeMap(() =>
         this.authService.logout().pipe(
+          tap(() => {
+            // Remove user data from localStorage
+            localStorage.removeItem('currentUser');
+          }),
           map(() => AuthActions.logoutSuccess()),
           catchError((error) =>
-            of(AuthActions.logoutFailure({ error: error.message }))
+            of(AuthActions.logoutFailure({ error: error.error?.message || 'Logout failed' }))
           )
         )
       )
@@ -44,13 +52,13 @@ export class AuthEffects {
       ofType(AuthActions.register),
       mergeMap(({ user }) =>
         this.authService.register(user).pipe(
-          map((response) =>
+          map((response:any) =>
             AuthActions.registerSuccess({
-              user: response.user,
+              user: response,
             })
           ),
           catchError((error) =>
-            of(AuthActions.registerFailure({ error: error.message }))
+            of(AuthActions.registerFailure({ error: error.error?.message || 'Register failed' }))
           )
         )
       )

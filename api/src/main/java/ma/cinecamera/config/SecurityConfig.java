@@ -41,11 +41,11 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 	http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf().disable().httpBasic().and()
 		.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/images/**").permitAll()
-		.antMatchers("/api/user/**").permitAll().antMatchers("/api/cinephile/**")
-		.hasAnyRole("CINEPHILE", "ADMIN", "MODERATOR").antMatchers("/api/moderator/**")
-		.hasAnyRole("ADMIN", "MODERATOR").antMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
-		.authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.exceptionHandling()
+		.antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll().antMatchers("/api/user/**").permitAll()
+		.antMatchers("/api/cinephile/**").hasAnyRole("CINEPHILE", "ADMIN", "MODERATOR")
+		.antMatchers("/api/moderator/**").hasAnyRole("ADMIN", "MODERATOR").antMatchers("/api/admin/**")
+		.hasRole("ADMIN").anyRequest().authenticated().and().sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
 		.authenticationEntryPoint((request, response, authException) -> response
 			.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
 		.and().logout().logoutUrl("/api/auth/logout")

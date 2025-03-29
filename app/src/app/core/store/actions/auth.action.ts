@@ -3,7 +3,7 @@ import User from '../../models/user.model';
 
 export const login = createAction(
   '[Auth] Login',
-  props<{ email: string; password: string }>()
+  props<{credentials :{ email: string; password: string }}>()
 );
 
 export const loginSuccess = createAction(

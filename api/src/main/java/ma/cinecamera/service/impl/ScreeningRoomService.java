@@ -20,6 +20,7 @@ import ma.cinecamera.dto.resp.ScreeningRoomRespDto;
 import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.ScreeningRoomMapper;
 import ma.cinecamera.model.ScreeningRoom;
+import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.ScreeningRoomRepository;
@@ -39,6 +40,9 @@ public class ScreeningRoomService implements IScreeningRoomService {
     private IFileService fileService;
 
     private final Logger logger = Logger.getLogger(ScreeningRoom.class.getName());
+
+    @Autowired
+    private ActivityService activityService;
 
 //  @Value("${screeningRoom.file.upload.directory}")
     private final String uploadDirectory = "uploads/images/screeningRooms";
@@ -96,6 +100,8 @@ public class ScreeningRoomService implements IScreeningRoomService {
 	// Save associated image files
 	fileService.saveFiles(dto.getImageFiles(), savedScreeningRoom.getId(), MediaType.SCREENING_ROOM,
 		MediaCategory.IMAGE, uniqueUploadDir);
+
+	activityService.createActivity(ActivityType.SCREENING_ROOM, sRoom.getName());
 
 	ScreeningRoomRespDto respDto = mapper.entityToDto(savedScreeningRoom);
 

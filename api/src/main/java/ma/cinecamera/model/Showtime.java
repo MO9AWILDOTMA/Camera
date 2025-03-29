@@ -1,6 +1,7 @@
 package ma.cinecamera.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -68,6 +70,9 @@ public class Showtime extends BaseEntity {
     @NotNull(message = "Showtime Version is required")
     @Enumerated(EnumType.STRING)
     private ShowVersion showVersion;
+
+    @OneToMany(mappedBy = "showtime")
+    private List<Reservation> reservations;
 
     @Column(name = "total_seats", nullable = false)
     @NotNull(message = "Showtime Total Seats is required")

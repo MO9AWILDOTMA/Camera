@@ -28,6 +28,7 @@ import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.UserMapper;
 import ma.cinecamera.model.Role;
 import ma.cinecamera.model.User;
+import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.ERole;
 import ma.cinecamera.repository.RoleRepository;
 import ma.cinecamera.repository.UserRepository;
@@ -52,6 +53,9 @@ public class AuthService implements IAuthService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ActivityService activityService;
 
     protected final Log logger = LogFactory.getLog(getClass());
 
@@ -78,6 +82,8 @@ public class AuthService implements IAuthService {
 	user.setEnable(true);
 
 	user = userRepo.save(user);
+
+	activityService.createActivity(ActivityType.USER, user.getEmail());
 
 	return mapper.entityToDto(user);
     }

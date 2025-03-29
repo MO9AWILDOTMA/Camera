@@ -1,14 +1,14 @@
 
 import Role from "../../models/role.model";
 
-export interface RolesState {
-  Roles: Role[];
+export interface RoleState {
+  roles: Role[];
   loading: boolean;
   error: string | null;
 }
 
-export const initialRolesState: RolesState = {
-  Roles: [],
+export const initialRoleState: RoleState = {
+  roles: [],
   loading: false,
   error: null,
 };

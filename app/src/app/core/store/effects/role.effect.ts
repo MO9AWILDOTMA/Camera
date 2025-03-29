@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import * as RoleActions from '../actions/role.action';
 import { RoleService } from '../../services/role.service';
+import Role from '../../models/role.model';
 
 @Injectable()
 export class RoleEffects {
@@ -12,7 +13,7 @@ export class RoleEffects {
       ofType(RoleActions.loadRoles),
       mergeMap(() =>
         this.roleService.getRoles().pipe(
-          map((roles) => RoleActions.loadRolesSuccess({ roles })),
+          map((roles: any) => RoleActions.loadRolesSuccess(roles)),
           catchError((error) =>
             of(RoleActions.loadRolesFailure({ error: error.message }))
           )
@@ -24,9 +25,9 @@ export class RoleEffects {
   addRole$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RoleActions.addRole),
-      mergeMap(({ role }) =>
+      mergeMap((role) =>
         this.roleService.createRole(role).pipe(
-          map((newRole) => RoleActions.addRoleSuccess({ role: newRole })),
+          map((newRole: any) => RoleActions.addRoleSuccess(newRole)),
           catchError((error) =>
             of(RoleActions.addRoleFailure({ error: error.message }))
           )
@@ -40,7 +41,7 @@ export class RoleEffects {
       ofType(RoleActions.updateRole),
       mergeMap(({ id, role }) =>
         this.roleService.updateRole(id, role).pipe(
-          map((updatedRole) =>
+          map((updatedRole: any) =>
             RoleActions.updateRoleSuccess({ role: updatedRole })
           ),
           catchError((error) =>
