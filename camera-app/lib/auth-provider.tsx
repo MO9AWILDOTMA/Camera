@@ -11,6 +11,7 @@ type User = {
   email: string;
   phone?: string;
   roles: Role[];
+  picture: string | null;
 };
 
 type Role = {

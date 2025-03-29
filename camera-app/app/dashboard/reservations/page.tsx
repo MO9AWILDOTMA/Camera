@@ -1,36 +1,42 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Calendar, Clock, Download, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Calendar, Clock, Download, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Booking = {
-  id: string
-  movieId: string
-  movieTitle: string
-  theaterId: string
-  theaterName: string
-  screenName: string
-  date: string
-  startTime: string
-  endTime: string
+  id: string;
+  movieId: string;
+  movieTitle: string;
+  theaterId: string;
+  theaterName: string;
+  screenName: string;
+  date: string;
+  startTime: string;
+  endTime: string;
   seats: {
-    id: string
-    row: string
-    number: number
-    type: string
-  }[]
-  totalPrice: number
-  status: "upcoming" | "completed" | "cancelled"
-  qrCode?: string
-}
+    id: string;
+    row: string;
+    number: number;
+    type: string;
+  }[];
+  totalPrice: number;
+  status: "upcoming" | "completed" | "cancelled";
+  qrCode?: string;
+};
 
 export default function ReservationsPage() {
-  const [bookings, setBookings] = useState<Booking[]>([])
-  const [loading, setLoading] = useState(true)
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -44,7 +50,7 @@ export default function ReservationsPage() {
             movieId: "1",
             movieTitle: "Interstellar",
             theaterId: "1",
-            theaterName: "CineTix Downtown",
+            theaterName: "Camera Downtown",
             screenName: "Screen 1",
             date: "2023-09-15",
             startTime: "19:00",
@@ -62,7 +68,7 @@ export default function ReservationsPage() {
             movieId: "2",
             movieTitle: "The Dark Knight",
             theaterId: "2",
-            theaterName: "CineTix Westside",
+            theaterName: "Camera Westside",
             screenName: "Screen 3",
             date: "2023-09-17",
             startTime: "14:30",
@@ -81,7 +87,7 @@ export default function ReservationsPage() {
             movieId: "3",
             movieTitle: "Inception",
             theaterId: "1",
-            theaterName: "CineTix Downtown",
+            theaterName: "Camera Downtown",
             screenName: "Screen 2",
             date: "2023-09-10",
             startTime: "20:00",
@@ -98,7 +104,7 @@ export default function ReservationsPage() {
             movieId: "4",
             movieTitle: "The Shawshank Redemption",
             theaterId: "2",
-            theaterName: "CineTix Westside",
+            theaterName: "Camera Westside",
             screenName: "Screen 1",
             date: "2023-09-05",
             startTime: "18:00",
@@ -107,23 +113,27 @@ export default function ReservationsPage() {
             totalPrice: 14.99,
             status: "cancelled",
           },
-        ]
+        ];
 
-        setBookings(mockBookings)
+        setBookings(mockBookings);
       } catch (error) {
-        console.error("Failed to fetch bookings:", error)
+        console.error("Failed to fetch bookings:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchBookings()
-  }, [])
+    fetchBookings();
+  }, []);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   const handleCancelBooking = async (bookingId: string) => {
     try {
@@ -132,13 +142,15 @@ export default function ReservationsPage() {
       // Update local state
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
-          booking.id === bookingId ? { ...booking, status: "cancelled" as const } : booking,
-        ),
-      )
+          booking.id === bookingId
+            ? { ...booking, status: "cancelled" as const }
+            : booking
+        )
+      );
     } catch (error) {
-      console.error("Failed to cancel booking:", error)
+      console.error("Failed to cancel booking:", error);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -154,12 +166,18 @@ export default function ReservationsPage() {
           ))}
         </div>
       </div>
-    )
+    );
   }
 
-  const upcomingBookings = bookings.filter((booking) => booking.status === "upcoming")
-  const completedBookings = bookings.filter((booking) => booking.status === "completed")
-  const cancelledBookings = bookings.filter((booking) => booking.status === "cancelled")
+  const upcomingBookings = bookings.filter(
+    (booking) => booking.status === "upcoming"
+  );
+  const completedBookings = bookings.filter(
+    (booking) => booking.status === "completed"
+  );
+  const cancelledBookings = bookings.filter(
+    (booking) => booking.status === "cancelled"
+  );
 
   return (
     <div>
@@ -167,16 +185,24 @@ export default function ReservationsPage() {
 
       <Tabs defaultValue="upcoming">
         <TabsList className="mb-6">
-          <TabsTrigger value="upcoming">Upcoming ({upcomingBookings.length})</TabsTrigger>
-          <TabsTrigger value="completed">Completed ({completedBookings.length})</TabsTrigger>
-          <TabsTrigger value="cancelled">Cancelled ({cancelledBookings.length})</TabsTrigger>
+          <TabsTrigger value="upcoming">
+            Upcoming ({upcomingBookings.length})
+          </TabsTrigger>
+          <TabsTrigger value="completed">
+            Completed ({completedBookings.length})
+          </TabsTrigger>
+          <TabsTrigger value="cancelled">
+            Cancelled ({cancelledBookings.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming">
           {upcomingBookings.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-10">
-                <p className="mb-4 text-center text-muted-foreground">You don't have any upcoming reservations</p>
+                <p className="mb-4 text-center text-muted-foreground">
+                  You don't have any upcoming reservations
+                </p>
                 <Link href="/">
                   <Button>Browse Movies</Button>
                 </Link>
@@ -191,9 +217,15 @@ export default function ReservationsPage() {
                       <CardTitle>{booking.movieTitle}</CardTitle>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={`/dashboard/reservations/${booking.id}`}>View Details</Link>
+                          <Link href={`/dashboard/reservations/${booking.id}`}>
+                            View Details
+                          </Link>
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => handleCancelBooking(booking.id)}>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleCancelBooking(booking.id)}
+                        >
                           Cancel
                         </Button>
                       </div>
@@ -220,7 +252,10 @@ export default function ReservationsPage() {
                         <h3 className="mb-2 text-sm font-medium">Seats</h3>
                         <div className="flex flex-wrap gap-2">
                           {booking.seats.map((seat) => (
-                            <div key={seat.id} className="rounded-md bg-muted px-2 py-1 text-xs">
+                            <div
+                              key={seat.id}
+                              className="rounded-md bg-muted px-2 py-1 text-xs"
+                            >
                               {seat.row}-{seat.number}
                             </div>
                           ))}
@@ -229,7 +264,11 @@ export default function ReservationsPage() {
 
                       <div className="flex items-center justify-center">
                         {booking.qrCode && (
-                          <img src={booking.qrCode || "/placeholder.svg"} alt="Ticket QR Code" className="h-24 w-24" />
+                          <img
+                            src={booking.qrCode || "/placeholder.svg"}
+                            alt="Ticket QR Code"
+                            className="h-24 w-24"
+                          />
                         )}
                       </div>
                     </div>
@@ -237,7 +276,9 @@ export default function ReservationsPage() {
                   <CardFooter className="flex justify-between">
                     <div>
                       <span className="text-sm font-medium">Total:</span>{" "}
-                      <span className="text-sm">${booking.totalPrice.toFixed(2)}</span>
+                      <span className="text-sm">
+                        ${booking.totalPrice.toFixed(2)}
+                      </span>
                     </div>
                     <Button variant="outline" size="sm">
                       <Download className="mr-2 h-4 w-4" />
@@ -254,7 +295,9 @@ export default function ReservationsPage() {
           {completedBookings.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-10">
-                <p className="text-center text-muted-foreground">You don't have any completed reservations</p>
+                <p className="text-center text-muted-foreground">
+                  You don't have any completed reservations
+                </p>
               </CardContent>
             </Card>
           ) : (
@@ -265,7 +308,9 @@ export default function ReservationsPage() {
                     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                       <CardTitle>{booking.movieTitle}</CardTitle>
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/dashboard/reservations/${booking.id}`}>View Details</Link>
+                        <Link href={`/dashboard/reservations/${booking.id}`}>
+                          View Details
+                        </Link>
                       </Button>
                     </div>
                   </CardHeader>
@@ -290,7 +335,10 @@ export default function ReservationsPage() {
                         <h3 className="mb-2 text-sm font-medium">Seats</h3>
                         <div className="flex flex-wrap gap-2">
                           {booking.seats.map((seat) => (
-                            <div key={seat.id} className="rounded-md bg-muted px-2 py-1 text-xs">
+                            <div
+                              key={seat.id}
+                              className="rounded-md bg-muted px-2 py-1 text-xs"
+                            >
                               {seat.row}-{seat.number}
                             </div>
                           ))}
@@ -301,7 +349,9 @@ export default function ReservationsPage() {
                   <CardFooter className="flex justify-between">
                     <div>
                       <span className="text-sm font-medium">Total:</span>{" "}
-                      <span className="text-sm">${booking.totalPrice.toFixed(2)}</span>
+                      <span className="text-sm">
+                        ${booking.totalPrice.toFixed(2)}
+                      </span>
                     </div>
                     <Button variant="outline" size="sm">
                       <Download className="mr-2 h-4 w-4" />
@@ -318,7 +368,9 @@ export default function ReservationsPage() {
           {cancelledBookings.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-10">
-                <p className="text-center text-muted-foreground">You don't have any cancelled reservations</p>
+                <p className="text-center text-muted-foreground">
+                  You don't have any cancelled reservations
+                </p>
               </CardContent>
             </Card>
           ) : (
@@ -347,9 +399,13 @@ export default function ReservationsPage() {
                   <CardFooter>
                     <div>
                       <span className="text-sm font-medium">Total:</span>{" "}
-                      <span className="text-sm">${booking.totalPrice.toFixed(2)}</span>
+                      <span className="text-sm">
+                        ${booking.totalPrice.toFixed(2)}
+                      </span>
                     </div>
-                    <div className="rounded-md bg-muted px-3 py-1 text-sm">Cancelled</div>
+                    <div className="rounded-md bg-muted px-3 py-1 text-sm">
+                      Cancelled
+                    </div>
                   </CardFooter>
                 </Card>
               ))}
@@ -358,6 +414,5 @@ export default function ReservationsPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

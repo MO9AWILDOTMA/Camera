@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ma.cinecamera.dto.req.ProfileUpdateReq;
 import ma.cinecamera.dto.req.RolesDto;
-import ma.cinecamera.dto.req.UserReqDto;
 import ma.cinecamera.service.IUserService;
 
 @RestController
@@ -44,7 +44,7 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PutMapping(value = "/admin/users/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> update(@ModelAttribute @Valid UserReqDto dto, @PathVariable(name = "id") Long id)
+    public ResponseEntity<?> update(@ModelAttribute @Valid ProfileUpdateReq dto, @PathVariable(name = "id") Long id)
 	    throws IOException {
 	return ResponseEntity.ok(service.update(id, dto));
     }
@@ -62,8 +62,8 @@ public class UserController {
     }
 
     @Secured("ROLE_CINEPHILE")
-    @PutMapping(value = "/cinephile/users/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateMyAccount(@ModelAttribute @Valid UserReqDto dto) throws IOException {
+    @PutMapping(value = "/cinephile/users", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateMyAccount(@ModelAttribute @Valid ProfileUpdateReq dto) throws IOException {
 	return ResponseEntity.ok(service.updateMyAccount(dto));
     }
 

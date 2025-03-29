@@ -1,5 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function DashboardPage() {
   return (
@@ -22,7 +28,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-sm">
-                  <p>CineTix Downtown • Screen 1</p>
+                  <p>Camera Downtown • Screen 1</p>
                   <p className="mt-2">Seats: D-5, D-6</p>
                   <div className="mt-4 flex justify-between">
                     <span className="font-medium">Total</span>
@@ -39,7 +45,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-sm">
-                  <p>CineTix Westside • Screen 3</p>
+                  <p>Camera Westside • Screen 3</p>
                   <p className="mt-2">Seats: G-10, G-11, G-12</p>
                   <div className="mt-4 flex justify-between">
                     <span className="font-medium">Total</span>
@@ -73,7 +79,9 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-sm">
-                  <p>You cancelled your reservation for The Shawshank Redemption</p>
+                  <p>
+                    You cancelled your reservation for The Shawshank Redemption
+                  </p>
                   <p className="mt-2">Refund: $14.99</p>
                 </div>
               </CardContent>
@@ -122,6 +130,5 @@ export default function DashboardPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

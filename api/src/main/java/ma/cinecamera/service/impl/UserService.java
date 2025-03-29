@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import ma.cinecamera.dto.req.ProfileUpdateReq;
 import ma.cinecamera.dto.req.RolesDto;
-import ma.cinecamera.dto.req.UserReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.UserRespDto;
@@ -94,7 +94,7 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public UserRespDto update(Long id, UserReqDto dto) throws IOException {
+    public UserRespDto update(Long id, ProfileUpdateReq dto) throws IOException {
 	if (dto == null) {
 	    throw new IllegalArgumentException("Movie data cannot be null");
 	}
@@ -108,7 +108,7 @@ public class UserService implements IUserService {
 	user.setLastName(
 		dto.getLastName() != null && dto.getLastName().length() > 0 ? dto.getLastName() : user.getLastName());
 
-	if (dto.getPassword().length() > 0) {
+	if (dto.getPassword() != null && dto.getPassword().length() > 0) {
 	    String encodedPass = encoder.encode(dto.getPassword());
 	    user.setPassword(encodedPass);
 	}
@@ -160,7 +160,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserRespDto updateMyAccount(UserReqDto dto) throws IOException {
+    public UserRespDto updateMyAccount(ProfileUpdateReq dto) throws IOException {
 	Long id = getConnectedUserId();
 	return update(id, dto);
     }

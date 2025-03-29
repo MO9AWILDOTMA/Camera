@@ -69,7 +69,7 @@ export default function BookingPage({
           movieTitle: "Interstellar",
           theaterId,
           theaterName:
-            theaterId === "1" ? "CineTix Downtown" : "CineTix Westside",
+            theaterId === "1" ? "Camera Downtown" : "Camera Westside",
           screenName: theaterId === "1" ? "Screen 1" : "Screen 3",
           date,
           startTime: time,
