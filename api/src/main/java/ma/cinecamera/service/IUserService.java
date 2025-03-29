@@ -2,8 +2,8 @@ package ma.cinecamera.service;
 
 import java.io.IOException;
 
+import ma.cinecamera.dto.req.ProfileUpdateReq;
 import ma.cinecamera.dto.req.RolesDto;
-import ma.cinecamera.dto.req.UserReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.dto.resp.ListResponse;
 import ma.cinecamera.dto.resp.UserRespDto;
@@ -17,7 +17,7 @@ public interface IUserService {
 
     UserRespDto getDetail(Long id);
 
-    UserRespDto update(Long id, UserReqDto dto) throws IOException;
+    UserRespDto update(Long id, ProfileUpdateReq dto) throws IOException;
 
     GlobalResp delete(Long id);
 
@@ -25,7 +25,7 @@ public interface IUserService {
 
     UserRespDto getMyAccount();
 
-    UserRespDto updateMyAccount(UserReqDto dto) throws IOException;
+    UserRespDto updateMyAccount(ProfileUpdateReq dto) throws IOException;
 
     GlobalResp deleteMyAccount();
 

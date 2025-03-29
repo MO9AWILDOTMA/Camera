@@ -71,8 +71,8 @@ export default function ShowtimesPage({ params }: { params: paramType }) {
         // Generate mock showtimes for each date
         const mockShowtimes: Showtime[] = [];
         const theaters = [
-          { id: 1, name: "CineTix Downtown", screen: "Screen 1" },
-          { id: 2, name: "CineTix Westside", screen: "Screen 3" },
+          { id: 1, name: "Camera Downtown", screen: "Screen 1" },
+          { id: 2, name: "Camera Westside", screen: "Screen 3" },
         ];
 
         dates.forEach((date) => {
@@ -134,7 +134,7 @@ export default function ShowtimesPage({ params }: { params: paramType }) {
           }
 
           const theaterName =
-            theaterId === "1" ? "CineTix Downtown" : "CineTix Westside";
+            theaterId === "1" ? "Camera Downtown" : "Camera Westside";
 
           if (!grouped[date][theaterId]) {
             grouped[date][theaterId] = {

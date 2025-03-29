@@ -110,6 +110,9 @@ export const usersApi = {
   // Admin endpoints
   create: (data: any) => api.post("/admin/users", data),
   update: (id: number, data: any) => api.put(`/admin/users/${id}`, data),
+  updateMyAccount: (data: any) => api.put(`/cinephile/users`, data, {
+    headers: { "Content-Type" : "multipart/form-data"}
+  }),
   delete: (id: number) => api.delete(`/admin/users/${id}`),
   assignRoles: (id: number, roles: Role[]) => api.post(`/admin/users/${id}/roles`, {roles})
 }

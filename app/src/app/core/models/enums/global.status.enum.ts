@@ -1,6 +1,0 @@
-export enum GlobalStatus{
-  IN_PROGRESS = "IN_PROGRESS",
-  CONFIRMED = "CONFIRMED",
-  CANCELLED = "CANCELLED",
-  ARCHIVED = "ARCHIVED",
-}

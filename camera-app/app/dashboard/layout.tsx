@@ -1,40 +1,40 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect } from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { CreditCard, Home, LogOut, Settings, Ticket, User } from "lucide-react"
-import { useAuth } from "@/lib/auth-provider"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useEffect } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { CreditCard, Home, LogOut, Ticket, User } from "lucide-react";
+import { useAuth } from "@/lib/auth-provider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const { user, loading, logout, isAuthenticated } = useAuth()
-  const router = useRouter()
-  const pathname = usePathname()
+  const { user, loading, logout, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push("/auth?redirect=/dashboard")
+      router.push("/auth?redirect=/dashboard");
     }
-  }, [loading, isAuthenticated, router])
+  }, [loading, isAuthenticated, router]);
 
   const handleLogout = async () => {
     try {
-      await logout()
-      router.push("/")
+      await logout();
+      router.push("/");
     } catch (error) {
-      console.error("Failed to logout:", error)
+      console.error("Failed to logout:", error);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -42,8 +42,11 @@ export default function DashboardLayout({
         <div className="border-b">
           <div className="container flex h-16 items-center px-4 md:px-6">
             <div className="mr-4 hidden md:flex">
-              <Link href="/" className="mr-6 flex items-center gap-2 text-lg font-bold">
-                CineTix
+              <Link
+                href="/"
+                className="mr-6 flex items-center gap-2 text-lg font-bold"
+              >
+                Camera
               </Link>
               <nav className="flex items-center gap-6 text-sm">
                 <Skeleton className="h-4 w-20" />
@@ -78,7 +81,7 @@ export default function DashboardLayout({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   const navItems = [
@@ -86,25 +89,36 @@ export default function DashboardLayout({
     { href: "/dashboard/reservations", label: "My Reservations", icon: Ticket },
     { href: "/dashboard/payments", label: "Payment History", icon: CreditCard },
     { href: "/dashboard/profile", label: "Profile", icon: User },
-    { href: "/dashboard/settings", label: "Settings", icon: Settings },
-  ]
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
       <div className="border-b">
         <div className="container flex h-16 items-center px-4 md:px-6">
           <div className="mr-4 hidden md:flex">
-            <Link href="/" className="mr-6 flex items-center gap-2 text-lg font-bold">
-              CineTix
+            <Link
+              href="/"
+              className="mr-6 flex items-center gap-2 text-lg font-bold"
+            >
+              Camera
             </Link>
             <nav className="flex items-center gap-6 text-sm">
-              <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                href="/"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Home
               </Link>
-              <Link href="/movies" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                href="/movies"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Movies
               </Link>
-              <Link href="/theaters" className="text-muted-foreground transition-colors hover:text-foreground">
+              <Link
+                href="/theaters"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
                 Theaters
               </Link>
             </nav>
@@ -152,7 +166,10 @@ export default function DashboardLayout({
             <div className="space-y-1">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
-                  <Button variant={pathname === item.href ? "secondary" : "ghost"} className="w-full justify-start">
+                  <Button
+                    variant={pathname === item.href ? "secondary" : "ghost"}
+                    className="w-full justify-start"
+                  >
                     <item.icon className="mr-2 h-4 w-4" />
                     {item.label}
                   </Button>
@@ -161,7 +178,11 @@ export default function DashboardLayout({
             </div>
           </nav>
           <div className="p-4">
-            <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={handleLogout}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Log Out
             </Button>
@@ -170,6 +191,5 @@ export default function DashboardLayout({
         <div className="flex-1 p-8">{children}</div>
       </div>
     </div>
-  )
+  );
 }
-

@@ -1,13 +1,13 @@
 import {
   CircleDollarSign,
+  CircleUser,
   Film,
   Home,
   Percent,
-  Settings,
   Theater,
   TicketCheck,
   Timer,
-  User,
+  Users,
 } from "lucide-react";
 
 export const navItems = [
@@ -18,6 +18,6 @@ export const navItems = [
   { href: "/admin/reservations", label: "Reservations", icon: TicketCheck },
   { href: "/admin/payments", label: "Payments", icon: CircleDollarSign },
   { href: "/admin/discounts", label: "Discounts", icon: Percent },
-  { href: "/admin/users", label: "Users", icon: User },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
 ];
