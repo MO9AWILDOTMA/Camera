@@ -26,12 +26,16 @@ export const moviesApi = {
   getFeatured: () => api.get("/user/movies/featured"),
   getCurrentlyShowing: () => api.get("/user/movies/current"),
   getUpcoming: () => api.get("/user/movies/upcoming?size=4"),
-  getById: (id: number) => api.get(`/user/movies/${id}`),
+  getById: (slug: string) => api.get(`/user/movies/${slug}`),
   search: (query: string) => api.get(`/user/movies/search/${query}`),
   // Admin endpoints
-  create: (data: any) => api.post("/admin/movies", data),
-  update: (id: number, data: any) => api.put(`/admin/movies/${id}`, data),
-  delete: (id: number) => api.delete(`/admin/movies/${id}`),
+  create: (data: any) => api.post("/moderator/movies", data, {
+    headers: { "Content-Type" : "multipart/form-data"}
+  }),
+  update: (id: number, data: any) => api.put(`/moderator/movies/${id}`, data, {
+    headers: { "Content-Type" : "multipart/form-data"}
+  }),
+  delete: (id: number) => api.delete(`/moderator/movies/${id}`),
 }
 
 // Screening Rooms API
