@@ -129,18 +129,38 @@
         <div>
           <button
             type="submit"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            [disabled]="registerForm.invalid"
+            (click)="handleClick()"
+            [ngClass]="{
+              'cursor-not-allowed': registerForm.invalid,
+              'cursor-pointer': !registerForm.invalid,
+              'w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white': true,
+              'bg-gray-400': registerForm.invalid,
+              'bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500':
+                !registerForm.invalid,
+            }"
           >
             Create Account
           </button>
         </div>
 
+        <div
+          *ngIf="(authState$ | async)?.error"
+          class="text-red-600 text-center font-serif text-sm"
+        >
+          {{ (authState$ | async)?.error }}
+        </div>
+
         <div class="mt-6 text-center">
           <p class="text-sm text-gray-600">
             Already have an account?
-            <a href="#" class="font-medium text-red-600 hover:text-red-500">
+            <button
+              type="button"
+              (click)="handleClick()"
+              class="font-medium text-red-600 hover:text-red-500"
+            >
               Sign in here
-            </a>
+            </button>
           </p>
         </div>
       </form>

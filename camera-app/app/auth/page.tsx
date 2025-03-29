@@ -102,7 +102,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="container flex h-screen my-10 items-center justify-center px-4 md:px-6">
+    <div className="container flex h-screen my-2  0 items-center justify-center px-4 md:px-6">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Welcome to CineTix</CardTitle>

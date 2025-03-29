@@ -1,3 +1,4 @@
+import Role from "@/models/role.model"
 import axios from "axios"
 
 // Create an axios instance with credentials
@@ -21,6 +22,7 @@ api.interceptors.response.use(
 
 // Movies API
 export const moviesApi = {
+  getAll: (page?: number, size?: number) => api.get(`/user/movies?page=${page}&size=${size}`),
   getFeatured: () => api.get("/user/movies/featured"),
   getCurrentlyShowing: () => api.get("/user/movies/current"),
   getUpcoming: () => api.get("/user/movies/upcoming?size=4"),
@@ -46,7 +48,8 @@ export const theatersApi = {
 export const showtimesApi = {
   getByMovie: (movieId: number) => api.get(`/user/showtimes/movie/${movieId}`),
   getByTheater: (theaterId: number) => api.get(`/user/showtimes/theater/${theaterId}`),
-  getById: (id: number) => api.get(`/user/showtimes/${id}`),
+  getById: (slug: string) => api.get(`/user/showtimes/${slug}`),
+  getAll: () => api.get(`/user/showtimes?size=6`),
   // Admin endpoints
   create: (data: any) => api.post("/admin/showtimes", data),
   update: (id: number, data: any) => api.put(`/admin/showtimes/${id}`, data),
@@ -68,9 +71,28 @@ export const seatsApi = {
 
 // Admin Analytics API
 export const analyticsApi = {
-  getSales: (period: string) => api.get(`/admin/analytics/sales?period=${period}`),
-  getRevenue: (period: string) => api.get(`/admin/analytics/revenue?period=${period}`),
-  getOccupancy: (period: string) => api.get(`/admin/analytics/occupancy?period=${period}`),
+  // getSales: (period: string) => api.get(`/admin/analytics/sales?period=${period}`),
+  // getRevenue: (period: string) => api.get(`/admin/analytics/revenue?period=${period}`),
+  // getOccupancy: (period: string) => api.get(`/admin/analytics/occupancy?period=${period}`),
+  getAnalyticsData: (days: number) => api.get(`/moderator/analytics?days=${days}`)
+}
+
+export const usersApi = {
+  getAll: (page: number, size: number) => api.get(`/admin/users?page=${page}&size=${size}`),
+  getById: (id: number) => api.get(`/admin/users/${id}`),
+  // Admin endpoints
+  create: (data: any) => api.post("/admin/users", data),
+  update: (id: number, data: any) => api.put(`/admin/users/${id}`, data),
+  delete: (id: number) => api.delete(`/admin/users/${id}`),
+  assignRoles: (id: number, roles: Role[]) => api.post(`/admin/users/${id}/roles`, {roles})
+}
+
+export const rolesApi = {
+  getAll: () => api.get("/admin/roles"),
+}
+
+export const activityApi= {
+  getAll: (page: number, size: number) => api.get(`/moderator/activities?page=${page}&size=${size}`)
 }
 
 export default api

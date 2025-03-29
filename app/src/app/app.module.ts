@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -9,9 +9,7 @@ import { environment } from '../environments/environment';
 // Guards and Interceptors
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { RoleInterceptor } from './core/interceptors/role.interceptor';
-import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
-import { ModeratorGuard } from './core/guards/moderator.guard';
 
 // Store
 import { appReducers } from './core/store/reducers/app.reducer';
@@ -28,6 +26,8 @@ import { ScreeningRoomEffects } from './core/store/effects/screening-room.effect
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PagesModule } from './pages/pages.module';
+import { ClientGuard } from './core/guards/client.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,7 @@ import { PagesModule } from './pages/pages.module';
     ]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
-      // logOnly: environment.production,
+      logOnly: environment.production,
       autoPause: true,
       trace: false,
       traceLimit: 75,
@@ -69,9 +69,10 @@ import { PagesModule } from './pages/pages.module';
       useClass: RoleInterceptor,
       multi: true
     },
-    AuthGuard,
+    ClientGuard,
     AdminGuard,
-    ModeratorGuard
+    AuthGuard,
+    provideHttpClient()
   ],
   bootstrap: [AppComponent]
 })

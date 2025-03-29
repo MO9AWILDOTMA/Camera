@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Observable, map, of } from 'rxjs';
-import { selectUser } from '../store/selectors/auth.selector';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable, map, tap } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { ERole } from '../models/role.model';
 
 @Injectable({
@@ -10,20 +9,35 @@ import { ERole } from '../models/role.model';
 })
 export class AdminGuard implements CanActivate {
   constructor(
-    private store: Store,
+    private authService: AuthService,
     private router: Router
   ) {}
 
-  canActivate(): Observable<boolean> {
-    // return this.store.select(selectUser).pipe(
-    //   map(user => {
-    //     if (user && user.role.name === ERole.ROLE_ADMIN) {
-    //       return true;
-    //     }
-    //     this.router.navigate(['/']);
-    //     return false;
-    //   })
-    // );
-    return of(true)
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+
+    return this.authService.getCurrentUser().pipe(
+      map(user => {
+        // Check if user exists
+        if (!user) {
+          console.log('No user found, redirecting to auth');
+          this.router.navigate(['/auth']);
+          return false;
+        }
+
+        // Check if the user has admin role
+        const isAdmin = user.roles?.some(role => role.name === ERole.ROLE_ADMIN);
+
+        if (isAdmin) {
+          console.log('Admin role verified, allowing access');
+          return true;
+        } else {
+          console.log('Not an admin, redirecting to client area');
+          this.router.navigate(['/client']);
+          return false;
+        }
+      })
+    );
   }
 }

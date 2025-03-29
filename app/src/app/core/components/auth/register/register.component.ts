@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../../../store/actions/auth.action';
@@ -9,12 +9,17 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  standalone: false
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;;
   authState$: Observable<AuthState>;
+  @Output() switchPage = new EventEmitter<void>();
 
+  handleClick() {
+    this.switchPage.emit();
+  }
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>
@@ -28,7 +33,7 @@ export class RegisterComponent implements OnInit {
       lastName: [''],
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 

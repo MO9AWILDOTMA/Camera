@@ -100,7 +100,7 @@ export function UpcomingMovies() {
           <CardHeader className="p-4">
             <CardTitle className="line-clamp-1 text-lg">{movie.name}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              {movie.genres[1]} • {Math.floor(movie.duration / 60)}h{" "}
+              {movie.genres[0]} • {Math.floor(movie.duration / 60)}h{" "}
               {movie.duration % 60}m
             </p>
             <p className="text-sm text-muted-foreground">

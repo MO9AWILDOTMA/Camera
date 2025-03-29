@@ -37,6 +37,7 @@ import ma.cinecamera.exception.ResourceNotFoundException;
 import ma.cinecamera.mapper.MovieMapper;
 import ma.cinecamera.model.Media;
 import ma.cinecamera.model.Movie;
+import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.Genre;
 import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
@@ -71,6 +72,9 @@ public class MovieService implements IMovieService {
 
     @Autowired
     private MediaRepository mediaRepository;
+
+    @Autowired
+    private ActivityService activityService;
 
     @Override
     public Movie getMovieById(Long id) {
@@ -136,6 +140,8 @@ public class MovieService implements IMovieService {
 
 	// Set image paths in the response DTO
 	respDto.setPicturePaths(fileService.getFilePaths(savedMovie.getId(), uniqueUploadDir, MediaType.MOVIE));
+
+	activityService.createActivity(ActivityType.MOVIE, movie.getName());
 
 	return respDto;
     }

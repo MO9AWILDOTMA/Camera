@@ -24,6 +24,7 @@ import ma.cinecamera.mapper.ShowtimeMapper;
 import ma.cinecamera.model.Movie;
 import ma.cinecamera.model.ScreeningRoom;
 import ma.cinecamera.model.Showtime;
+import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.MovieRepository;
 import ma.cinecamera.repository.ShowtimeRepository;
@@ -67,6 +68,9 @@ public class ShowtimeService implements IShowtimeService {
     private final String uploadDirectory = "src/main/resources/static/images/movies";
 
     private final Slugify slg = new Slugify();
+
+    @Autowired
+    private ActivityService activityService;
 
     @Override
     public Showtime getById(Long id) {
@@ -134,6 +138,11 @@ public class ShowtimeService implements IShowtimeService {
 	Showtime savedShowtime = repository.save(showtime);
 	movie.updateStatus();
 	movieRepository.save(movie);
+
+	String time = showtime.getDateTime().getHour() + "H";
+	String message = movie.getName() + " Showtime in: " + time;
+
+	activityService.createActivity(ActivityType.SHOWTIME, message);
 
 	return mapper.entityToDto(savedShowtime);
     }

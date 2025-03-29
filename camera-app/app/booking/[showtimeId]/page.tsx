@@ -1,44 +1,56 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { ArrowLeft, Calendar, Clock, CreditCard } from "lucide-react"
-import { useAuth } from "@/lib/auth-provider"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Calendar, Clock, CreditCard } from "lucide-react";
+import { useAuth } from "@/lib/auth-provider";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import Loading from "@/app/loading";
 
 type Showtime = {
-  id: string
-  movieId: string
-  movieTitle: string
-  theaterId: string
-  theaterName: string
-  screenName: string
-  date: string
-  startTime: string
-  endTime: string
-  price: number
-}
+  id: string;
+  movieId: string;
+  movieTitle: string;
+  theaterId: string;
+  theaterName: string;
+  screenName: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  price: number;
+};
 
 type Seat = {
-  id: string
-  row: string
-  number: number
-  type: "standard" | "premium" | "vip"
-  status: "available" | "reserved" | "selected" | "unavailable"
-  price: number
-}
+  id: string;
+  row: string;
+  number: number;
+  type: "standard" | "premium" | "vip";
+  status: "available" | "reserved" | "selected" | "unavailable";
+  price: number;
+};
 
-export default function BookingPage({ params }: { params: { showtimeId: string } }) {
-  const [showtime, setShowtime] = useState<Showtime | null>(null)
-  const [seats, setSeats] = useState<Seat[][]>([])
-  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([])
-  const [loading, setLoading] = useState(true)
-  const { isAuthenticated } = useAuth()
-  const router = useRouter()
-  const { toast } = useToast()
+export default function BookingPage({
+  params,
+}: {
+  params: { showtimeId: string };
+}) {
+  const [showtime, setShowtime] = useState<Showtime | null>(null);
+  const [seats, setSeats] = useState<Seat[][]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchShowtimeAndSeats = async () => {
@@ -49,14 +61,15 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
         // const seatsResponse = await seatsApi.getByShowtime(params.showtimeId)
 
         // Parse showtime ID to get date and time
-        const [date, time, theaterId] = params.showtimeId.split("-")
+        const [date, time, theaterId] = params.showtimeId.split("-");
 
         const mockShowtime: Showtime = {
           id: params.showtimeId,
           movieId: "1",
           movieTitle: "Interstellar",
           theaterId,
-          theaterName: theaterId === "1" ? "CineTix Downtown" : "CineTix Westside",
+          theaterName:
+            theaterId === "1" ? "CineTix Downtown" : "CineTix Westside",
           screenName: theaterId === "1" ? "Screen 1" : "Screen 3",
           date,
           startTime: time,
@@ -71,35 +84,35 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
                     ? "14:15"
                     : "20:45",
           price: theaterId === "1" ? 12.99 : 14.99,
-        }
+        };
 
         // Generate mock seats
-        const rows = ["A", "B", "C", "D", "E", "F", "G", "H"]
-        const mockSeats: Seat[][] = []
+        const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+        const mockSeats: Seat[][] = [];
 
         rows.forEach((row, rowIndex) => {
-          const seatsInRow: Seat[] = []
-          const seatsCount = row === "A" || row === "H" ? 8 : 10
+          const seatsInRow: Seat[] = [];
+          const seatsCount = row === "A" || row === "H" ? 8 : 10;
 
           for (let i = 1; i <= seatsCount; i++) {
             // Determine seat type
-            let type: "standard" | "premium" | "vip" = "standard"
+            let type: "standard" | "premium" | "vip" = "standard";
             if (row === "D" || row === "E") {
-              type = "premium"
+              type = "premium";
             } else if (row === "G") {
-              type = "vip"
+              type = "vip";
             }
 
             // Determine seat status (randomly make some seats unavailable)
-            let status: "available" | "reserved" | "unavailable" = "available"
+            let status: "available" | "reserved" | "unavailable" = "available";
             if (Math.random() < 0.2) {
-              status = "unavailable"
+              status = "unavailable";
             }
 
             // Calculate price based on seat type
-            let price = mockShowtime.price
-            if (type === "premium") price *= 1.2
-            if (type === "vip") price *= 1.5
+            let price = mockShowtime.price;
+            if (type === "premium") price *= 1.2;
+            if (type === "vip") price *= 1.5;
 
             seatsInRow.push({
               id: `${row}-${i}`,
@@ -108,71 +121,71 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
               type,
               status,
               price,
-            })
+            });
           }
 
-          mockSeats.push(seatsInRow)
-        })
+          mockSeats.push(seatsInRow);
+        });
 
-        setShowtime(mockShowtime)
-        setSeats(mockSeats)
+        setShowtime(mockShowtime);
+        setSeats(mockSeats);
       } catch (error) {
-        console.error("Failed to fetch showtime and seats:", error)
+        console.error("Failed to fetch showtime and seats:", error);
         toast({
           title: "Error",
           description: "Failed to load booking information",
           variant: "destructive",
-        })
+        });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchShowtimeAndSeats()
-  }, [params.showtimeId, toast])
+    fetchShowtimeAndSeats();
+  }, [params.showtimeId, toast]);
 
   const handleSeatClick = (seat: Seat) => {
-    if (seat.status === "unavailable") return
+    if (seat.status === "unavailable") return;
 
     setSeats((prevSeats) => {
-      const newSeats = [...prevSeats]
+      const newSeats = [...prevSeats];
 
       // Find the seat in the array and update its status
       for (let i = 0; i < newSeats.length; i++) {
         for (let j = 0; j < newSeats[i].length; j++) {
           if (newSeats[i][j].id === seat.id) {
-            const isSelected = newSeats[i][j].status === "selected"
+            const isSelected = newSeats[i][j].status === "selected";
             newSeats[i][j] = {
               ...newSeats[i][j],
               status: isSelected ? "available" : "selected",
-            }
-            break
+            };
+            break;
           }
         }
       }
 
-      return newSeats
-    })
+      return newSeats;
+    });
 
     setSelectedSeats((prevSelected) => {
-      const isAlreadySelected = prevSelected.some((s) => s.id === seat.id)
+      const isAlreadySelected = prevSelected.some((s) => s.id === seat.id);
 
       if (isAlreadySelected) {
-        return prevSelected.filter((s) => s.id !== seat.id)
+        return prevSelected.filter((s) => s.id !== seat.id);
       } else {
-        return [...prevSelected, seat]
+        return [...prevSelected, seat];
       }
-    })
-  }
+    });
+  };
 
   const handleProceedToPayment = () => {
     if (!isAuthenticated) {
       toast({
         title: "Authentication Required",
         description: "Please sign in to continue with your booking",
-      })
-      router.push(`/auth?redirect=/booking/${params.showtimeId}`)
-      return
+      });
+      router.push(`/auth?redirect=/booking/${params.showtimeId}`);
+      return;
     }
 
     if (selectedSeats.length === 0) {
@@ -180,8 +193,8 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
         title: "No Seats Selected",
         description: "Please select at least one seat to continue",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // In a real app, you would create a booking and redirect to payment
@@ -189,33 +202,25 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
     toast({
       title: "Booking Successful",
       description: "Your tickets have been booked successfully",
-    })
-    router.push("/dashboard/reservations")
-  }
+    });
+    router.push("/dashboard/reservations");
+  };
 
   const getTotalPrice = () => {
-    return selectedSeats.reduce((total, seat) => total + seat.price, 0)
-  }
+    return selectedSeats.reduce((total, seat) => total + seat.price, 0);
+  };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="h-10 w-1/4 animate-pulse rounded-lg bg-muted mb-8"></div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="md:col-span-2">
-            <div className="h-[400px] w-full animate-pulse rounded-lg bg-muted"></div>
-          </div>
-          <div>
-            <div className="h-[300px] w-full animate-pulse rounded-lg bg-muted"></div>
-          </div>
-        </div>
-      </div>
-    )
+    return <Loading />;
   }
 
   if (!showtime) {
@@ -226,7 +231,7 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
           <Button className="mt-4">Back to Home</Button>
         </Link>
       </div>
-    )
+    );
   }
 
   return (
@@ -260,13 +265,17 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
           </div>
 
           <div className="mb-8 w-full overflow-x-auto">
-            <div className="mb-4 w-full rounded-lg bg-muted p-2 text-center text-sm font-medium">Screen</div>
+            <div className="mb-4 w-full rounded-lg bg-muted p-2 text-center text-sm font-medium">
+              Screen
+            </div>
 
             <div className="mb-8 flex justify-center">
               <div className="space-y-2">
                 {seats.map((row, rowIndex) => (
                   <div key={rowIndex} className="flex items-center gap-2">
-                    <div className="w-6 text-center text-sm font-medium">{row[0]?.row}</div>
+                    <div className="w-6 text-center text-sm font-medium">
+                      {row[0]?.row}
+                    </div>
                     <div className="flex gap-1">
                       {row.map((seat) => (
                         <button
@@ -289,7 +298,9 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
                         </button>
                       ))}
                     </div>
-                    <div className="w-6 text-center text-sm font-medium">{row[0]?.row}</div>
+                    <div className="w-6 text-center text-sm font-medium">
+                      {row[0]?.row}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -339,11 +350,16 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
               <div>
                 <h3 className="mb-2 font-medium">Selected Seats</h3>
                 {selectedSeats.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No seats selected</p>
+                  <p className="text-sm text-muted-foreground">
+                    No seats selected
+                  </p>
                 ) : (
                   <div className="space-y-2">
                     {selectedSeats.map((seat) => (
-                      <div key={seat.id} className="flex justify-between text-sm">
+                      <div
+                        key={seat.id}
+                        className="flex justify-between text-sm"
+                      >
                         <span>
                           {seat.row}-{seat.number} ({seat.type})
                         </span>
@@ -364,7 +380,11 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
               )}
             </CardContent>
             <CardFooter>
-              <Button className="w-full" onClick={handleProceedToPayment} disabled={selectedSeats.length === 0}>
+              <Button
+                className="w-full"
+                onClick={handleProceedToPayment}
+                disabled={selectedSeats.length === 0}
+              >
                 <CreditCard className="mr-2 h-4 w-4" />
                 Proceed to Payment
               </Button>
@@ -373,6 +393,5 @@ export default function BookingPage({ params }: { params: { showtimeId: string }
         </div>
       </div>
     </div>
-  )
+  );
 }
-

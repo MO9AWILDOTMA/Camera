@@ -1,2 +1,2 @@
-<app-login />
-<p class="text-red-500">red text</p>
+<app-login *ngIf="login" (switchPage)="handleWhichPage()"></app-login>
+<app-register *ngIf="!login" (switchPage)="handleWhichPage()"></app-register>

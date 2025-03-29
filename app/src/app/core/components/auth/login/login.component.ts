@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../../../store/actions/auth.action';
@@ -8,11 +8,17 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  standalone: false
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   authState$: Observable<AuthState>;
+  @Output() switchPage = new EventEmitter<void>();
+
+  handleClick() {
+    this.switchPage.emit();
+  }
 
   constructor(
     private fb: FormBuilder,

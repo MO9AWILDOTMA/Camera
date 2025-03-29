@@ -1,0 +1,24 @@
+<div class="admin-layout">
+  <nav class="admin-sidebar">
+    <div class="logo">
+      <h2>Admin Panel</h2>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/admin/users" routerLinkActive="active">Users</a>
+      <a routerLink="/admin/movies" routerLinkActive="active">Movies</a>
+      <a routerLink="/admin/settings" routerLinkActive="active">Settings</a>
+    </div>
+    <div class="logout">
+      <button (click)="logout()">Logout</button>
+    </div>
+  </nav>
+  <main class="admin-content">
+    <header class="admin-header">
+      <div class="user-info">Welcome, Admin</div>
+    </header>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

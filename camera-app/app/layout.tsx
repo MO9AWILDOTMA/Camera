@@ -1,19 +1,19 @@
-import type React from "react"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
-import { AuthProvider } from "@/lib/auth-provider"
-import "./globals.css"
+import type React from "react";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/lib/auth-provider";
+import "./globals.css";
 
 export const metadata = {
-  title: "Cinema Ticketing System",
+  title: "Camera Ticketing System",
   description: "Book your favorite movies with ease",
-    generator: 'v0.dev'
-}
+  generator: "v0.dev",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -26,9 +26,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
-
-
-
-import './globals.css'
