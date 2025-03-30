@@ -1,17 +1,14 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Layout } from "@/components/layout";
 import { FixedPlugin } from "@/components/fixed-plugin";
 import { Footer, Navbar } from "@/components";
 import { Suspense } from "react";
 import Loading from "@/components/loading";
+import { Providers } from "./providers";
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Cinema Camera",
@@ -34,13 +31,15 @@ export default function RootLayout({
         ></script>
         <link rel="shortcut icon" href="/favicon.ico" type="image/png" />
       </head>
-      <body className={roboto.className}>
-        <Layout>
-          <Navbar />
-          <Suspense fallback={<Loading />}>{children}</Suspense>
-          <FixedPlugin />
-          <Footer />
-        </Layout>
+      <body className={inter.className}>
+        <Providers>
+          <Layout>
+            <Navbar />
+            <Suspense fallback={<Loading />}>{children}</Suspense>
+            <FixedPlugin />
+            <Footer />
+          </Layout>
+        </Providers>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"

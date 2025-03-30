@@ -32,6 +32,7 @@ interface UserUpdateFormProps {
 export function UserUpdateForm({
   user,
   open,
+  checkAuth,
   onOpenChange,
   onUpdateSuccess,
 }: UserUpdateFormProps) {
@@ -99,7 +100,9 @@ export function UserUpdateForm({
     }
 
     try {
-      const response = await usersApi.updateMyAccount(formDataToSend);
+      await usersApi.updateMyAccount(formDataToSend);
+
+      await checkAuth();
 
       toast({
         title: "Success",

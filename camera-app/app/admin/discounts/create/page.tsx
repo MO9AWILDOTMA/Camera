@@ -69,7 +69,7 @@ const CreateDiscount = () => {
           Back
         </Button>
       </div>
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col justify-center items-center lg:flex-row gap-8">
         <div className="bg-white rounded-lg shadow p-6">
           <DynamicForm
             fields={discountFields}

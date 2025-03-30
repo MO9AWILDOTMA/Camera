@@ -3,11 +3,11 @@
 import { fetchMovies, searchForMovies } from "@/apis/fetchMovies";
 import Alert from "@/components/alert";
 import Loading from "@/components/loading";
-import MovieCard from "@/components/movie-card";
 import Search from "@/components/search";
 import { Pagination } from "@/components/pagination";
 import { Movie } from "@/models/Movie";
 import React, { useEffect, useState } from "react";
+import MovieCard from "@/components/movie-card";
 
 const MoviesList = () => {
   const [movies, setMovies] = useState([]);

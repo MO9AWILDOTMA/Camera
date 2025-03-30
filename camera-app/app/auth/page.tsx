@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,11 +50,9 @@ const registerSchema = z
     confirmPassword: z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
-    terms: z
-      .boolean()
-      .refine((val) => val === true, {
-        message: "You must accept the terms of service",
-      }),
+    terms: z.boolean().refine((val) => val === true, {
+      message: "You must accept the terms of service",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -62,6 +60,8 @@ const registerSchema = z
   });
 
 export default function AuthPage() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [activeTab, setActiveTab] = useState("login");
   const { login, register } = useAuth();
   const router = useRouter();
@@ -95,8 +95,14 @@ export default function AuthPage() {
         title: "Login successful",
         description: "You have been logged in successfully",
       });
-      router.push("/");
+
+      console.log(redirect);
+
+      if (redirect) router.push(`${redirect}`);
+      else router.push("/");
     } catch (error) {
+      console.log("teest");
+
       toast({
         title: "Login failed",
         description: "Invalid email or password",
@@ -129,7 +135,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="container flex h-screen my-2  0 items-center justify-center px-4 md:px-6">
+    <div className="container flex h-screen my-12  0 items-center justify-center px-4 md:px-6">
       <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">
