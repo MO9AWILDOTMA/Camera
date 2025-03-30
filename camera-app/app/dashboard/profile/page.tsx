@@ -24,7 +24,7 @@ const api = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8080";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, checkAuth } = useAuth();
   const router = useRouter();
   const [picture, setPicture] = useState(
     "https://ui-avatars.com/api/?name=User&background=f0f0f0&color=333&rounded=true&size=150"
@@ -75,7 +75,7 @@ const Profile = () => {
 
   if (loading) return <Loading />;
 
-  const getRoleBadgeColor = (roleName) => {
+  const getRoleBadgeColor = (roleName: string) => {
     const role = roleName.split("_").pop();
     switch (role) {
       case "ADMIN":
@@ -253,6 +253,7 @@ const Profile = () => {
 
       <UserUpdateForm
         user={user!}
+        checkAuth={checkAuth}
         open={updateDialogOpen}
         onOpenChange={setUpdateDialogOpen}
         onUpdateSuccess={() => {

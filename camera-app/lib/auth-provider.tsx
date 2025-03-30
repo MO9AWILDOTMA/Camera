@@ -33,6 +33,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
   isAuthenticated: boolean;
   isAdmin: boolean;
 };
@@ -51,19 +52,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await api.get("/cinephile/myAccount");
-        setUser(response.data);
-      } catch (error) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    try {
+      const response = await api.get("/cinephile/myAccount");
+      setUser(response.data);
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     try {
@@ -115,6 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
+        checkAuth,
         isAuthenticated,
         isAdmin,
       }}

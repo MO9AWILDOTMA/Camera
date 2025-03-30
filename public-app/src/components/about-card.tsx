@@ -1,4 +1,5 @@
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
+import { useRouter } from "next/navigation";
 
 interface AboutCardProp {
   name: string;
@@ -17,7 +18,12 @@ export function AboutCard({
   slug,
   picturePaths,
 }: AboutCardProp) {
+  const router = useRouter();
   const picture = BASE_URL + picturePaths[0];
+  function hanldeClick(): void {
+    router.push(`/movies/${slug}`);
+  }
+
   return (
     <Card {...({} as any)} shadow={false}>
       <CardBody
@@ -52,7 +58,12 @@ export function AboutCard({
         >
           {description}
         </Typography>
-        <Button {...({} as any)} color="white" size="sm">
+        <Button
+          {...({} as any)}
+          color="white"
+          size="sm"
+          onClick={() => hanldeClick()}
+        >
           view details
         </Button>
       </CardBody>

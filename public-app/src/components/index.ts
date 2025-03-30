@@ -8,4 +8,4 @@ export * from "./stats-card";
 export * from "./event-content-card";
 export * from "./fixed-plugin";
 export * from "./video-hero";
-export * from "./movie-card";
+export * from "./screen-card";

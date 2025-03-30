@@ -100,3 +100,24 @@ export const fetchMovies = async (size:number = 3, page: number = 1) => {
         throw error;
     }
 }
+
+export const fetchMovieShowtimes = async (id: number) => {
+    try {
+        if (!BASE_URL) {
+            throw new Error('API Base URL is not configured. Please check your environment variables.');
+        }
+        const response = await axios(`${SHOW_MOVIE}/showtimes/${id}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching movies:', error);
+        if (axios.isAxiosError(error)) {
+            if (error.response?.status === 500) {
+                console.error('Server error:', error.response.data);
+            }
+            if (!error.response) {
+                console.error('Network error - please check if the API server is running');
+            }
+        }
+        throw error;
+    }
+}

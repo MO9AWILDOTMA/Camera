@@ -35,10 +35,16 @@ export function AboutEvent() {
   useEffect(() => {
     const getShowtimes = async () => {
       try {
-        const resp = await fetchShowtimes();
+        const resp = await fetchShowtimes(1, 6);
         let movieArray: Movie[] = [];
         resp.data.content.forEach((showtime: Showtime) => {
-          movieArray.push(showtime.movie);
+          const exists = movieArray.some(
+            (movie) => movie.id === showtime.movie.id
+          );
+
+          if (!exists) {
+            movieArray.push(showtime.movie);
+          }
         });
         setMovies(movieArray.length > 0 ? movieArray : EVENT_INFO);
       } catch (error) {

@@ -11,10 +11,17 @@ import { Film } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Discount from "@/models/discount.model";
 
-const columns = [
+const columns: any = [
   { key: "id", label: "ID" },
   { key: "name", label: "Name" },
-  { key: "percentage", label: "Percentage %" },
+  {
+    key: "percentage",
+    label: "Percentage %",
+
+    render: (item: any) => {
+      return item.percentage * 100 + "%";
+    },
+  },
 ];
 const Discounts = () => {
   const [discounts, setDiscounts] = useState();

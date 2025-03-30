@@ -3,7 +3,7 @@
 import DynamicForm, { FieldConfig } from "@/components/admin/dynamic-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { discountsApi, moviesApi, showtimesApi, theatersApi } from "@/lib/api";
+import { discountsApi, moviesApi, screenApi, showtimesApi } from "@/lib/api";
 import { format } from "date-fns";
 import { StepBack, X, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ const showtimeFields: FieldConfig[] = [
   {
     name: "dateTime",
     label: "Date & Time",
-    type: "datetime-local",
+    type: "datetime",
     placeholder: "Select date and time",
     description: "When the showtime will occur",
     required: true,
@@ -26,7 +26,6 @@ const showtimeFields: FieldConfig[] = [
     description: "Ticket price in USD",
     required: true,
     min: 0,
-    step: 0.01,
   },
   {
     name: "totalSeats",
@@ -81,7 +80,7 @@ const CreateShowtime = () => {
         const [moviesResponse, roomsResponse, discountsResponse] =
           await Promise.all([
             moviesApi.getAll(1, 50),
-            theatersApi.getAll(1, 50),
+            screenApi.getAll(1, 50),
             discountsApi.getAll(1, 50),
           ]);
         setAvailableMovies(moviesResponse.data.content);

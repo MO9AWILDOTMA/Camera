@@ -2,9 +2,11 @@
 import Image from "next/image";
 import { Button } from "@material-tailwind/react";
 
+const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL + "/showtimes";
+
 export function FixedPlugin() {
   return (
-    <a href="https://www.cinecamera.ma  " target="_blank">
+    <a href={DASH_URL} target="_blank">
       <Button
         {...({} as any)}
         color="white"

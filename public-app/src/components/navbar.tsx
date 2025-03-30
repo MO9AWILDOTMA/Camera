@@ -22,6 +22,8 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL + "/showtimes";
+
 interface NavItemProps {
   children: React.ReactNode;
   href?: string;
@@ -67,7 +69,7 @@ const NAV_MENU = [
   {
     name: "Screening Rooms",
     icon: TvIcon,
-    href: "/screening-rooms",
+    href: "/screening_rooms",
   },
   {
     name: "About Us",
@@ -136,7 +138,7 @@ export function Navbar() {
           ))}
         </ul>
         <div className="hidden items-center gap-4 lg:flex">
-          <a href="https://www.cinecamera.ma" target="_blank">
+          <a href={DASH_URL} target="_blank">
             <Button {...({} as any)} color={isScrolling ? "gray" : "white"}>
               book now!
             </Button>
@@ -167,7 +169,7 @@ export function Navbar() {
             ))}
           </ul>
           <div className="mt-6 flex items-center gap-4">
-            <a href="https://www.cinecamera.ma" target="_blank">
+            <a href={DASH_URL} target="_blank">
               <Button {...({} as any)} color="gray">
                 book now!
               </Button>

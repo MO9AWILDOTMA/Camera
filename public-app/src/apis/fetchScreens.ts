@@ -1,22 +1,18 @@
 import axios from "axios"
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const SHOWTIMES = BASE_URL  + "/user/showtimes";
+const SHOW_SCREENINGROOM = BASE_URL + "/user/screeningRooms";
 
-export const fetchShowtimes = async (page: number, size: number) => {
+
+export const fetchScreeningRoomDetails = async (slug: string)=> {
     try {
         if (!BASE_URL) {
             throw new Error('API Base URL is not configured. Please check your environment variables.');
         }
-        const response = await axios(SHOWTIMES, {
-            params: {
-                size,
-                page
-            }
-        });
+        const response = await axios(`${SHOW_SCREENINGROOM}/${slug}`);
         return response;
     } catch (error) {
-        console.error('Error fetching showtimes:', error);
+        console.error('Error fetching screeningroom:', error);
         if (axios.isAxiosError(error)) {
             if (error.response?.status === 500) {
                 console.error('Server error:', error.response.data);
@@ -30,15 +26,19 @@ export const fetchShowtimes = async (page: number, size: number) => {
 }
 
 
-export const fetchShowtimeDetails = async (slug: string)=> {
+export const fetchScreeningRooms = async (size:number = 3, page: number = 1) => {
     try {
         if (!BASE_URL) {
             throw new Error('API Base URL is not configured. Please check your environment variables.');
         }
-        const response = await axios(`${SHOWTIMES}/${slug}`);
+        const response = await axios(SHOW_SCREENINGROOM, {
+            params: {
+                page,
+                size
+            }});
         return response;
     } catch (error) {
-        console.error('Error fetching showtime:', error);
+        console.error('Error fetching screeningrooms:', error);
         if (axios.isAxiosError(error)) {
             if (error.response?.status === 500) {
                 console.error('Server error:', error.response.data);
