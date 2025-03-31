@@ -3,6 +3,7 @@ import {
   CircleUser,
   Film,
   Home,
+  LayoutDashboard,
   Percent,
   Theater,
   TicketCheck,
@@ -19,5 +20,6 @@ export const navItems = [
   { href: "/admin/payments", label: "Payments", icon: CircleDollarSign },
   { href: "/admin/discounts", label: "Discounts", icon: Percent },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/dashboard", label: "Client Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/profile", label: "Profile", icon: CircleUser },
 ];

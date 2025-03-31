@@ -1,5 +1,6 @@
 import Discount from "./discount.model";
 import Movie from "./movie.model";
+import ScreeningRoom from "./screening-room.model";
 
 export default interface Showtime {
   id: number;
@@ -9,6 +10,7 @@ export default interface Showtime {
   movie: Movie;
   discounts: Discount[];
   showVersion: ShowVersion;
+  screeningRoom: ScreeningRoom;
   totalSeats: number;
   reservedSeats: number;
   isPreview: boolean;
@@ -20,3 +22,5 @@ export enum ShowVersion {
   VOST_FR = "VOST_FR",
   VOST_EN = "VOST_EN",
 }
+
+

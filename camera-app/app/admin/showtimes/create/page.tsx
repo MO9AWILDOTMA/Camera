@@ -23,7 +23,7 @@ const showtimeFields: FieldConfig[] = [
     label: "Price",
     type: "number",
     placeholder: "10.00",
-    description: "Ticket price in USD",
+    description: "Ticket price in MAD",
     required: true,
     min: 0,
   },

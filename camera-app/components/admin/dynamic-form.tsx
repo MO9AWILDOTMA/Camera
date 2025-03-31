@@ -33,6 +33,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 // Define the possible field types
 export type FieldType =
@@ -336,7 +337,6 @@ export default function DynamicForm({
           />
         );
 
-      case "date":
       case "datetime":
         return (
           <FormField
@@ -357,23 +357,90 @@ export default function DynamicForm({
                         )}
                       >
                         {formField.value ? (
-                          format(formField.value, "yyyy-MM-dd") // Format as simple date string
+                          format(formField.value, "PPP p") // Format as date and time
                         ) : (
-                          <span>{field.placeholder || "Select a date"}</span>
+                          <span>
+                            {field.placeholder || "Select date and time"}
+                          </span>
                         )}
                         <CalendarIcon className="ml-auto h-4 w-4" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={formField.value}
-                      onSelect={(date) => {
-                        formField.onChange(date);
-                      }}
-                      initialFocus
-                    />
+                    <div className="p-4 border-b">
+                      <Calendar
+                        mode="single"
+                        selected={formField.value}
+                        onSelect={(date) => {
+                          // Preserve the time when changing the date
+                          if (date && formField.value) {
+                            const hours = formField.value.getHours();
+                            const minutes = formField.value.getMinutes();
+                            date.setHours(hours);
+                            date.setMinutes(minutes);
+                          }
+                          formField.onChange(date);
+                        }}
+                        initialFocus
+                      />
+                    </div>
+                    {formField.value && (
+                      <div className="p-3 border-t flex items-center justify-center gap-2">
+                        <div className="grid gap-1">
+                          <div className="flex items-center">
+                            <Label htmlFor="hours" className="text-xs mr-2">
+                              Hours:
+                            </Label>
+                            <Select
+                              value={formField.value.getHours().toString()}
+                              onValueChange={(value) => {
+                                const newDate = new Date(formField.value);
+                                newDate.setHours(parseInt(value));
+                                formField.onChange(newDate);
+                              }}
+                            >
+                              <SelectTrigger id="hours" className="w-16">
+                                <SelectValue placeholder="Hour" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 24 }).map((_, i) => (
+                                  <SelectItem key={i} value={i.toString()}>
+                                    {i.toString().padStart(2, "0")}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div className="grid gap-1">
+                          <div className="flex items-center">
+                            <Label htmlFor="minutes" className="text-xs mr-2">
+                              Minutes:
+                            </Label>
+                            <Select
+                              value={formField.value.getMinutes().toString()}
+                              onValueChange={(value) => {
+                                const newDate = new Date(formField.value);
+                                newDate.setMinutes(parseInt(value));
+                                formField.onChange(newDate);
+                              }}
+                            >
+                              <SelectTrigger id="minutes" className="w-16">
+                                <SelectValue placeholder="Min" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 60 }).map((_, i) => (
+                                  <SelectItem key={i} value={i.toString()}>
+                                    {i.toString().padStart(2, "0")}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </PopoverContent>
                 </Popover>
                 {field.description && (

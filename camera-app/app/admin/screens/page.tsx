@@ -21,7 +21,11 @@ import {
 const columns: Column<ScreeningRoom>[] = [
   { key: "id", label: "ID" },
   { key: "name", label: "Name" },
-  { key: "seats", label: "Seats" },
+  {
+    key: "seats",
+    label: "Seats",
+    render: (item: ScreeningRoom) => item.seats.length,
+  },
   {
     key: "picturePaths",
     label: "Images",

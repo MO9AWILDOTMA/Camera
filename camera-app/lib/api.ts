@@ -64,7 +64,7 @@ export const discountsApi = {
 
 // Showtimes API
 export const showtimesApi = {
-  getByMovie: (movieId: number) => api.get(`/user/showtimes/movie/${movieId}`),
+  getByMovie: (movieId: number) => api.get(`/user/movies/showtimes/${movieId}`),
   getByTheater: (theaterId: number) => api.get(`/user/showtimes/theater/${theaterId}`),
   getById: (slug: string) => api.get(`/user/showtimes/${slug}`),
   getAll: (page: number, size: number) => api.get(`/user/showtimes?size=${size}&page=${page}`),
@@ -94,6 +94,7 @@ export const paymentsApi = {
 // Seats API
 export const seatsApi = {
   getByShowtime: (showtimeId: number) => api.get(`/seats/showtime/${showtimeId}`),
+  checkAvaibality: (seatId: number) => api(`/cinephile/seats/check/${seatId}`),
 }
 
 // Admin Analytics API
