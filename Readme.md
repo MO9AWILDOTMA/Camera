@@ -9,6 +9,11 @@ CAMERA is a web application designed to simplify the cinema reservation experien
 - Offer a fluid and modern user experience
 - Enable efficient management of reservations
 
+## Links
+- (Specifications)[https://docs.google.com/document/d/1SnwR1tASZ93UMiAlZIXPKi0zWyVhXDmI16coh8oVXME/edit?usp=sharing]
+- (Jira)[https://benfill.atlassian.net/jira/software/projects/CAM/boards/303?atlOrigin=eyJpIjoiMDUzOWY4YWYxNmFlNDQ2YmFlNmVlN2VlZjA3NjFkZDgiLCJwIjoiaiJ9]
+- (UML)[https://github.com/MO9AWILDOTMA/Camera/tree/main/docs/UML]
+
 ## Features
 **Front-Office**
 - Browse movies currently in theaters
@@ -35,8 +40,7 @@ CAMERA is a web application designed to simplify the cinema reservation experien
 - Deployment: Docker
 
 **Frontend**
-- Framework: Angular
-- UI Library: Angular Material
+- Framework: NextJs
 
 **Architecture**
 - Monolithic Architecture
