@@ -76,11 +76,11 @@ export const showtimesApi = {
 
 // Reservation API
 export const reservationsApi = {
-  create: (data: any) => api.post("/cinephile/reservation", data),
+  create: (data: any) => api.post("/cinephile/reservations", data),
   getAll: (page: number, size: number) => api.get(`/moderator/reservations?size=${size}&page=${page}`),
   getUserReservation: () => api.get("/user/reservation/user"),
-  getById: (id: number) => api.get(`/user/reservation/${id}`),
-  cancel: (id: number) => api.post(`/reservation/${id}/cancel`),
+  getById: (id: number) => api.get(`/cinephile/reservations/${id}`),
+  cancel: (id: number) => api.post(`/reservations/${id}/cancel`),
 }
 
 export const paymentsApi = {

@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ma.cinecamera.dto.req.MovieReqDto;
 import ma.cinecamera.dto.resp.GlobalResp;
 import ma.cinecamera.service.IMovieService;
+import ma.cinecamera.service.IShowtimeService;
 
 @RestController
 @RequestMapping("/api")
@@ -32,10 +33,18 @@ public class MovieController {
     @Autowired
     private IMovieService service;
 
+    @Autowired
+    private IShowtimeService showtimeService;
+
     @GetMapping("/user/movies")
     public ResponseEntity<?> index(@RequestParam(defaultValue = "1", name = "page") Integer page,
 	    @RequestParam(defaultValue = "3", name = "size") Integer size) {
 	return ResponseEntity.ok(service.getAllMovies(page, size));
+    }
+
+    @GetMapping("/user/movies/showtimes/{id}")
+    public ResponseEntity<?> getShowtimes(@PathVariable(name = "id") Long id) {
+	return ResponseEntity.ok(showtimeService.getMovieShowtimes(id));
     }
 
     @GetMapping("/user/movies/upcoming")

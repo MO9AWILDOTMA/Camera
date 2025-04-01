@@ -87,7 +87,8 @@ public class ShowtimeService implements IShowtimeService {
 	Long totalElements = res.getTotalElements();
 	Integer totalPages = res.getTotalPages();
 	List<ShowtimeRespDto> dtos = mapper.entitiesToDto(showtimes).stream().map(d -> {
-	    d.getMovie().setPicturePaths(fileService.getFilePaths(d.getId(), uploadDirectory, MediaType.MOVIE));
+	    d.getMovie()
+		    .setPicturePaths(fileService.getFilePaths(d.getMovie().getId(), uploadDirectory, MediaType.MOVIE));
 	    return d;
 	}).collect(Collectors.toList());
 	return ListResponse.builder().content(dtos).totalElements(totalElements).totalPages(totalPages).build();
@@ -98,7 +99,8 @@ public class ShowtimeService implements IShowtimeService {
 	Showtime showtime = repository.findBySlug(slug)
 		.orElseThrow(() -> new ResourceNotFoundException("Showtime Not Found"));
 	ShowtimeRespDto dto = mapper.entityToDto(showtime);
-	dto.getMovie().setPicturePaths(fileService.getFilePaths(dto.getId(), uploadDirectory, MediaType.MOVIE));
+	dto.getMovie()
+		.setPicturePaths(fileService.getFilePaths(dto.getMovie().getId(), uploadDirectory, MediaType.MOVIE));
 	return dto;
     }
 
@@ -123,7 +125,7 @@ public class ShowtimeService implements IShowtimeService {
 		    "Showtime creation failed, cannot be two showtimes in same time and same screening room.");
 	}
 
-	if (totalSeats > sRoom.getSeats()) {
+	if (totalSeats > sRoom.getSeats().size()) {
 	    throw new ResourceValidationException(
 		    "Showtime creation failed, total seats greater than screening room seats which is: "
 			    + sRoom.getSeats());
@@ -209,5 +211,15 @@ public class ShowtimeService implements IShowtimeService {
 	});
 
 	return respDtos;
+    }
+
+    @Override
+    public List<ShowtimeRespDto> getMovieShowtimes(Long id) {
+	List<Showtime> showtimes = repository.findByMovieId(id);
+	return mapper.entitiesToDto(showtimes).stream().map(d -> {
+	    d.getMovie()
+		    .setPicturePaths(fileService.getFilePaths(d.getMovie().getId(), uploadDirectory, MediaType.MOVIE));
+	    return d;
+	}).collect(Collectors.toList());
     }
 }

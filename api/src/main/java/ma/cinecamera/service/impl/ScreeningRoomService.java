@@ -26,6 +26,7 @@ import ma.cinecamera.model.enums.MediaType;
 import ma.cinecamera.repository.ScreeningRoomRepository;
 import ma.cinecamera.service.IFileService;
 import ma.cinecamera.service.IScreeningRoomService;
+import ma.cinecamera.service.ISeatService;
 
 @Service
 public class ScreeningRoomService implements IScreeningRoomService {
@@ -38,6 +39,9 @@ public class ScreeningRoomService implements IScreeningRoomService {
 
     @Autowired
     private IFileService fileService;
+
+    @Autowired
+    private ISeatService seatService;
 
     private final Logger logger = Logger.getLogger(ScreeningRoom.class.getName());
 
@@ -95,6 +99,8 @@ public class ScreeningRoomService implements IScreeningRoomService {
 	sRoom.setSlug(slg.slugify(sRoom.getName()));
 	ScreeningRoom savedScreeningRoom = repository.save(sRoom);
 
+	seatService.createSeats(savedScreeningRoom);
+
 	String uniqueUploadDir = uploadDirectory + "/" + savedScreeningRoom.getId();
 
 	// Save associated image files
@@ -117,9 +123,11 @@ public class ScreeningRoomService implements IScreeningRoomService {
 	ScreeningRoom sRoom = getById(id);
 
 	sRoom.setName(dto.getName());
-	sRoom.setSeats(dto.getSeats());
 	sRoom.setSlug(slg.slugify(sRoom.getName()));
-
+	if (dto.getTotalSeats() != sRoom.getTotalSeats()) {
+	    seatService.deleteSeats(sRoom.getSeats());
+	    seatService.createSeats(sRoom);
+	}
 	ScreeningRoom updatedRoom = repository.save(sRoom);
 
 	String uniqueUploadDir = uploadDirectory + "/" + updatedRoom.getId();

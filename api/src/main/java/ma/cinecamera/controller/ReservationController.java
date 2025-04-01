@@ -46,6 +46,12 @@ public class ReservationController {
     }
 
     @Secured("ROLE_CINEPHILE")
+    @GetMapping("/cinephile/reservations/{id}")
+    public ResponseEntity<?> getDetails(@PathVariable(name = "id") Long id) {
+	return ResponseEntity.ok(service.getDetails(id));
+    }
+
+    @Secured("ROLE_CINEPHILE")
     @PutMapping("/cinephile/reservations/cancel/{id}")
     public ResponseEntity<?> cancelReservation(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.cancelReservation(id));

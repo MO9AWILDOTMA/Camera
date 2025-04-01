@@ -23,4 +23,6 @@ public interface IReservationService {
 
     GlobalResp archive(Long id);
 
+    ReservationRespDto getDetails(Long id);
+
 }

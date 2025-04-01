@@ -22,4 +22,6 @@ public interface IShowtimeService {
 
     GlobalResp deleteShowtime(Long id);
 
+    List<ShowtimeRespDto> getMovieShowtimes(Long id);
+
 }

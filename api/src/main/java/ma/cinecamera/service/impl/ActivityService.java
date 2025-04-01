@@ -16,6 +16,7 @@ import ma.cinecamera.model.Activity;
 import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.repository.ActivityRepository;
 import ma.cinecamera.service.IActivityService;
+import ma.cinecamera.service.IUserService;
 
 @Service
 public class ActivityService implements IActivityService {
@@ -25,6 +26,9 @@ public class ActivityService implements IActivityService {
 
     @Autowired
     private ActivityMapper mapper;
+
+    @Autowired
+    private IUserService userService;
 
     @Override
     public List<ActivityResp> getAll(Integer page, Integer size) {
@@ -57,7 +61,8 @@ public class ActivityService implements IActivityService {
 	    break;
 	}
 
-	Activity activity = Activity.builder().title(title).description(message).time(LocalDateTime.now()).build();
+	Activity activity = Activity.builder().user(userService.getById(userService.getConnectedUserId())).title(title)
+		.description(message).time(LocalDateTime.now()).build();
 	repository.save(activity);
 
     }

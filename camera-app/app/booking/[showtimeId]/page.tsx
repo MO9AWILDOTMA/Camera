@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Calendar, Clock, CreditCard } from "lucide-react";
@@ -16,16 +16,14 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import Loading from "@/app/loading";
-import { showtimesApi } from "@/lib/api";
+import { reservationsApi, showtimesApi } from "@/lib/api";
 import GlobalLayout from "@/components/home/layout";
 import Showtime from "@/models/showtime.model";
 import { Seat } from "@/models/screening-room.model";
+import TheaterSeatingChart from "../TheaterSeatingChart";
+import { GlobalStatus } from "@/models/enums/global.status.enum";
 
-export default function BookingPage({
-  params,
-}: {
-  params: { showtimeId: string };
-}) {
+export default function BookingPage({ params }: { params: any }) {
   const [showtime, setShowtime] = useState<Showtime | null>(null);
   const [seats, setSeats] = useState<Seat[][]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
@@ -33,11 +31,14 @@ export default function BookingPage({
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const unwrapedParams: any = use(params);
+  const showtimeId = unwrapedParams.showtimeId;
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchShowtimeAndSeats = async () => {
       try {
-        const resp = await showtimesApi.getById(params.showtimeId);
+        const resp = await showtimesApi.getById(showtimeId);
         const data = resp.data;
         setShowtime(data);
 
@@ -78,7 +79,7 @@ export default function BookingPage({
     };
 
     fetchShowtimeAndSeats();
-  }, [params.showtimeId, toast]);
+  }, [showtimeId, toast]);
 
   const handleSeatClick = (seat: Seat) => {
     if (seat.status === "UNAVAILABLE") return;
@@ -104,7 +105,7 @@ export default function BookingPage({
     });
   };
 
-  const handleProceedToPayment = () => {
+  const handleProceedToPayment = async () => {
     if (!isAuthenticated) {
       toast({
         title: "Authentication Required",
@@ -123,11 +124,31 @@ export default function BookingPage({
       return;
     }
 
-    toast({
-      title: "Booking Successful",
-      description: "Your tickets have been booked successfully",
-    });
-    router.push("/dashboard/reservations");
+    try {
+      const seatNames = selectedSeats.map(
+        (seat) => `${seat.row}${seat.number}`
+      );
+      const resp = await reservationsApi.create({
+        showtimeId: showtime?.id,
+        seats: seatNames,
+        userId: user?.id,
+      });
+      const reservationId = resp.data.id;
+      toast({
+        title: "Proceed To Payment",
+        description: "Your reservation proccess start successfully",
+      });
+      // router.push("/dashboard/payment/" + reservationId);
+    } catch (error) {
+      console.error("Failed to fetch showtime and seats:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load booking information",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getTotalPrice = () => {
@@ -158,12 +179,14 @@ export default function BookingPage({
 
   if (!showtime) {
     return (
-      <div className="container mx-auto px-4 h-screen flex items-center flex-col pt-44">
-        <h1 className="text-2xl font-bold">Showtime not found</h1>
-        <Link href="/">
-          <Button className="mt-4">Back to Home</Button>
-        </Link>
-      </div>
+      <GlobalLayout>
+        <div className="container mx-auto px-4 h-screen flex items-center flex-col pt-44">
+          <h1 className="text-2xl font-bold">Showtime not found</h1>
+          <Link href="/">
+            <Button className="mt-4">Back to Home</Button>
+          </Link>
+        </div>
+      </GlobalLayout>
     );
   }
 
@@ -196,59 +219,12 @@ export default function BookingPage({
               </div>
             </div>
 
-            <div className="mb-8 w-full overflow-x-auto">
-              <div className="mb-4 w-full rounded-lg bg-muted p-2 text-center text-sm font-medium">
-                Screen
-              </div>
-
-              <div className="mb-8 flex justify-center">
-                <div className="space-y-2">
-                  {seats.map((row, rowIndex) => (
-                    <div key={rowIndex} className="flex items-center gap-2">
-                      <div className="w-6 text-center text-sm font-medium">
-                        {row[0]?.row}
-                      </div>
-                      <div className="flex gap-1">
-                        {row.map((seat) => (
-                          <button
-                            key={seat.id}
-                            className={`h-8 w-8 rounded-t-lg text-xs font-medium transition-colors ${
-                              seat.status === "UNAVAILABLE"
-                                ? "cursor-not-allowed bg-muted text-muted-foreground"
-                                : seat.status === "SELECTED"
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-background hover:bg-muted"
-                            }`}
-                            onClick={() => handleSeatClick(seat)}
-                            disabled={seat.status === "UNAVAILABLE"}
-                          >
-                            {seat.number}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="w-6 text-center text-sm font-medium">
-                        {row[0]?.row}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-center gap-6">
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-sm bg-background border"></div>
-                  <span className="text-xs">Available</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-sm bg-muted"></div>
-                  <span className="text-xs">Unavailable</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-sm bg-primary"></div>
-                  <span className="text-xs">Selected</span>
-                </div>
-              </div>
-            </div>
+            <TheaterSeatingChart
+              handleSeatClick={handleSeatClick}
+              seats={seats}
+              screeningRoom={showtime.screeningRoom}
+              selectedSeats={selectedSeats}
+            />
           </div>
 
           <div>
