@@ -1,6 +1,7 @@
 package ma.cinecamera.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
 	    + "WHERE r.status = :status AND s.dateTime BETWEEN :start AND :end")
     Optional<Double> averageOccupancy(@Param("status") ReservationStatus status, @Param("start") LocalDateTime start,
 	    @Param("end") LocalDateTime end);
+
+    List<Showtime> findByMovieId(Long id);
 }

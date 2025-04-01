@@ -24,10 +24,12 @@ import ma.cinecamera.model.User;
 import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.PaymentStatus;
 import ma.cinecamera.model.enums.ReservationStatus;
+import ma.cinecamera.model.enums.SeatStatus;
 import ma.cinecamera.repository.PaymentRepository;
 import ma.cinecamera.repository.ReservationRepository;
 import ma.cinecamera.service.IPaymentService;
 import ma.cinecamera.service.IReservationService;
+import ma.cinecamera.service.ISeatService;
 import ma.cinecamera.service.ITicketService;
 import ma.cinecamera.service.ITransactionService;
 import ma.cinecamera.service.IUserService;
@@ -62,6 +64,9 @@ public class PaymentService implements IPaymentService {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ISeatService seatService;
 
     private final Logger logger = Logger.getLogger(PaymentService.class.getName());
 
@@ -119,6 +124,10 @@ public class PaymentService implements IPaymentService {
 	activityMessage = activityMessage + reservation.getShowtime().getMovie().getName();
 
 	activityService.createActivity(ActivityType.RESERVATION, activityMessage);
+
+	reservation.getShowtime().getScreeningRoom().getSeats().forEach(s -> {
+	    seatService.updateStatus(s.getId(), SeatStatus.RESERVED);
+	});
 
 	return mapper.entityToDto(savedPayment);
     }

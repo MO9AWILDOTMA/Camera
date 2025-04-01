@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const PUBLIC_URL = process.env.NEXT_PUBLIC_PUBLIC_WEBSITE_URL;
 export default function DashboardLayout({
   children,
 }: {
@@ -110,16 +111,16 @@ export default function DashboardLayout({
                 Home
               </Link>
               <Link
-                href="/movies"
+                href={PUBLIC_URL + "/movies"}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 Movies
               </Link>
               <Link
-                href="/theaters"
+                href={PUBLIC_URL + "/screen_rooms"}
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
-                Theaters
+                Screens
               </Link>
             </nav>
           </div>

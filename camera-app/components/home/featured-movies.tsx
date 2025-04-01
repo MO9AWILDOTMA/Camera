@@ -8,50 +8,65 @@ import Loading from "@/app/loading";
 import { showtimesApi } from "@/lib/api";
 import Movie, { Genre } from "@/models/movie.model";
 import Showtime from "@/models/showtime.model";
+import { setInterval } from "timers";
 
-const api = "http://localhost:8080";
+const mockMovies: Partial<Movie>[] = [
+  {
+    id: 1,
+    name: "Interstellar",
+    picturePaths: ["/placeholder.svg?height=600&width=400"],
+    releaseDate: "2023-07-15",
+    duration: 165,
+    genres: [Genre.SCIENCE_FICTION],
+  },
+  {
+    id: 2,
+    name: "The Dark Knight",
+    picturePaths: ["/placeholder.svg?height=600&width=400"],
+    releaseDate: "2023-08-10",
+    duration: 152,
+    genres: [Genre.ACTION],
+  },
+  {
+    id: 3,
+    name: "Inception",
+    picturePaths: ["/placeholder.svg?height=600&width=400"],
+    releaseDate: "2023-06-22",
+    duration: 148,
+    genres: [Genre.THRILLER],
+  },
+];
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+const PUBLIC_URl = process.env.NEXT_PUBLIC_PUBLIC_WEBSITE_URL;
 
 export function FeaturedMovies() {
   const [movies, setMovies] = useState<Partial<Movie>[]>([]);
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [currentMovie, setCurrentMovie] = useState<Partial<Movie> | null>(null);
+  const [totalMovies, setTotalMovies] = useState(0);
 
   useEffect(() => {
     const fetchFeaturedMovies = async () => {
       try {
         const response = await showtimesApi.getAll(1, 6);
         const data = response.data;
-        const mockMovies: Partial<Movie>[] = [
-          {
-            id: 1,
-            name: "Interstellar",
-            picturePaths: ["/placeholder.svg?height=600&width=400"],
-            releaseDate: "2023-07-15",
-            duration: 165,
-            genres: [Genre.SCIENCE_FICTION],
-          },
-          {
-            id: 2,
-            name: "The Dark Knight",
-            picturePaths: ["/placeholder.svg?height=600&width=400"],
-            releaseDate: "2023-08-10",
-            duration: 152,
-            genres: [Genre.ACTION],
-          },
-          {
-            id: 3,
-            name: "Inception",
-            picturePaths: ["/placeholder.svg?height=600&width=400"],
-            releaseDate: "2023-06-22",
-            duration: 148,
-            genres: [Genre.THRILLER],
-          },
-        ];
         if (data && data.content) {
-          const newMovies = data.content.map((s: Showtime) => s.movie);
-          setMovies(newMovies);
+          let movieArray: Movie[] = [];
+          data.content.forEach((showtime: Showtime) => {
+            const exists = movieArray.some(
+              (movie) => movie.id === showtime.movie.id
+            );
+
+            if (!exists) {
+              movieArray.push(showtime.movie);
+            }
+          });
+          setMovies(movieArray);
           setShowtimes(data.content);
+          setCurrentMovie(movieArray[0]);
+          setTotalMovies(movieArray.length);
         } else setMovies(mockMovies);
       } catch (error) {
         console.error("Failed to fetch featured movies:", error);
@@ -63,25 +78,30 @@ export function FeaturedMovies() {
     fetchFeaturedMovies();
   }, []);
 
+  useEffect(() => {
+    setCurrentMovie(movies[currentIndex]);
+  }, [currentIndex]);
+
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
+    if (currentIndex + 1 >= totalMovies) setCurrentIndex(0);
+    else setCurrentIndex((prevIndex) => (prevIndex + 1) % showtimes.length);
   };
 
   const prevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + movies.length) % movies.length
-    );
+    if (currentIndex === 0) setCurrentIndex(totalMovies - 1);
+    else
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + showtimes.length) % showtimes.length
+      );
   };
 
   if (loading) {
     return <Loading />;
   }
 
-  if (movies.length === 0) {
+  if (movies.length === 0 || !currentMovie) {
     return null;
   }
-
-  const currentMovie = movies[currentIndex];
 
   return (
     <div className="relative overflow-hidden rounded-lg">
@@ -89,7 +109,7 @@ export function FeaturedMovies() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(${api}${currentMovie.picturePaths![0] || ""})`,
+            backgroundImage: `url(${API_URL}${currentMovie.picturePaths![0] || ""})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
@@ -110,10 +130,10 @@ export function FeaturedMovies() {
                 {new Date(currentMovie.releaseDate!).toLocaleDateString()}
               </p>
               <div className="flex gap-4">
-                <Link href={`/movies/${currentMovie.id}`}>
+                <Link href={`${PUBLIC_URl}/movies/${currentMovie.slug}`}>
                   <Button>View Details</Button>
                 </Link>
-                <Link href={`/showtimes/${showtimes[currentIndex].slug}`}>
+                <Link href={`/showtimes/${currentMovie.id}`}>
                   <Button
                     variant="outline"
                     className="text-black hover:bg-gray-300"

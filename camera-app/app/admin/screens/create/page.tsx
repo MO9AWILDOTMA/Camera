@@ -19,13 +19,22 @@ const roomFields: FieldConfig[] = [
     min: 2,
   },
   {
-    name: "seats",
+    name: "totalSeats",
     label: "Number of Seats",
     type: "number",
     placeholder: "100",
     description: "Total seating capacity",
     required: true,
-    min: 1,
+    min: 50,
+  },
+  {
+    name: "rowSize",
+    label: "Number of Seats in a single Row",
+    type: "number",
+    placeholder: "10",
+    description: "Total Row seating capacity",
+    required: true,
+    min: 5,
   },
 ];
 

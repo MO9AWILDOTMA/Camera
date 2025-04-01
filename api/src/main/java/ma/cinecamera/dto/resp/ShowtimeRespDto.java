@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ma.cinecamera.model.ScreeningRoom;
 import ma.cinecamera.model.enums.ShowVersion;
 
 @Setter
@@ -32,5 +33,6 @@ public class ShowtimeRespDto extends BaseDto {
     private int reservedSeats;
     private boolean isPreview;
     private boolean isSpecialEvent;
+    private ScreeningRoom screeningRoom;
 
 }

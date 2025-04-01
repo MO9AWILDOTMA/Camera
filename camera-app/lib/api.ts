@@ -64,7 +64,7 @@ export const discountsApi = {
 
 // Showtimes API
 export const showtimesApi = {
-  getByMovie: (movieId: number) => api.get(`/user/showtimes/movie/${movieId}`),
+  getByMovie: (movieId: number) => api.get(`/user/movies/showtimes/${movieId}`),
   getByTheater: (theaterId: number) => api.get(`/user/showtimes/theater/${theaterId}`),
   getById: (slug: string) => api.get(`/user/showtimes/${slug}`),
   getAll: (page: number, size: number) => api.get(`/user/showtimes?size=${size}&page=${page}`),
@@ -76,11 +76,11 @@ export const showtimesApi = {
 
 // Reservation API
 export const reservationsApi = {
-  create: (data: any) => api.post("/cinephile/reservation", data),
+  create: (data: any) => api.post("/cinephile/reservations", data),
   getAll: (page: number, size: number) => api.get(`/moderator/reservations?size=${size}&page=${page}`),
   getUserReservation: () => api.get("/user/reservation/user"),
-  getById: (id: number) => api.get(`/user/reservation/${id}`),
-  cancel: (id: number) => api.post(`/reservation/${id}/cancel`),
+  getById: (id: number) => api.get(`/cinephile/reservations/${id}`),
+  cancel: (id: number) => api.post(`/reservations/${id}/cancel`),
 }
 
 export const paymentsApi = {
@@ -94,6 +94,7 @@ export const paymentsApi = {
 // Seats API
 export const seatsApi = {
   getByShowtime: (showtimeId: number) => api.get(`/seats/showtime/${showtimeId}`),
+  checkAvaibality: (seatId: number) => api(`/cinephile/seats/check/${seatId}`),
 }
 
 // Admin Analytics API

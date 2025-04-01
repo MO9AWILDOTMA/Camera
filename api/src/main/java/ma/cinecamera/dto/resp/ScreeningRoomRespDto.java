@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import ma.cinecamera.model.Seat;
 
 @Data
 @SuperBuilder
@@ -16,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class ScreeningRoomRespDto extends BaseDto {
     private String name;
     private String slug;
-    private Integer seats;
+    private List<Seat> seats;
     private List<String> picturePaths;
 }

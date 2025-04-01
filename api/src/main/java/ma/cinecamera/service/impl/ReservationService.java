@@ -133,4 +133,9 @@ public class ReservationService implements IReservationService {
 	repository.save(reservation);
 	return GlobalResp.builder().message("Reservation archived successfully").build();
     }
+
+    @Override
+    public ReservationRespDto getDetails(Long id) {
+	return mapper.entityToDto(getById(id));
+    }
 }

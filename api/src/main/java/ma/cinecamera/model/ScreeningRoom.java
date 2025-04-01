@@ -38,9 +38,17 @@ public class ScreeningRoom extends BaseEntity {
     @NotNull(message = "Screening Room Slug is required")
     private String slug;
 
-    @Column(name = "seats", nullable = false)
-    @NotNull(message = "Screening Room Seats is required")
-    private Integer seats;
+    @Column(name = "total_seats", nullable = true)
+    @NotNull(message = "Screening Room Total Seats is required")
+    private Integer totalSeats;
+
+    @Column(name = "row_size", nullable = false)
+    @NotNull(message = "Screening Room Row Size is required")
+    private Integer rowSize;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "screeningRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Seat> seats;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "screeningRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

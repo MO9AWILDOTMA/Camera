@@ -1,10 +1,6 @@
 package ma.cinecamera.model;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ma.cinecamera.model.enums.ActivityType;
+import ma.cinecamera.model.enums.SeatStatus;
 
 @Getter
 @Setter
@@ -24,15 +20,14 @@ import ma.cinecamera.model.enums.ActivityType;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "activities")
-public class Activity extends BaseEntity {
-    private String title;
-    private String description;
-    private LocalDateTime time;
-    @Enumerated(EnumType.STRING)
-    private ActivityType type;
+@Table(name = "seats")
+
+public class Seat extends BaseEntity {
+    String row;
+    Integer number;
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "screening_room_id", nullable = false)
+    private ScreeningRoom screeningRoom;
+    SeatStatus status;
 }

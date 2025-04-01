@@ -43,7 +43,7 @@ const movieFields: FieldConfig[] = [
   {
     name: "releaseDate",
     label: "Release Date",
-    type: "date",
+    type: "datetime",
     description: "When the movie was or will be released",
     required: true,
   },

@@ -1,23 +1,36 @@
+"use client";
+
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { TheaterSelector } from "@/components/home/theater-selector";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-provider";
 
-interface HeaderProps {
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-  onLogout: () => void;
-}
-
-export function ResponsiveHeader({
-  isAuthenticated,
-  isAdmin,
-  onLogout,
-}: HeaderProps) {
+export function ResponsiveHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, logout, isAdmin } = useAuth();
+  const router = useRouter();
+
+  async function onLogout() {
+    try {
+      await logout();
+      toast({
+        title: "Logout successful",
+        description: "You have been logged out successfully",
+      });
+      router.push("/");
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "Invalid email or password",
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <header className="border-b px-4 md:px-8">
@@ -36,7 +49,7 @@ export function ResponsiveHeader({
             </Link>
           ) : (
             <>
-              {!isAdmin ? (
+              {isAdmin ? (
                 <Link href="/admin">
                   <Button variant="outline">Dashboard</Button>
                 </Link>
@@ -75,11 +88,13 @@ export function ResponsiveHeader({
                   </Link>
                 ) : (
                   <>
-                    {isAdmin && (
-                      <Link href="/admin" onClick={() => setIsMenuOpen(false)}>
-                        <Button variant="outline" className="w-full">
-                          Dashboard
-                        </Button>
+                    {isAdmin ? (
+                      <Link href="/admin">
+                        <Button variant="outline">Dashboard</Button>
+                      </Link>
+                    ) : (
+                      <Link href="/dashboard">
+                        <Button variant="outline">Dashboard</Button>
                       </Link>
                     )}
                     <Button
