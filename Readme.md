@@ -10,9 +10,9 @@ CAMERA is a web application designed to simplify the cinema reservation experien
 - Enable efficient management of reservations
 
 ## Links
-- (Specifications)[https://docs.google.com/document/d/1SnwR1tASZ93UMiAlZIXPKi0zWyVhXDmI16coh8oVXME/edit?usp=sharing]
-- (Jira)[https://benfill.atlassian.net/jira/software/projects/CAM/boards/303?atlOrigin=eyJpIjoiMDUzOWY4YWYxNmFlNDQ2YmFlNmVlN2VlZjA3NjFkZDgiLCJwIjoiaiJ9]
-- (UML)[https://github.com/MO9AWILDOTMA/Camera/tree/main/docs/UML]
+- [Specifications](https://docs.google.com/document/d/1SnwR1tASZ93UMiAlZIXPKi0zWyVhXDmI16coh8oVXME/edit?usp=sharing)
+- [Jira](https://benfill.atlassian.net/jira/software/projects/CAM/boards/303?atlOrigin=eyJpIjoiMDUzOWY4YWYxNmFlNDQ2YmFlNmVlN2VlZjA3NjFkZDgiLCJwIjoiaiJ9)
+- [UML](https://github.com/MO9AWILDOTMA/Camera/tree/main/docs/UML)
 
 ## Features
 **Front-Office**
