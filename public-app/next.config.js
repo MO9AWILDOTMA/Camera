@@ -1,16 +1,18 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export", // Enable static export
   images: {
+    unoptimized: true, // Required for static export
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8080",
+        protocol: "https", // Change to https for production
+        hostname: "https://cinecamera-api-c39c6ec4c5e9.herokuapp.com", // Update to your production API domain
+        port: "",
         pathname: "/images/**",
       },
     ],
   },
+  trailingSlash: true, // Recommended for static exports
 };
 
 module.exports = nextConfig;

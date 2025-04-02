@@ -19,7 +19,7 @@ const initialCarouselContent: HeroMovie[] = [
       "Join us for special screenings commemorating our successful revival since Aïd Al-Fitr 2023. The historic 650-seat venue continues to thrive with state-of-the-art digital projection.",
     image: "/image/camera-day.jpg",
     status: "Special Event",
-    cta: "",
+    cta: "Learn More",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const initialCarouselContent: HeroMovie[] = [
       "Discover the architectural beauty and history of Cinéma Caméra, from its construction by the Sandeaux family to the 2023 renovation that brought digital cinema to this historic venue.",
     image: "/image/camera-night.jpg",
     status: "Weekly Event",
-    cta: "",
+    cta: "Learn More",
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ const initialCarouselContent: HeroMovie[] = [
       "A critically acclaimed drama following three generations of a family in Meknès, filmed partially in our historic theater.",
     image: "/logos/camera-logo.jpg",
     status: "Now Showing",
-    cta: "",
+    cta: "Learn More",
   },
 ];
 
