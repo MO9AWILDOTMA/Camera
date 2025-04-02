@@ -60,7 +60,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 	CorsConfiguration configuration = new CorsConfiguration();
-	configuration.setAllowedOrigins(Arrays.asList("http://localhost:3001", "http://localhost:3000/"));
+	configuration.setAllowedOrigins(Arrays.asList("http://localhost:3001", "https://www.cinecamera.ma",
+		"https://cinecamera-api-c39c6ec4c5e9.herokuapp.com", "http://localhost:3000/"));
 	configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 	configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept",
 		"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));

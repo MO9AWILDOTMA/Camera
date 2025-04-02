@@ -269,7 +269,7 @@ export default function BookingPage({ params }: { params: any }) {
                   <div className="border-t pt-4">
                     <div className="flex justify-between font-medium">
                       <span>Total</span>
-                      <span>€{getTotalPrice().toFixed(2)}</span>
+                      <span>{getTotalPrice().toFixed(2)} MAD</span>
                     </div>
                   </div>
                 )}
