@@ -31,6 +31,7 @@
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",
+    "autoprefixer": "^10.4.21",
     "axios": "^1.6.8",
     "camera-app": "file:",
     "chart.js": "^4.4.2",
@@ -38,20 +39,21 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.454.0",
-    "next": "14.0.4",
+    "next": "14.1.0",
     "next-themes": "^0.4.4",
+    "postcss": "^8.4.35",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
     "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17"
   }

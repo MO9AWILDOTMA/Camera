@@ -5,7 +5,7 @@
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
-        "installCommand": "npm install --no-optional --no-audit --no-fund",
+        "installCommand": "npm install",
         "maxLambdaSize": "10mb"
       }
     }
