@@ -46,7 +46,9 @@ export default function ShowtimesPage({ params }: { params: any }) {
       try {
         const response = await showtimesApi.getByMovie(movieId);
         const data = response.data;
-        if (!data || data.length === 0) return;
+        if (!data || data.length === 0) {
+          router.push("/not-found");
+        }
 
         const movieData = data[0].movie;
         setShowtimes(data);
@@ -88,6 +90,7 @@ export default function ShowtimesPage({ params }: { params: any }) {
         }
       } catch (error) {
         console.error("Failed to fetch movie and showtimes:", error);
+        router.push("/not-found");
       } finally {
         setLoading(false);
       }

@@ -19,7 +19,8 @@ export function AboutCard({
   picturePaths,
 }: AboutCardProp) {
   const router = useRouter();
-  const picture = BASE_URL + picturePaths[0];
+  const picture =
+    picturePaths && picturePaths.length > 0 ? BASE_URL + picturePaths[0] : "";
   function hanldeClick(): void {
     router.push(`/movies/${slug}`);
   }

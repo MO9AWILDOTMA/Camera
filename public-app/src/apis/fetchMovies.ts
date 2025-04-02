@@ -10,7 +10,7 @@ export const fetchUpcomingMovies = async () => {
         if (!BASE_URL) {
             throw new Error('API Base URL is not configured. Please check your environment variables.');
         }
-        const response = await axios(UPCOMING_MOVIES);
+        const response = await axios(UPCOMING_MOVIES);  
         return response;
     } catch (error) {
         console.error('Error fetching movies:', error);
