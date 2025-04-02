@@ -23,7 +23,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!loading) {
       router.push("/auth?redirect=/dashboard");
     }
   }, [loading, isAuthenticated, router]);
@@ -148,7 +148,7 @@ export default function DashboardLayout({
               <AvatarImage src="" />
               <AvatarFallback>
                 {user?.firstName.charAt(0)}
-                {user?.lastName.charAt(0) || ""}
+                {user?.lastName ? user?.lastName.charAt(0) : ""}
               </AvatarFallback>
             </Avatar>
           </div>

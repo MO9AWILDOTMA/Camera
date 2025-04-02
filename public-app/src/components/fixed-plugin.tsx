@@ -2,11 +2,11 @@
 import Image from "next/image";
 import { Button } from "@material-tailwind/react";
 
-const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL + "/showtimes";
+const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 export function FixedPlugin() {
   return (
-    <a href={DASH_URL} target="_blank">
+    <a href={DASH_URL}>
       <Button
         {...({} as any)}
         color="white"

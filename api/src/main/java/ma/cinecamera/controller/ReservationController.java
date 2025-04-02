@@ -47,7 +47,7 @@ public class ReservationController {
 
     @Secured("ROLE_CINEPHILE")
     @GetMapping("/cinephile/reservations/{id}")
-    public ResponseEntity<?> getDetails(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<?> getMyReservations(@PathVariable(name = "id") Long id) {
 	return ResponseEntity.ok(service.getDetails(id));
     }
 

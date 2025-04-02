@@ -4,5 +4,5 @@ export default interface Role {
 }
 
 export enum ERole {
-  ROLE_ADMIN=("Admin"), ROLE_CINEPHILE=("Cinephile"), ROLE_MODERATOR=("Moderator")
+  ROLE_ADMIN=("ROLE_ADMIN"), ROLE_CINEPHILE=("ROLE_CINEPHILE"), ROLE_MODERATOR=("ROLE_MODERATOR")
 }

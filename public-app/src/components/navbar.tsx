@@ -22,7 +22,7 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL + "/showtimes";
+const DASH_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL + "/auth";
 
 interface NavItemProps {
   children: React.ReactNode;
@@ -138,7 +138,7 @@ export function Navbar() {
           ))}
         </ul>
         <div className="hidden items-center gap-4 lg:flex">
-          <a href={DASH_URL} target="_blank">
+          <a href={DASH_URL}>
             <Button {...({} as any)} color={isScrolling ? "gray" : "white"}>
               book now!
             </Button>

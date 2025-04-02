@@ -14,19 +14,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
 import { usersApi } from "@/lib/api";
+import User from "@/models/user.model";
 
 interface UserUpdateFormProps {
-  user: {
-    id: number;
-    firstName: string;
-    lastName?: string;
-    email: string;
-    phone?: string;
-    picture?: string;
-  };
+  user: User;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdateSuccess: () => void;
+  checkAuth: () => void;
 }
 
 export function UserUpdateForm({

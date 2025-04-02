@@ -210,7 +210,9 @@ const Profile = () => {
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Total Bookings
                   </p>
-                  <p className="font-medium text-gray-800 mt-1">24</p>
+                  <p className="font-medium text-gray-800 mt-1">
+                    {user?.reservations.length}
+                  </p>
                 </div>
               </div>
             </div>

@@ -7,14 +7,18 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import ma.cinecamera.model.Payment;
 import ma.cinecamera.model.enums.PaymentStatus;
 import ma.cinecamera.utils.DateValue;
 
+@Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Optional<Payment> findByUserIdAndStatus(Long userId, PaymentStatus status);
+
+    List<Payment> findByUserId(Long id);
 
     List<Payment> findByStatus(PaymentStatus status);
 

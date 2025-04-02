@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import ma.cinecamera.dto.req.PaymentReqDto;
 import ma.cinecamera.dto.req.ReservationReqDto;
 import ma.cinecamera.dto.req.ReservationUpdateDto;
 import ma.cinecamera.dto.resp.GlobalResp;
@@ -20,8 +21,10 @@ import ma.cinecamera.mapper.ReservationMapper;
 import ma.cinecamera.model.Reservation;
 import ma.cinecamera.model.Showtime;
 import ma.cinecamera.model.User;
+import ma.cinecamera.model.enums.ActivityType;
 import ma.cinecamera.model.enums.ReservationStatus;
 import ma.cinecamera.repository.ReservationRepository;
+import ma.cinecamera.service.IPaymentService;
 import ma.cinecamera.service.IReservationService;
 import ma.cinecamera.service.IShowtimeService;
 import ma.cinecamera.service.IUserService;
@@ -43,9 +46,15 @@ public class ReservationService implements IReservationService {
     private ReservationMapper mapper;
 
     @Autowired
+    private IPaymentService paymentService;
+
+    @Autowired
     private ReservationValidator validator;
 
     private final Logger logger = Logger.getLogger(ReservationService.class.getName());
+
+    @Autowired
+    private ActivityService activityService;
 
     @Override
     public Reservation getById(Long id) {
@@ -81,6 +90,17 @@ public class ReservationService implements IReservationService {
 	reservation.setShowtime(showtime);
 	reservation.setStatus(ReservationStatus.IN_PROGRESS);
 	Reservation savedReservation = repository.save(reservation);
+
+	PaymentReqDto paymentReqDto = PaymentReqDto.builder()
+		.amount(reservation.getShowtime().getPrice() * reservation.getSeats().length)
+		.userId(reservation.getUser().getId()).currency("MAD").reservation(reservation).build();
+
+	paymentService.create(paymentReqDto);
+
+	int ticketsNbr = reservation.getSeats().length;
+	String message = ticketsNbr > 1 ? ticketsNbr + " Tickets were booked successfully"
+		: ticketsNbr + " Ticket was Booked successfully";
+	activityService.createActivity(ActivityType.CLIENT, message);
 	return mapper.entityToDto(savedReservation);
     }
 
@@ -135,7 +155,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public ReservationRespDto getDetails(Long id) {
-	return mapper.entityToDto(getById(id));
+    public List<ReservationRespDto> getDetails(Long id) {
+	return mapper.entitiesToDto(repository.findByUserId(id));
     }
 }

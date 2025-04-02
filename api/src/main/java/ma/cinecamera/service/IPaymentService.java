@@ -1,5 +1,7 @@
 package ma.cinecamera.service;
 
+import java.util.List;
+
 import ma.cinecamera.dto.req.PaymentReqDto;
 import ma.cinecamera.dto.req.PaymentUpdateDto;
 import ma.cinecamera.dto.resp.GlobalResp;
@@ -21,4 +23,6 @@ public interface IPaymentService {
     GlobalResp cancelPayment(Long id);
 
     GlobalResp archive(Long id);
+
+    List<PaymentRespDto> getMyPayments(Long id);
 }

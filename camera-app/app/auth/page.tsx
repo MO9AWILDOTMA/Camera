@@ -64,7 +64,7 @@ export default function AuthPage() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const [activeTab, setActiveTab] = useState("login");
-  const { login, register } = useAuth();
+  const { login, register, user } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -135,6 +135,7 @@ export default function AuthPage() {
     }
   }
 
+  if (user) router.push("/dashboard/profile");
   return (
     <GlobalLayout>
       <div className="container flex my-12 items-center justify-center px-4 md:px-6">

@@ -28,7 +28,6 @@ import ma.cinecamera.model.enums.SeatStatus;
 import ma.cinecamera.repository.PaymentRepository;
 import ma.cinecamera.repository.ReservationRepository;
 import ma.cinecamera.service.IPaymentService;
-import ma.cinecamera.service.IReservationService;
 import ma.cinecamera.service.ISeatService;
 import ma.cinecamera.service.ITicketService;
 import ma.cinecamera.service.ITransactionService;
@@ -50,8 +49,8 @@ public class PaymentService implements IPaymentService {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private IReservationService reservationService;
+//    @Autowired
+//    private IReservationService reservationService;
 
     @Autowired
     private ITransactionService transactionService;
@@ -92,7 +91,7 @@ public class PaymentService implements IPaymentService {
     public PaymentRespDto create(PaymentReqDto dto) {
 	Long userId = dto.getUserId();
 	User user = userService.getById(userId);
-	Reservation reservation = reservationService.getById(dto.getReservationId());
+	Reservation reservation = dto.getReservation();
 
 	if (validator.checkIfThereIsPaymentPending(userId)) {
 	    throw new ResourceValidationException("Cannot create two Payments in the same time");
@@ -126,7 +125,14 @@ public class PaymentService implements IPaymentService {
 	activityService.createActivity(ActivityType.RESERVATION, activityMessage);
 
 	reservation.getShowtime().getScreeningRoom().getSeats().forEach(s -> {
-	    seatService.updateStatus(s.getId(), SeatStatus.RESERVED);
+	    String[] seats = reservation.getSeats();
+
+	    for (int i = 0; i < seats.length; i++) {
+		if ((s.getRow().equals(seats[i].substring(0, 1)))
+			&& s.getNumber().toString().equals(seats[i].substring(1, 2))) {
+		    seatService.updateStatus(s.getId(), SeatStatus.RESERVED);
+		}
+	    }
 	});
 
 	return mapper.entityToDto(savedPayment);
@@ -134,23 +140,24 @@ public class PaymentService implements IPaymentService {
 
     @Override
     public PaymentRespDto update(Long id, PaymentUpdateDto dto) {
-	Payment payment = getById(id);
-	Long userId = dto.getUserId();
-	User user = userService.getById(userId);
-	Reservation reservation = reservationService.getById(dto.getReservationId());
-
-	if (!userId.equals(payment.getUser().getId())) {
-	    if (validator.checkIfThereIsPaymentPending(userId)) {
-		throw new ResourceValidationException("Cannot create two Payments in the same time");
-	    }
-	    payment.setUser(user);
-	}
-
-	payment.setReservation(reservation);
-	payment.setStatus(dto.getStatus());
-
-	Payment updatedPayment = repository.save(payment);
-	return mapper.entityToDto(updatedPayment);
+//	Payment payment = getById(id);
+//	Long userId = dto.getUserId();
+//	User user = userService.getById(userId);
+//	
+//	Reservation = dto.getReservationId()
+//
+//	if (!userId.equals(payment.getUser().getId())) {
+//	    if (validator.checkIfThereIsPaymentPending(userId)) {
+//		throw new ResourceValidationException("Cannot create two Payments in the same time");
+//	    }
+//	    payment.setUser(user);
+//	}
+//
+//	payment.setReservation(reservation);
+//	payment.setStatus(dto.getStatus());
+//
+//	Payment updatedPayment = repository.save(payment);
+	return null;
     }
 
     @Override
@@ -179,6 +186,11 @@ public class PaymentService implements IPaymentService {
 	payment.setStatus(PaymentStatus.CANCELLED);
 	repository.save(payment);
 	return GlobalResp.builder().message("Payment archived successfully").build();
+    }
+
+    @Override
+    public List<PaymentRespDto> getMyPayments(Long id) {
+	return mapper.entitiesToDto(repository.findByUserId(id));
     }
 
 }

@@ -59,12 +59,21 @@ public class ActivityService implements IActivityService {
 	case SCREENING_ROOM:
 	    title = "New Screening Room Added";
 	    break;
+	case CLIENT:
+	    title = "Reservation Completed Successfully";
+	    break;
 	}
 
 	Activity activity = Activity.builder().user(userService.getById(userService.getConnectedUserId())).title(title)
 		.description(message).time(LocalDateTime.now()).build();
 	repository.save(activity);
 
+    }
+
+    @Override
+    public List<ActivityResp> getMyActivities(Long id) {
+	List<Activity> res = repository.findByUserId(id);
+	return mapper.entitiesToDto(res);
     }
 
 }

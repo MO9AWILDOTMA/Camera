@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import ma.cinecamera.model.Activity;
+import ma.cinecamera.model.Payment;
+import ma.cinecamera.model.Reservation;
 import ma.cinecamera.model.Role;
 
 @Data
@@ -22,4 +25,9 @@ public class UserRespDto extends BaseDto {
     private String picture;
     private List<Role> roles;
     private Boolean enable;
+
+    private List<Reservation> reservations;
+    private List<Payment> payments;
+    private List<Activity> activities;
+
 }
