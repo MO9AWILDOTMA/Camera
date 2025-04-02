@@ -10,7 +10,7 @@ import ma.cinecamera.model.enums.MediaCategory;
 import ma.cinecamera.model.enums.MediaType;
 
 @Repository
-public interface MediaRepository extends JpaRepository<Media, Long> {
+public interface MediaRepository extends JpaRepository<Media, Long>{
 
     List<Media> findByMediaTypeAndOwnerId(MediaType type, Long id);
 
