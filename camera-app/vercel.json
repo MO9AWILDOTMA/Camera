@@ -3,7 +3,11 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "npm install --no-optional --no-audit --no-fund",
+        "maxLambdaSize": "10mb"
+      }
     }
   ]
 }
