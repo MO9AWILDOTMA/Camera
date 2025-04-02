@@ -43,11 +43,9 @@ const MovieDetails = ({ movie }: { movie: Movie }) => {
   }, [movie]);
 
   // Get unique dates from showtimes
-  const uniqueDates = [
-    ...new Set<string>(
-      showtimes.map((st) => new Date(st.dateTime).toDateString())
-    ),
-  ];
+  const uniqueDates = Array.from(
+    new Set(showtimes.map((st) => new Date(st.dateTime).toDateString()))
+  );
 
   // Group showtimes by date
   const showtimesByDate = uniqueDates.reduce(

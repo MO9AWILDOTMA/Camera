@@ -22,7 +22,6 @@ const ScreeningRoomsList = () => {
       };
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    keepPreviousData: true, // Keep previous data while loading new data
   });
 
   // Memoize the room cards to prevent unnecessary re-renders
@@ -60,7 +59,7 @@ const ScreeningRoomsList = () => {
         <div className="flex justify-center mt-8">
           <Pagination
             active={currentPage}
-            totalPages={data.totalPages}
+            totalPages={data!.totalPages}
             onPageChange={setCurrentPage}
           />
         </div>
