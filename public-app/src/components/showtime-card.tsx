@@ -55,7 +55,7 @@ const ShowtimeCard = ({ showtime, colorTheme = "red" }: ShowtimeCardProps) => {
   const bgColor = themeColors[colorTheme];
 
   function handleNavigation() {
-    router.push(`${DASH_URL}/showtimes/${slug}`);
+    router.push(`${DASH_URL}/showtimes/${movie.id}`);
   }
 
   const pictureSrc =

@@ -78,15 +78,15 @@ export const showtimesApi = {
 export const reservationsApi = {
   create: (data: any) => api.post("/cinephile/reservations", data),
   getAll: (page: number, size: number) => api.get(`/moderator/reservations?size=${size}&page=${page}`),
-  getUserReservation: () => api.get("/user/reservation/user"),
+  getUserReservation: (id: number) => api.get("/cinephile/reservations/" + id),
   getById: (id: number) => api.get(`/cinephile/reservations/${id}`),
-  cancel: (id: number) => api.post(`/reservations/${id}/cancel`),
+  cancel: (id: number) => api.post(`/cinephile/reservations/${id}/cancel`),
 }
 
 export const paymentsApi = {
   create: (data: any) => api.post("/cinephile/payment", data),
   getAll: (page: number, size: number) => api.get(`/moderator/payments?size=${size}&page=${page}`),
-  getUserPayments: () => api.get("/user/payments/user"),
+  getUserPayments: (id: number) => api.get("/cinephile/payments/" + id),
   getById: (id: number) => api.get(`/user/payments/${id}`),
   cancel: (id: number) => api.post(`/payments/${id}/cancel`),
 }
@@ -123,7 +123,20 @@ export const rolesApi = {
 }
 
 export const activityApi= {
-  getAll: (page: number, size: number) => api.get(`/moderator/activities?page=${page}&size=${size}`)
+  getAll: (page: number, size: number) => api.get(`/moderator/activities?page=${page}&size=${size}`),
+  getMyActivities: (id: number) => api.get(`/cinephile/activities/${id}`)
+}
+
+export const ticketApi= {
+  download: (codes: string[]) => api.post(`/cinephile/tickets/download`, {
+    codes
+  }, {
+    responseType: 'blob', // This is crucial for binary data like PDFs
+    headers: {
+      'Accept': 'application/pdf',
+      'Content-Type': 'application/json'
+    }
+  })
 }
 
 export default api

@@ -50,6 +50,8 @@ movie:
     upload:
       directory: ${MOVIE_UPLOAD_DIR}
 
-youcanpay:
-  public-key: ${YOUCANPAY_PUBLIC_KEY}
-  private-key: ${YOUCANPAY_PRIVATE_KEY}
+STRIPE:
+  PUBLISHABLE:
+    KEY: ${STRIPE_PUBLISHABLE_KEY}
+  SECRET:
+    KEY: ${STRIPE_SECRET_KEY}

@@ -1,5 +1,7 @@
 package ma.cinecamera.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +12,6 @@ import ma.cinecamera.model.Activity;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     Page<Activity> findAllByOrderByTimeDesc(Pageable pageable);
+
+    List<Activity> findByUserId(Long id);
 }

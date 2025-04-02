@@ -3,21 +3,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-
-type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  roles: Role[];
-  picture: string | null;
-};
-
-type Role = {
-  id: number;
-  name: string;
-};
+import Reservation from "@/models/reservation.model";
+import Payment from "@/models/payment.model";
+import User from "@/models/user.model";
+import Role, { ERole } from "@/models/role.model";
 
 type RegisterData = {
   firstName: string;
@@ -107,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = !!user;
 
   const isAdmin =
-    user?.roles?.some((r: Role) => r.name === "ROLE_ADMIN") ?? false;
+    user?.roles?.some((r: Role) => r.name == ERole.ROLE_ADMIN) ?? false;
 
   return (
     <AuthContext.Provider

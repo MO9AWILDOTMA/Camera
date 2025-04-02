@@ -63,4 +63,10 @@ public class PaymentController {
 	return ResponseEntity.ok(service.archive(id));
     }
 
+    @Secured("ROLE_CINEPHILE")
+    @GetMapping("/cinephile/payments/{id}")
+    public ResponseEntity<?> getMyPayments(@PathVariable(name = "id") Long id) {
+	return ResponseEntity.ok(service.getMyPayments(id));
+    }
+
 }

@@ -10,4 +10,6 @@ public interface IActivityService {
     List<ActivityResp> getAll(Integer page, Integer size);
 
     void createActivity(ActivityType type, String message);
+
+    List<ActivityResp> getMyActivities(Long id);
 }

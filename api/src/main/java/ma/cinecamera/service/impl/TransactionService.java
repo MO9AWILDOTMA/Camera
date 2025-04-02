@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class TransactionService implements ITransactionService {
 
-//    @Value("${youcanpay.private-key}")
-//    private String privateKey;
+    @Value("${STRIPE.SECRET.KEY}")
+    private String STRIPE_API_KEY;
 
     private final WebClient webClient;
 
@@ -82,6 +83,40 @@ public class TransactionService implements ITransactionService {
 	return repository.save(transaction);
 
     }
+
+//    String hostedCheckout(RequestDTO requestDTO) throws StripeException {
+//
+//	Stripe.apiKey = STRIPE_API_KEY;
+//	String clientBaseURL = System.getenv().get("CLIENT_BASE_URL");
+//
+//	// Start by finding an existing customer record from Stripe or creating a new
+//	// one if needed
+//	Customer customer = CustomerUtil.findOrCreateCustomer(requestDTO.getCustomerEmail(),
+//		requestDTO.getCustomerName());
+//
+//	// Next, create a checkout session by adding the details of the checkout
+//	SessionCreateParams.Builder paramsBuilder = SessionCreateParams.builder()
+//		.setMode(SessionCreateParams.Mode.PAYMENT).setCustomer(customer.getId())
+//		.setSuccessUrl(clientBaseURL + "/success?session_id={CHECKOUT_SESSION_ID}")
+//		.setCancelUrl(clientBaseURL + "/failure");
+//
+//	for (Product product : requestDTO.getItems()) {
+//	    paramsBuilder.addLineItem(SessionCreateParams.LineItem.builder().setQuantity(1L).setPriceData(PriceData
+//		    .builder()
+//		    .setProductData(PriceData.ProductData.builder().putMetadata("app_id", product.getId())
+//			    .setName(product.getName()).build())
+//		    .setCurrency(ProductDAO.getProduct(product.getId()).getDefaultPriceObject().getCurrency())
+//		    .setUnitAmountDecimal(
+//			    ProductDAO.getProduct(product.getId()).getDefaultPriceObject().getUnitAmountDecimal())
+//		    .build()).build());
+//	}
+//
+//    }
+//
+//    Session session = Session.create(paramsBuilder.build());
+//
+//    return session.getUrl();
+//    }
 
     @Override
     public TransactionResp processTransaction(TransactionReq req) {

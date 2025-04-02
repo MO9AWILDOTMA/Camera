@@ -138,7 +138,7 @@ export default function BookingPage({ params }: { params: any }) {
         title: "Proceed To Payment",
         description: "Your reservation proccess start successfully",
       });
-      // router.push("/dashboard/payment/" + reservationId);
+      router.push("/dashboard/reservations/");
     } catch (error) {
       console.error("Failed to fetch showtime and seats:", error);
       toast({

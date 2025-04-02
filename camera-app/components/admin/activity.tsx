@@ -4,7 +4,7 @@ import { Film, Clock, Building, Ticket, Users } from "lucide-react";
 import { activityApi } from "@/lib/api";
 import { formatDistanceToNow, parseISO } from "date-fns";
 
-type ActivityType = {
+export type ActivityType = {
   id: number;
   title: string;
   description: string;
@@ -13,9 +13,14 @@ type ActivityType = {
   icon?: any;
 };
 
-type Type = "MOVIE" | "USER" | "SHOWTIME" | "SCREENING_ROOM" | "RESERVATION";
+export type Type =
+  | "MOVIE"
+  | "USER"
+  | "SHOWTIME"
+  | "SCREENING_ROOM"
+  | "RESERVATION";
 
-function getIcon(type: Type) {
+export function getIcon(type: Type) {
   switch (type) {
     case "MOVIE":
       return Film;

@@ -170,10 +170,10 @@ export default function ShowtimesPage({ params }: { params: any }) {
 
           {dates.length > 0 ? (
             <Tabs value={selectedDate} onValueChange={setSelectedDate}>
-              <TabsList className="mb-6 flex w-full overflow-x-auto">
+              <TabsList className="mb-6 flex w-full h-full overflow-x-auto">
                 {dates.map((date) => (
-                  <TabsTrigger key={date} value={date} className="flex-1">
-                    <div className="flex flex-col items-center">
+                  <TabsTrigger key={date} value={date} className="flex-1 ">
+                    <div className="flex flex-col items-center py-6 w-full bg-slate-100 hover:bg-slate-200">
                       <span className="text-xs">
                         {new Date(date).toLocaleDateString("en-US", {
                           weekday: "short",
